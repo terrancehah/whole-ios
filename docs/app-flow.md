@@ -126,6 +126,32 @@
   - Usage: Call `resetPassword(email:completion:)` with the user's email address.
 
 ---
+### Premium Feature Gating & Paywall Logic (2025-04-17)
+- Only users with an active trial or paid subscription (see `UserProfile.subscriptionStatus` and `trialEndDate`) can access premium features:
+  - Unlimited quote swipes
+  - Theme and font customization (except default theme)
+- Free users:
+  - Are limited to 10 quotes/day
+  - Can only use the default theme
+  - See a lock icon and paywall prompt when attempting to access premium features
+- Paywall modal (`PaywallView`) is shown when a free user hits the swipe limit or tries to select a premium theme.
+- All gating logic is based on the actual user profile fields for reliability.
+
+### Theme Management
+- **Quote Theme (Card/Sharing Only):**
+  - Users can select a visual style (Serene Minimalism, Elegant Monochrome, Soft Pastel Elegance) for quote cards and share images.
+  - Managed by `ThemeManager` and set via `CustomizationView`.
+  - Only affects `QuoteShareCardView` and sharing, NOT the rest of the app UI.
+- **System-wide Theme:**
+  - All other UI (navigation, settings, paywall, etc.) follows system light/dark mode using system colors.
+  - No custom theme selection for global UI—respects iOS appearance settings.
+
+### User Profile State & Sync (2025-04-17)
+- `UserProfileViewModel` is owned by `SettingsView` and passed to all settings-related child views (e.g. `CustomizationView`).
+- On appear, `SettingsView` calls `.refresh(userId:)` to sync the latest user profile and subscription state from Supabase.
+- All premium gating and paywall logic in settings/customization flows now reactively update based on the latest profile state.
+- `SupabaseService` provides `fetchUserProfile(userId:completion:)` for backend sync.
+- This ensures robust, model-driven state management and a seamless upgrade/restore experience.
 
 ### Data Models: Quote
 
@@ -180,9 +206,20 @@
     - `createdAt: Date?`
 - **Maps to Supabase table:** `userquotes`
 
+### Data Models: LikedQuote
+- **Swift Model:**
+  - File: `Services/SupabaseService.swift`
+  - Structure:
+    - `id: String?`
+    - `userId: String`
+    - `quoteId: String`
+- **Maps to Supabase table:** `liked_quotes`
+
 ### View Models
 - **QuoteViewModel:**
-  - File: `ViewModels/QuoteViewModel.swift`
-  - Handles fetching and state for quotes.
+  - File: `Features/Quotes/QuoteViewModel.swift`
+  - Handles fetching, liking, and unliking quotes using Supabase integration.
+  - Syncs liked quotes state with backend in real-time.
+  - Provides robust error handling for all backend operations.
 
 ---

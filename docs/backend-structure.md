@@ -60,6 +60,16 @@ This document describes the current schema and access policies for the Supabase 
   - ALL: Only the user (user_id = auth.uid)
   - INSERT: user_id must match auth.uid
 
+### 5. `liked_quotes`
+- **Purpose:** Stores user likes for quotes.
+- **Columns:**
+  - `id`: uuid, primary key, auto-generated
+  - `user_id`: uuid, references users(id)
+  - `quote_id`: uuid, references quotes(id)
+- **RLS:**
+  - ALL: Only the user (user_id = auth.uid)
+  - INSERT: user_id must match auth.uid
+
 ---
 
 ## Row Level Security (RLS) Summary
@@ -69,6 +79,7 @@ This document describes the current schema and access policies for the Supabase 
 | users           | Only self (id = auth.uid) | Only self (id = auth.uid) | Only self (id = auth.uid)  |
 | userpreferences | Only self (user_id = auth.uid) | Only self (user_id = auth.uid) | Only self (user_id = auth.uid) |
 | userquotes      | Only self (user_id = auth.uid) | Only self (user_id = auth.uid) | Only self (user_id = auth.uid) |
+| liked_quotes    | Only self (user_id = auth.uid) | Only self (user_id = auth.uid) | Only self (user_id = auth.uid) |
 
 ---
 

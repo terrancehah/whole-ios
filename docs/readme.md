@@ -5,10 +5,13 @@
 ---
 
 ## Features
-- **Daily Quotes**: Receive a new bilingual quote each day directly on your lock screen.
-- **Customizable Categories**: Select preferred quote categories for a personalized experience.
-- **Premium Subscriptions**: Unlock unlimited quotes, remove watermarks, and access premium customization options.
-- **Share Quotes**: Generate and share quote images on social media (with optional watermarks for free users).
+- Browse bilingual quotes with horizontal swipe.
+- Like and unlike quotes, with real-time sync to Supabase backend.
+- Robust error handling for all quote interactions.
+- Quote card and sharing support user-selectable themes (Serene Minimalism, Elegant Monochrome, Soft Pastel Elegance).
+- All other UI follows system light/dark mode for maximum consistency with iOS.
+- Theme selection UI in CustomizationView; theme state managed globally via ThemeManager.
+- [Planned] Sharing and paywall features.
 
 ---
 
@@ -52,8 +55,15 @@
 - Use SwiftUI for building user interfaces.
 - Follow the guidelines outlined in `frontend-guidelines.md` for consistent design.
 
-### Backend:
+### Backend
+- All quote and like/unlike operations are performed via SupabaseService.
+- Requires `liked_quotes` table with `userId` and `quoteId` fields in Supabase.
 - Use Supabase's Swift client for all backend interactions (authentication, database, etc.).
+
+### Architecture
+- Quote card and sharing support user-selectable themes (Serene Minimalism, Elegant Monochrome, Soft Pastel Elegance).
+- All other UI follows system light/dark mode for maximum consistency with iOS.
+- Theme selection UI in CustomizationView; theme state managed globally via ThemeManager.
 
 ---
 
