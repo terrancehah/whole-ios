@@ -7,11 +7,13 @@ import Features
 /// Utility for generating a shareable image from a Quote.
 struct QuoteImageGenerator {
     /// Generates a UIImage representation of the given quote.
-    /// - Parameter quote: The Quote to render.
+    /// - Parameters:
+    ///   - quote: The Quote to render.
+    ///   - isPremiumUser: Whether the user is premium (if false, watermark is added)
     /// - Returns: A UIImage of the rendered quote card, or nil if rendering fails.
-    static func generateShareImage(for quote: Quote) -> UIImage? {
-        // Use the canonical QuoteShareCardView for shareable rendering.
-        let controller = UIHostingController(rootView: Features.Quotes.QuoteShareCardView(quote: quote))
+    static func generateShareImage(for quote: Quote, isPremiumUser: Bool) -> UIImage? {
+        // Use the canonical QuoteShareCardView for shareable rendering, with watermark overlay if needed.
+        let controller = UIHostingController(rootView: Features.Quotes.QuoteShareCardView(quote: quote, showWatermark: !isPremiumUser))
         let view = controller.view
         // Set the desired size for the rendered image
         let targetSize = CGSize(width: 600, height: 800)
@@ -36,7 +38,11 @@ struct QuoteImageGenerator_Previews: PreviewProvider {
             createdAt: Date(),
             createdBy: "Walt Disney"
         )
-        return Features.Quotes.QuoteShareCardView(quote: quote)
+        // Show both with and without watermark for preview
+        VStack {
+            Features.Quotes.QuoteShareCardView(quote: quote, showWatermark: true)
+            Features.Quotes.QuoteShareCardView(quote: quote, showWatermark: false)
+        }
     }
 }
 #endif

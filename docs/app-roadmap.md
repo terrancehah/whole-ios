@@ -66,9 +66,14 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ## Step 7: Widget Development — ⬜ TODO
 **Objective:** Deliver quotes directly to users’ lock screen/standby.
-- Set up `QuoteWidget.swift` and `WidgetEntry.swift` with WidgetKit.
-- Ensure widget displays daily bilingual quotes, updates, and deep links to the app.
-**Outcome:** Quotes appear on lock/standby screens as designed.
+- Set up `QuoteWidget.swift` and `WidgetEntry.swift` using WidgetKit to display daily bilingual quotes.
+- Widget should be available to all users (not a premium feature).
+- Allow users to select preferred quote categories for the widget (category selection UI).
+- [Future] If widget theming/customization is desired, reuse the existing `AppTheme` and `ThemeManager` logic for consistency with the main app.
+    - Premium gating for advanced widget themes can mirror the main app's logic (e.g., only default theme for free users, all themes for premium users).
+    - Store widget theme preferences in a shared location (e.g., UserDefaults with App Group) for access by both app and widget.
+- Ensure the widget design is minimal, readable, and matches the app's visual style.
+**Outcome:** Quotes appear on lock/standby screens as designed, with a consistent experience for all users. Advanced widget customization can be added in the future as a premium feature.
 
 ---
 

@@ -3,6 +3,8 @@ import SwiftUI
 /// A dedicated view for rendering a quote as a shareable image.
 struct QuoteShareCardView: View {
     let quote: Quote
+    // Whether to show the watermark (false for premium users)
+    var showWatermark: Bool = false
     // Observe the global theme manager for dynamic theming
     @ObservedObject private var themeManager = ThemeManager.shared
     var body: some View {
@@ -31,6 +33,28 @@ struct QuoteShareCardView: View {
                 }
             }
             .padding(32)
+            // Watermark overlay for free users
+            if showWatermark {
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        HStack(spacing: 6) {
+                            Image(systemName: "sparkles")
+                                .foregroundColor(.yellow)
+                            Text("Whole")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.white)
+                                .shadow(radius: 3)
+                        }
+                        .padding(10)
+                        .background(Color.black.opacity(0.35))
+                        .cornerRadius(10)
+                        .padding([.bottom, .trailing], 16)
+                    }
+                }
+            }
         }
         .frame(width: 600, height: 800)
         .background(themeManager.selectedTheme.theme.background)
@@ -47,7 +71,7 @@ struct QuoteShareCardView_Previews: PreviewProvider {
             categories: ["Motivation"],
             createdAt: Date(),
             createdBy: "Walt Disney"
-        ))
+        ), showWatermark: true)
     }
 }
 #endif
