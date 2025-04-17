@@ -12,6 +12,16 @@
 
 ---
 
+## MVP Feature Summary (2025-04-17)
+- Horizontal quote browsing (carousel style), 10/day for free users.
+- Like = Save, with native feedback.
+- Share via native iOS share sheet.
+- Popups for like/limit reached.
+- Paywall CTA and theme switch on main UI.
+- Serene Minimalism default theme.
+
+---
+
 ## Setup
 
 1. **Clone the Repository**:

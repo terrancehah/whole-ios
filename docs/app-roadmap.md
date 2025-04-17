@@ -32,6 +32,14 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
+### Progress & Next Steps (as of 2025-04-17)
+- **Step 3 completed:** Reusable UI components (QuoteCardView, CustomButton) implemented.
+- **Step 4 in progress:**
+  - QuoteListView.swift: Horizontal swipe, 10 quotes/day for free users, Like/Share, limit logic, popups, theme switch, paywall CTA.
+- **After Step 4:** Widget, onboarding, paywall, and more per roadmap.
+
+---
+
 ## Step 4: Main Quote Browsing Interface
 **Objective:** Enable users to browse and interact with quotes.
 - Build `QuoteListView.swift` for swipeable quote cards.

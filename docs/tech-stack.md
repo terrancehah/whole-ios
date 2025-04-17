@@ -17,3 +17,14 @@
 - **Notifications**: UserNotifications (for daily quote notifications)
 - **In-App Purchases**: StoreKit (for managing subscriptions and paywall)
 - **Image Generation**: SwiftUI rendering (for creating shareable quote images)
+
+---
+
+## Key Technologies (Updated)
+- SwiftUI: UI, navigation, and theming.
+- Combine: State management, async data.
+- Supabase: Backend, auth, quote storage, like/save sync.
+- Native iOS share sheet: Sharing quotes.
+- Planned: Local caching for offline quotes.
+
+---

@@ -53,7 +53,28 @@
     - Favorites: Saved quotes collection.
     - Settings: Customization and account options.
 
-## 3. Settings Screen
+## 3. Quote Browsing Flow (Updated)
+- **Main Interface:**
+  - Horizontal swipe (carousel style) for browsing quotes.
+  - Users can scroll both forward and backward; quotes are not dismissed.
+  - Free users: Limited to 10 quotes per day (loaded all at once).
+  - Offline access: Previously loaded quotes are viewable offline (caching planned).
+- **Like Action:**
+  - Tapping Like fills the heart icon and saves the quote to the user's collection.
+  - Native-style bottom popup confirms the action ("Liked!").
+  - Like status syncs with Supabase immediately.
+- **Share Action:**
+  - Opens native iOS share sheet, with a preview image of the quote.
+- **Swipe Limit:**
+  - Upon reaching daily limit, a native-style bottom popup appears.
+  - Paywall CTA button highlights/appears after limit is hit.
+- **Theme & Settings:**
+  - Theme switcher and settings buttons on main interface.
+  - Default theme: Serene Minimalism.
+- **Error Handling:**
+  - Native-style retry button for load failures.
+
+## 4. Settings Screen
 - **Quote Categories**
   - Edit or update preferred categories.
   - Mirrors onboarding selections.
@@ -77,21 +98,21 @@
   - Daily quote timing adjustment.
   - Default set to 8 AM.
 
-## 4. Widget
+## 5. Widget
 - **Lock Screen and Standby Mode**
   - Display: One bilingual quote, updated daily.
   - Categories: Based on user preferences.
   - Interaction: Tap to open specific quote in app.
   - Design: Simple, clean layout for glanceable reading.
 
-## 5. Notifications
+## 6. Notifications
 - **Daily Quote Notification**
   - Timing: User-defined (default: 8 AM).
   - Content: Bilingual quote text.
   - Deep Link: Opens app to specific quote.
   - Settings: Configurable in Settings tab.
 
-## 6. Sharing
+## 7. Sharing
 - **Generate Quote Image**
   - Access: Available from Quotes or Favorites tab.
   - Free Users: Images include "Whole" watermark.
@@ -99,7 +120,7 @@
   - Share Options: Compatible with installed social media apps.
   - Platforms: Instagram, Instagram Stories, WhatsApp, WeChat, etc.
 
-## 7. AuthService
+## 8. AuthService
 - **Password Reset:**
   - The AuthService provides a method to send password reset emails via Supabase.
   - Usage: Call `resetPassword(email:completion:)` with the user's email address.

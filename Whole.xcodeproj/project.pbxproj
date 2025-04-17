@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		FE69A3E42DAF66F70096F621 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A38D2DAF66F70096F621 /* CustomButton.swift */; };
 		FE69A3E52DAF66F70096F621 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3CD2DAF66F70096F621 /* Config.swift */; };
-		FE69A3E62DAF66F70096F621 /* WholeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3D62DAF66F70096F621 /* WholeApp.swift */; };
 		FE69A3E72DAF66F70096F621 /* UserQuoteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3B42DAF66F70096F621 /* UserQuoteModel.swift */; };
 		FE69A3E82DAF66F70096F621 /* QuoteWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3DF2DAF66F70096F621 /* QuoteWidget.swift */; };
 		FE69A3E92DAF66F70096F621 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3A82DAF66F70096F621 /* SettingsView.swift */; };
@@ -24,7 +23,6 @@
 		FE69A3F22DAF66F70096F621 /* ErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3CF2DAF66F70096F621 /* ErrorHandler.swift */; };
 		FE69A3F32DAF66F70096F621 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A38A2DAF66F70096F621 /* SceneDelegate.swift */; };
 		FE69A3F42DAF66F70096F621 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3AC2DAF66F70096F621 /* ShareSheet.swift */; };
-		FE69A3F52DAF66F70096F621 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3D52DAF66F70096F621 /* ContentView.swift */; };
 		FE69A3F62DAF66F70096F621 /* QuoteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3B12DAF66F70096F621 /* QuoteModel.swift */; };
 		FE69A3F72DAF66F70096F621 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3BF2DAF66F70096F621 /* AuthService.swift */; };
 		FE69A3F82DAF66F70096F621 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3892DAF66F70096F621 /* AppDelegate.swift */; };
@@ -52,16 +50,12 @@
 		FE69A40E2DAF66F70096F621 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3BC2DAF66F70096F621 /* Assets.xcassets */; };
 		FE69A40F2DAF66F70096F621 /* entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3C42DAF66F70096F621 /* entitlements.plist */; };
 		FE69A4102DAF66F70096F621 /* tech-stack.md in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3962DAF66F70096F621 /* tech-stack.md */; };
-		FE69A4112DAF66F70096F621 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3C52DAF66F70096F621 /* Info.plist */; };
 		FE69A4122DAF66F70096F621 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3C62DAF66F70096F621 /* LaunchScreen.storyboard */; };
 		FE69A4132DAF66F70096F621 /* readme.md in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3952DAF66F70096F621 /* readme.md */; };
 		FE69A4142DAF66F70096F621 /* app-flow.md in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3902DAF66F70096F621 /* app-flow.md */; };
 		FE69A4152DAF66F70096F621 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3CA2DAF66F70096F621 /* README.md */; };
 		FE69A4162DAF66F70096F621 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3BA2DAF66F70096F621 /* Localizable.strings */; };
-		FE69A4172DAF66F70096F621 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3D22DAF66F70096F621 /* Preview Assets.xcassets */; };
 		FE69A4182DAF66F70096F621 /* app-roadmap.md in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3912DAF66F70096F621 /* app-roadmap.md */; };
-		FE69A4192DAF66F70096F621 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3C82DAF66F70096F621 /* README.md */; };
-		FE69A41A2DAF66F70096F621 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3D42DAF66F70096F621 /* Assets.xcassets */; };
 		FE69A41B2DAF66F70096F621 /* backend-structure.md in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3922DAF66F70096F621 /* backend-structure.md */; };
 		FE69A41C2DAF66F70096F621 /* prd.md in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3942DAF66F70096F621 /* prd.md */; };
 		FE69A41D2DAF66F70096F621 /* frontend-guidelines.md in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3932DAF66F70096F621 /* frontend-guidelines.md */; };
@@ -143,10 +137,6 @@
 		FE69A3CE2DAF66F70096F621 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		FE69A3CF2DAF66F70096F621 /* ErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHandler.swift; sourceTree = "<group>"; };
 		FE69A3D02DAF66F70096F621 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
-		FE69A3D22DAF66F70096F621 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		FE69A3D42DAF66F70096F621 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		FE69A3D52DAF66F70096F621 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		FE69A3D62DAF66F70096F621 /* WholeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WholeApp.swift; sourceTree = "<group>"; };
 		FE69A3D92DAF66F70096F621 /* Whole.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Whole.xcodeproj; sourceTree = "<group>"; };
 		FE69A3DA2DAF66F70096F621 /* WholeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WholeTests.swift; sourceTree = "<group>"; };
 		FE69A3DC2DAF66F70096F621 /* WholeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WholeUITests.swift; sourceTree = "<group>"; };
@@ -156,11 +146,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		FE69A33F2DAF62C80096F621 /* Whole */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Whole;
-			sourceTree = "<group>";
-		};
 		FE69A3502DAF62CA0096F621 /* WholeTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = WholeTests;
@@ -218,12 +203,10 @@
 				FE69A3C72DAF66F70096F621 /* SupportingFiles */,
 				FE69A3CC2DAF66F70096F621 /* Tests */,
 				FE69A3D12DAF66F70096F621 /* Utilities */,
-				FE69A3D82DAF66F70096F621 /* Whole */,
 				FE69A3D92DAF66F70096F621 /* Whole.xcodeproj */,
 				FE69A3DB2DAF66F70096F621 /* WholeTests */,
 				FE69A3DE2DAF66F70096F621 /* WholeUITests */,
 				FE69A3E12DAF66F70096F621 /* Widget */,
-				FE69A33F2DAF62C80096F621 /* Whole */,
 				FE69A3502DAF62CA0096F621 /* WholeTests */,
 				FE69A35A2DAF62CA0096F621 /* WholeUITests */,
 				FE69A33E2DAF62C80096F621 /* Products */,
@@ -453,33 +436,6 @@
 			path = Utilities;
 			sourceTree = "<group>";
 		};
-		FE69A3D32DAF66F70096F621 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				FE69A3D22DAF66F70096F621 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		FE69A3D72DAF66F70096F621 /* Whole */ = {
-			isa = PBXGroup;
-			children = (
-				FE69A3D32DAF66F70096F621 /* Preview Content */,
-				FE69A3D42DAF66F70096F621 /* Assets.xcassets */,
-				FE69A3D52DAF66F70096F621 /* ContentView.swift */,
-				FE69A3D62DAF66F70096F621 /* WholeApp.swift */,
-			);
-			path = Whole;
-			sourceTree = "<group>";
-		};
-		FE69A3D82DAF66F70096F621 /* Whole */ = {
-			isa = PBXGroup;
-			children = (
-				FE69A3D72DAF66F70096F621 /* Whole */,
-			);
-			path = Whole;
-			sourceTree = "<group>";
-		};
 		FE69A3DB2DAF66F70096F621 /* WholeTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -525,9 +481,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				FE69A33F2DAF62C80096F621 /* Whole */,
 			);
 			name = Whole;
 			packageProductDependencies = (
@@ -649,16 +602,12 @@
 				FE69A40E2DAF66F70096F621 /* Assets.xcassets in Resources */,
 				FE69A40F2DAF66F70096F621 /* entitlements.plist in Resources */,
 				FE69A4102DAF66F70096F621 /* tech-stack.md in Resources */,
-				FE69A4112DAF66F70096F621 /* Info.plist in Resources */,
 				FE69A4122DAF66F70096F621 /* LaunchScreen.storyboard in Resources */,
 				FE69A4132DAF66F70096F621 /* readme.md in Resources */,
 				FE69A4142DAF66F70096F621 /* app-flow.md in Resources */,
 				FE69A4152DAF66F70096F621 /* README.md in Resources */,
 				FE69A4162DAF66F70096F621 /* Localizable.strings in Resources */,
-				FE69A4172DAF66F70096F621 /* Preview Assets.xcassets in Resources */,
 				FE69A4182DAF66F70096F621 /* app-roadmap.md in Resources */,
-				FE69A4192DAF66F70096F621 /* README.md in Resources */,
-				FE69A41A2DAF66F70096F621 /* Assets.xcassets in Resources */,
 				FE69A41B2DAF66F70096F621 /* backend-structure.md in Resources */,
 				FE69A41C2DAF66F70096F621 /* prd.md in Resources */,
 				FE69A41D2DAF66F70096F621 /* frontend-guidelines.md in Resources */,
@@ -688,7 +637,6 @@
 			files = (
 				FE69A3E42DAF66F70096F621 /* CustomButton.swift in Sources */,
 				FE69A3E52DAF66F70096F621 /* Config.swift in Sources */,
-				FE69A3E62DAF66F70096F621 /* WholeApp.swift in Sources */,
 				FE69A3E72DAF66F70096F621 /* UserQuoteModel.swift in Sources */,
 				FE69A3E82DAF66F70096F621 /* QuoteWidget.swift in Sources */,
 				FE69A3E92DAF66F70096F621 /* SettingsView.swift in Sources */,
@@ -703,7 +651,6 @@
 				FE69A3F22DAF66F70096F621 /* ErrorHandler.swift in Sources */,
 				FE69A3F32DAF66F70096F621 /* SceneDelegate.swift in Sources */,
 				FE69A3F42DAF66F70096F621 /* ShareSheet.swift in Sources */,
-				FE69A3F52DAF66F70096F621 /* ContentView.swift in Sources */,
 				FE69A3F62DAF66F70096F621 /* QuoteModel.swift in Sources */,
 				FE69A3F72DAF66F70096F621 /* AuthService.swift in Sources */,
 				FE69A3F82DAF66F70096F621 /* AppDelegate.swift in Sources */,

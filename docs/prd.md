@@ -47,7 +47,16 @@ Premium features are unlocked through a subscription, offering unlimited quote a
 - Includes options to save quotes to favorites and share on social media
 - Displays English quote on top with Chinese translation below
 
-### 5.3 Paywall and Subscriptions
+### 5.3 Quote Browsing Requirements (MVP)
+- Horizontal swipe browsing, not dismissable.
+- 10 quotes/day limit for free users.
+- Like = Save; native feedback popup.
+- Share: Native iOS share sheet with quote image.
+- Paywall CTA after limit.
+- Theme switcher and settings on main UI.
+- Caching for offline planned.
+
+### 5.4 Paywall and Subscriptions
 - Offers a **7-day free trial** upon first launch
 - Provides monthly and yearly subscription options
 - Premium features include:
@@ -56,13 +65,13 @@ Premium features are unlocked through a subscription, offering unlimited quote a
   - Premium fonts and themes
   - Ability to create personal quotes
 
-### 5.4 Notifications
+### 5.5 Notifications
 - Sends daily notifications with new quotes at a user-set time
 
-### 5.5 Quote Sharing
+### 5.6 Quote Sharing
 - Generates shareable quote images (with watermarks for free users)
 
-### 5.6 User-Generated Quotes (MVP: Personal Use Only)
+### 5.7 User-Generated Quotes (MVP: Personal Use Only)
 - Allows users to create and save their own quotes locally
 
 ---

@@ -72,6 +72,14 @@ This document describes the current schema and access policies for the Supabase 
 
 ---
 
+## Quote Like/Save Logic
+- Liking a quote saves it to the user's collection (no separate save action).
+- Like status is synced immediately to Supabase.
+- Free user swipe limit: 10 quotes/day (enforced in app logic).
+- Caching of loaded quotes planned for offline browsing.
+
+---
+
 ## Quote Model (Swift)
 
 The Swift model representing a quote in the app is defined as follows (see `Models/QuoteModel.swift`):
