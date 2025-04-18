@@ -39,10 +39,22 @@ struct QuoteListView: View {
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
                 .onChange(of: selectedIndex) { newIndex in
+                    // Save the currently displayed quote for the widget whenever the user swipes to a new quote.
+                    if viewModel.quotes.indices.contains(newIndex) {
+                        let currentQuote = viewModel.quotes[newIndex]
+                        viewModel.saveQuoteForWidget(currentQuote)
+                    }
                     if !isPremiumUser && newIndex >= viewModel.swipeLimit {
                         showLimitPopup = true
                         showPaywall = true
                         viewModel.showPaywallCTA = true
+                    }
+                }
+                .onAppear {
+                    // Save the initial quote for the widget when the view appears.
+                    if viewModel.quotes.indices.contains(selectedIndex) {
+                        let currentQuote = viewModel.quotes[selectedIndex]
+                        viewModel.saveQuoteForWidget(currentQuote)
                     }
                 }
                 .animation(.easeInOut, value: selectedIndex)

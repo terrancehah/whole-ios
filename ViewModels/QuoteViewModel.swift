@@ -31,4 +31,24 @@ final class QuoteViewModel: ObservableObject {
             }
         }
     }
+
+    /// Saves the provided quote as the daily widget quote to App Group UserDefaults.
+    /// - Parameter quote: The Quote to be displayed in the widget.
+    func saveQuoteForWidget(_ quote: Quote) {
+        let defaults = UserDefaults(suiteName: "group.com.wholeapp.shared")
+        // Encode the quote as JSON
+        if let data = try? JSONEncoder().encode(quote) {
+            defaults?.set(data, forKey: "widgetDailyQuote")
+        }
+    }
+
+    /// Loads the most recently saved widget quote from App Group UserDefaults.
+    /// - Returns: The Quote if available, otherwise nil.
+    func loadQuoteForWidget() -> Quote? {
+        let defaults = UserDefaults(suiteName: "group.com.wholeapp.shared")
+        if let data = defaults?.data(forKey: "widgetDailyQuote") {
+            return try? JSONDecoder().decode(Quote.self, from: data)
+        }
+        return nil
+    }
 }

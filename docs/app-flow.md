@@ -123,6 +123,17 @@
   - The AuthService provides a method to send password reset emails via Supabase.
   - Usage: Call `resetPassword(email:completion:)` with the user's email address.
 
+## Widget Integration Progress (2025-04-18)
+- The widget now displays the quote most recently shown on the main interface.
+- When the user swipes to a new quote or launches the app, the currently displayed quote is saved to App Group UserDefaults for widget access.
+- This ensures the widget and app are always in sync, providing a seamless user experience.
+- Ref: Logic implemented in `QuoteListView.swift` using `saveQuoteForWidget(_:)` from `QuoteViewModel`.
+
+## Technical Implementation Notes
+- The widget reads the saved quote from App Group UserDefaults (key: `widgetDailyQuote`).
+- If no quote is available, the widget falls back to a static demo quote.
+- All code is clearly commented for future maintainability.
+
 ---
 ### Premium Feature Gating & Paywall Logic (2025-04-17)
 - Only users with an active trial or paid subscription (see `UserProfile.subscriptionStatus` and `trialEndDate`) can access premium features:

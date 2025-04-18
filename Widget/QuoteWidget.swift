@@ -4,25 +4,40 @@
 import WidgetKit
 import SwiftUI
 
-/// Main widget view displaying a bilingual quote in minimal style.
+/// Main widget view displaying a bilingual quote in minimal style, themed to match the app.
 struct QuoteWidgetView: View {
     let entry: QuoteWidgetEntry
 
     var body: some View {
+        let theme = entry.theme.theme // Get Theme struct from AppTheme
         VStack(alignment: .leading, spacing: 8) {
             Text(entry.quote.englishText)
-                .font(.headline)
-                .foregroundColor(.primary)
+                .font(theme.englishFont)
+                .foregroundColor(theme.englishColor)
                 .minimumScaleFactor(0.7)
                 .lineLimit(2)
             Text(entry.quote.chineseText)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+                .font(theme.chineseFont)
+                .foregroundColor(theme.chineseColor)
                 .minimumScaleFactor(0.7)
                 .lineLimit(2)
+            // Category chips (show on medium/large widgets)
+            if !entry.quote.categories.isEmpty {
+                HStack(spacing: 8) {
+                    ForEach(entry.quote.categories, id: \ .self) { category in
+                        Text(category.displayName)
+                            .font(.caption)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 4)
+                            .background(theme.cardBackground.opacity(0.15))
+                            .foregroundColor(.accentColor)
+                            .cornerRadius(8)
+                    }
+                }
+            }
         }
         .padding()
-        .background(Color(.systemBackground))
+        .background(theme.cardBackground)
         .widgetURL(URL(string: "whole://quote/\(entry.quote.id)")) // Deep link to quote in app
     }
 }
@@ -42,4 +57,4 @@ struct QuoteWidget: Widget {
 }
 
 // MARK: - Comment
-// QuoteWidget is the main entry for WidgetKit. It uses QuoteWidgetProvider for timeline and QuoteWidgetView for UI. MVP shows a random quote daily, no configuration.
+// QuoteWidget now applies app theme and category chips. It uses QuoteWidgetProvider for timeline and QuoteWidgetView for UI. MVP shows a random quote daily, no configuration.

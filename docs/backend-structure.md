@@ -108,7 +108,7 @@ struct Quote: Codable, Identifiable {
     let id: String
     let englishText: String
     let chineseText: String
-    let categories: [String]
+    let categories: [QuoteCategory]
     let createdAt: Date?
     let createdBy: String?
 }
@@ -116,11 +116,30 @@ struct Quote: Codable, Identifiable {
 - `id`: UUID string, matches Supabase `id` column
 - `englishText`: English text of the quote (maps to `english_text`)
 - `chineseText`: Chinese translation (maps to `chinese_text`)
-- `categories`: Array of category strings
+- `categories`: Array of `QuoteCategory` enum values
 - `createdAt`: Creation timestamp (`created_at`)
 - `createdBy`: Creator user ID (optional, `created_by`)
 
 > The coding keys in Swift map each property to its Supabase column name for seamless decoding.
+
+## Quote Categories (Enum)
+
+- Categories in the codebase are now represented by the `QuoteCategory` enum in `QuoteModel.swift` for type safety and consistency.
+- Allowed categories (enum cases):
+    - Inspiration
+    - Motivation
+    - Love
+    - Wisdom
+    - Life
+    - Happiness
+    - Compassion
+    - Friends & Family
+    - Optimism
+    - Unknown (fallback for invalid/legacy data)
+- The `categories` field in the `Quote` model is `[QuoteCategory]`.
+- The enum provides a `.displayName` property for user-friendly UI display.
+- All mock data, previews, widgets, and UI components now use `[QuoteCategory]` instead of `[String]` for categories.
+- When importing/exporting data, conversion between enum and string is handled automatically in the model's Codable logic.
 
 ---
 

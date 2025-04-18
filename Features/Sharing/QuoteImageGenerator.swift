@@ -30,11 +30,12 @@ struct QuoteImageGenerator {
 #if DEBUG
 struct QuoteImageGenerator_Previews: PreviewProvider {
     static var previews: some View {
+        // Use QuoteCategory enum for categories
         let quote = Quote(
             id: "1",
             englishText: "The best way to get started is to quit talking and begin doing.",
             chineseText: "开始的最好方法就是停止说话并开始行动。",
-            categories: ["Motivation"],
+            categories: [.motivation],
             createdAt: Date(),
             createdBy: "Walt Disney"
         )

@@ -200,7 +200,7 @@ extension Quote {
                 id: UUID().uuidString,
                 englishText: "Sample Quote \(i+1)",
                 chineseText: "示例语录 \(i+1)",
-                categories: ["Inspiration", "Life"],
+                categories: [.inspiration, .life],
                 createdAt: Date(),
                 createdBy: nil
             )
