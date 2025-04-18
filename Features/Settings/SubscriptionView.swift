@@ -15,7 +15,9 @@ struct SubscriptionView: View {
             }
             Section {
                 Button("Manage Subscription") {
-                    // TODO: Trigger paywall or subscription management
+                    // Present the paywall modal for subscription management
+                    // This uses NotificationCenter to trigger the paywall in the main view layer
+                    NotificationCenter.default.post(name: .showPaywall, object: nil)
                 }
             }
         }

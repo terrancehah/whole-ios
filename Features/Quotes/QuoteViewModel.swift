@@ -153,19 +153,31 @@ final class QuoteViewModel: ObservableObject {
         return QuoteImageGenerator.generateShareImage(for: quote)
     }
 
-    /// Show the theme switcher UI.
+    // MARK: - UI Presentation Methods
+    /// Presents the theme switcher UI by posting a notification.
     func showThemeSwitcher() {
-        // TODO: Implement theme switching logic.
+        // Post a notification that can be observed by the main view to present the theme switcher.
+        NotificationCenter.default.post(name: .showThemeSwitcher, object: nil)
     }
 
-    /// Show the settings UI.
+    /// Presents the settings UI by posting a notification.
     func showSettings() {
-        // TODO: Implement settings navigation logic.
+        // Post a notification that can be observed by the main view to present the settings screen.
+        NotificationCenter.default.post(name: .showSettings, object: nil)
     }
 
-    /// Show the paywall UI.
+    /// Presents the paywall UI by posting a notification.
     func showPaywall() {
-        // TODO: Implement paywall presentation logic.
+        // Post a notification that can be observed by the main view to present the paywall modal.
+        NotificationCenter.default.post(name: .showPaywall, object: nil)
+    }
+
+    // MARK: - Notification Names
+    // These notifications can be observed in the main view to trigger modals or navigation.
+    extension Notification.Name {
+        static let showThemeSwitcher = Notification.Name("showThemeSwitcher")
+        static let showSettings = Notification.Name("showSettings")
+        static let showPaywall = Notification.Name("showPaywall")
     }
 
     // MARK: - Preview Support

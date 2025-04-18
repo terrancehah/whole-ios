@@ -91,8 +91,7 @@
   - Cancel subscription functionality.
 
 - **Widget Configuration**
-  - Set widget preferences.
-  - Category selection for displayed quotes.
+  - Set widget preferences (size only; no category selection for MVP).
 
 - **Notifications**
   - Daily quote timing adjustment.
@@ -100,8 +99,7 @@
 
 ## 5. Widget
 - **Lock Screen and Standby Mode**
-  - Display: One bilingual quote, updated daily.
-  - Categories: Based on user preferences.
+  - Display: One bilingual quote, updated daily (random from all quotes).
   - Interaction: Tap to open specific quote in app.
   - Design: Simple, clean layout for glanceable reading.
 

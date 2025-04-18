@@ -55,23 +55,27 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 6: Sharing, Theming, and Paywall Polish — ⏳ IN PROGRESS
+## Step 6: Sharing, Theming, and Paywall Polish — ✅ COMPLETED
 **Objective:** Enhance user engagement and monetization.
-- Add sharing capabilities for quotes (native share sheet, social, etc.).
-- Finalize theming infrastructure so main UI responds to theme changes.
-- Polish and test paywall presentation and premium gating across all flows.
+- Sharing capabilities for quotes (native share sheet, social, etc.) are implemented and polished.
+- Theming infrastructure is finalized; main UI responds to theme changes and premium themes are gated.
+- Paywall presentation and premium gating are robust and consistent across all flows.
+- Watermark logic for free users is implemented for shared images.
+- All premium actions (theme, sharing, unlimited swipes, etc.) consistently trigger the paywall modal for free users.
+- UI/UX polish: badges, borders, and feedback for gated features are visually consistent.
+- All flows are tested for robustness and polish.
 **Outcome:** The app provides a delightful, premium experience and is ready for broader testing.
 
 ---
 
-## Step 7: Widget Development — ⬜ TODO
+## Step 7: Widget Development — ⏳ IN PROGRESS
 **Objective:** Deliver quotes directly to users’ lock screen/standby.
 - Set up `QuoteWidget.swift` and `WidgetEntry.swift` using WidgetKit to display daily bilingual quotes.
 - Widget should be available to all users (not a premium feature).
-- Allow users to select preferred quote categories for the widget (category selection UI).
+- Widget will display a random quote each day (no category selection for MVP).
 - [Future] If widget theming/customization is desired, reuse the existing `AppTheme` and `ThemeManager` logic for consistency with the main app.
-    - Premium gating for advanced widget themes can mirror the main app's logic (e.g., only default theme for free users, all themes for premium users).
-    - Store widget theme preferences in a shared location (e.g., UserDefaults with App Group) for access by both app and widget.
+-     - Premium gating for advanced widget themes can mirror the main app's logic (e.g., only default theme for free users, all themes for premium users).
+-     - Store widget theme preferences in a shared location (e.g., UserDefaults with App Group) for access by both app and widget.
 - Ensure the widget design is minimal, readable, and matches the app's visual style.
 **Outcome:** Quotes appear on lock/standby screens as designed, with a consistent experience for all users. Advanced widget customization can be added in the future as a premium feature.
 
@@ -148,8 +152,9 @@ This document provides a step-by-step guide for developing the Whole app, from b
 ### Progress & Next Steps (as of 2025-04-17)
 
 - All foundational steps through settings are ✅ COMPLETED.
-- **Step 6: Sharing, Theming, and Paywall Polish** is currently ⏳ IN PROGRESS.
-- Next: Complete sharing, polish theming and paywall, then proceed to widget, onboarding, and favorites features.
+- **Step 6: Sharing, Theming, and Paywall Polish** is now ✅ COMPLETED.
+- **Step 7: Widget Development** is currently ⏳ IN PROGRESS.
+- Next: Complete widget development, then proceed to onboarding, favorites, and other features.
 
 ---
 

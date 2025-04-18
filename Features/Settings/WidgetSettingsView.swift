@@ -8,8 +8,7 @@ struct WidgetSettingsView: View {
     var body: some View {
         Form {
             Section(header: Text("Widget")) {
-                Text("Configure your daily quote widget.")
-                // TODO: Add widget customization options for premium users
+                Text("No widget category selection for MVP. The widget will display a random quote each day.")
             }
         }
         .navigationTitle("Widget")

@@ -39,8 +39,8 @@ Premium features are unlocked through a subscription, offering unlimited quote a
 
 ### 5.1 Widget
 - Displays a bilingual quote on the lock screen and standby mode
-- Updates daily with a new quote
-- Allows category selection for personalized content
+- Updates daily with a new, random quote
+- (No category selection for MVP)
 
 ### 5.2 Main Interface
 - Features swipeable cards to browse quotes

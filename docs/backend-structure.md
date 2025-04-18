@@ -13,8 +13,17 @@ This document describes the current schema and access policies for the Supabase 
   - `english_text`: text, required
   - `chinese_text`: text, required
   - `categories`: text[], required (e.g., ['Inspiration', 'Love'])
-  - `created_at`: timestamp with time zone, default now()
-  - `created_by`: uuid, nullable (for user-generated quotes)
+  - **Allowed categories:**
+    - Inspiration
+    - Love
+    - Success
+    - Wisdom
+    - Motivation
+    - Life
+    - Happiness
+    - Compassion
+    - Friends & Family
+    - Optimism
 - **RLS:**
   - SELECT: Any authenticated user
   - ALL (INSERT/UPDATE/DELETE): Only admins (service_role, supabase_admin)
@@ -43,7 +52,6 @@ This document describes the current schema and access policies for the Supabase 
   - `user_id`: uuid, primary key, references users(id)
   - `selected_categories`: text[], required
   - `notification_time`: text, default '08:00'
-  - `widget_category`: text
 - **RLS:**
   - ALL: Only the user (user_id = auth.uid)
   - INSERT: user_id must match auth.uid
@@ -179,6 +187,23 @@ final class QuoteViewModel: ObservableObject {
 }
 ```
 - Handles fetching and state for quotes in the UI.
+
+---
+
+## Quotes Table: CSV Import Format
+
+- The `categories` column in the `quotes` table should be of type `text`.
+- For CSV import, use square brackets with comma-separated values for `categories`, e.g., `["Inspiration"]` or `[Love,Compassion]`.
+- This format is compatible with Supabase's CSV importer for a text column and avoids errors caused by array or curly brace formats.
+- **Example CSV row:**
+  ```csv
+  id,english_text,chinese_text,categories
+  uuid-123,"Example quote.","示例语录。","[Inspiration,Life]"
+  ```
+- **Do not** use PostgreSQL array syntax (curly braces) in the CSV for this column.
+
+#### Rationale
+This format was chosen because Supabase's CSV importer expects a plain text value for text columns. Using square brackets with comma-separated values allows for easy import and future parsing, while avoiding errors that occur with array or curly brace formats. If you need to support multiple categories, list them within the brackets separated by commas.
 
 ---
 
