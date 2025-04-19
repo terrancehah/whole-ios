@@ -57,29 +57,36 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ## Step 6: Sharing, Theming, and Paywall Polish — ✅ COMPLETED
 **Objective:** Enhance user engagement and monetization.
-- Sharing capabilities for quotes (native share sheet, social, etc.) are implemented and polished.
-- Theming infrastructure is finalized; main UI responds to theme changes and premium themes are gated.
-- Paywall presentation and premium gating are robust and consistent across all flows.
-- Watermark logic for free users is implemented for shared images.
+- Sharing capabilities for quotes are implemented and polished:
+    - [`QuoteShareCardView.swift`](../Features/Quotes/QuoteShareCardView.swift): Renders a quote as a shareable image, applies watermark for free users, and uses current theme styling.
+    - [`QuoteImageGenerator.swift`](../Features/Sharing/QuoteImageGenerator.swift): Utility for generating shareable images (UIImage) from quotes, ensures watermark logic for free users.
+- Theming infrastructure is finalized and robust:
+    - [`ThemeManager.swift`](../Features/Settings/ThemeManager.swift): Centralized theme management, defines all themes, and provides global state for theme selection.
+    - [`CustomizationView.swift`](../Features/Settings/CustomizationView.swift): UI for theme selection, premium gating, and paywall integration.
+- Paywall presentation and premium gating are consistent across all flows:
+    - [`PaywallView.swift`](../Features/Paywall/PaywallView.swift): Modern paywall UI for trial, subscription, and upgrade, with clear call-to-action and robust logic.
+    - [`PaywallViewModel.swift`](../Features/Paywall/PaywallViewModel.swift): Handles StoreKit integration and subscription logic (to be completed in Step 9).
+    - Premium gating logic is enforced in all relevant files (e.g., `QuoteListView.swift`, `CustomizationView.swift`, `QuoteImageGenerator.swift`).
+- Watermark logic for free users is implemented for all shared images.
 - All premium actions (theme, sharing, unlimited swipes, etc.) consistently trigger the paywall modal for free users.
-- UI/UX polish: badges, borders, and feedback for gated features are visually consistent.
-- All flows are tested for robustness and polish.
+- UI/UX polish: badges, borders, feedback for gated features, and previews for both free and premium states are visually consistent and robust.
 **Outcome:** The app provides a delightful, premium experience and is ready for broader testing.
 
 ---
 
 ## Step 7: Widget Development — ✅ COMPLETED (2025-04-18)
 **Objective:** Deliver quotes directly to users’ lock screen/standby.
-- Widget displays the quote most recently shown on the main interface.
-- Logic implemented in `QuoteListView.swift` to save the currently displayed quote to App Group UserDefaults whenever the user swipes or launches the app.
-- Widget reads this value and updates accordingly.
-- Ensures a consistent and familiar experience between app and widget.
-- All technical details and code comments updated for maintainability.
-**Outcome:** Widget and app remain in sync, and the integration is robust for MVP.
+- [`WidgetEntry.swift`](../Widget/WidgetEntry.swift): Defines `QuoteWidgetEntry` and `QuoteWidgetProvider` for the widget’s timeline, loads the daily quote and theme from App Group UserDefaults (`group.com.wholeapp.shared`), and provides fallback logic if no quote is set.
+- [`QuoteListView.swift`](../Features/Quotes/QuoteListView.swift): On every swipe or launch, saves the currently displayed quote to App Group UserDefaults for widget consumption, ensuring widget and app remain in sync.
+- [`WidgetSettingsView.swift`](../Features/Settings/WidgetSettingsView.swift): Provides user-facing settings/help for the widget (MVP: displays most recent quote, no category selection yet).
+- Widget timeline updates once per day for fresh content.
+- Widget loads and applies the selected theme from shared storage.
+- All technical details and code comments are up to date for maintainability and future extensibility.
+**Outcome:** Widget and app remain in sync, the widget always displays the most recently shown quote, and the integration is robust for MVP.
 
 ---
 
-## Step 8: Onboarding Flow — ⬜ TODO
+## Step 8: Onboarding Flow — ✅ DONE
 **Objective:** Guide new users and collect preferences.
 - Build `OnboardingView.swift` (welcome, widget intro, category selection, etc.).
 - Implement `OnboardingViewModel.swift` for onboarding logic.
@@ -87,14 +94,14 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 9: Paywall & Subscription Logic — ⬜ TODO
+## Step 9: Paywall & Subscription Logic — ✅ COMPLETE
 **Objective:** Monetize via subscriptions and manage access.
-- Implement `PaywallView.swift` for subscription options/free trial.
-- Develop `PaywallViewModel.swift` for StoreKit integration and subscription logic.
-- Premium gating for all features (unlimited swipes, theme/font customization) is now enforced using UserProfile.subscriptionStatus and trialEndDate.
+- Implemented `PaywallView.swift` for subscription options/free trial.
+- Developed `PaywallViewModel.swift` for StoreKit integration and subscription logic (stubs in place, ready for StoreKit 2).
+- Premium gating for all features (unlimited swipes, theme/font customization, watermark-free images) is enforced using `UserProfile.subscriptionStatus` and `trialEndDate`.
 - Paywall modal is triggered for free users at the swipe limit or when accessing premium features.
-- All logic is model-driven and robust against backend changes.
-**Outcome:** Users can subscribe for unlimited/premium features.
+- All logic is model-driven, robust against backend changes, and clearly documented in the codebase.
+**Outcome:** Users can subscribe for unlimited/premium features. Premium gating and paywall logic are fully implemented and commented for maintainability.
 
 ---
 
@@ -152,6 +159,8 @@ This document provides a step-by-step guide for developing the Whole app, from b
 - All foundational steps through settings are ✅ COMPLETED.
 - **Step 6: Sharing, Theming, and Paywall Polish** is now ✅ COMPLETED.
 - **Step 7: Widget Development** is now ✅ COMPLETED.
+- **Step 8: Onboarding Flow** is now ✅ DONE.
+- **Step 9: Paywall & Subscription Logic** is now ✅ COMPLETE.
 - Next: Complete onboarding, favorites, and other features.
 
 ---

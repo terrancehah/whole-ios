@@ -14,6 +14,13 @@
 		FE189B782DB0BC1C00F107A6 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE189B702DB0B92100F107A6 /* XCTest.framework */; platformFilter = ios; };
 		FE189B792DB0C5A000F107A6 /* WholeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3DD2DAF66F70096F621 /* WholeUITestsLaunchTests.swift */; };
 		FE189B7B2DB0C5DE00F107A6 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = FE189B7A2DB0C5DE00F107A6 /* Supabase */; };
+		FE189B8B2DB2487300F107A6 /* NotificationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE189B862DB2487300F107A6 /* NotificationSettingsView.swift */; };
+		FE189B8C2DB2487300F107A6 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE189B872DB2487300F107A6 /* ProfileView.swift */; };
+		FE189B8D2DB2487300F107A6 /* SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE189B882DB2487300F107A6 /* SubscriptionView.swift */; };
+		FE189B8E2DB2487300F107A6 /* WidgetSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE189B8A2DB2487300F107A6 /* WidgetSettingsView.swift */; };
+		FE189B8F2DB2487300F107A6 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE189B892DB2487300F107A6 /* ThemeManager.swift */; };
+		FE189B942DB250A100F107A6 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE189B912DB250A100F107A6 /* UserProfileViewModel.swift */; };
+		FE189B962DB267AA00F107A6 /* QuoteShareCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE189B952DB267AA00F107A6 /* QuoteShareCardView.swift */; };
 		FE69A3E42DAF66F70096F621 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A38D2DAF66F70096F621 /* CustomButton.swift */; };
 		FE69A3E52DAF66F70096F621 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3CD2DAF66F70096F621 /* Config.swift */; };
 		FE69A3E72DAF66F70096F621 /* UserQuoteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3B42DAF66F70096F621 /* UserQuoteModel.swift */; };
@@ -93,6 +100,13 @@
 		FE189B702DB0B92100F107A6 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		FE189B722DB0BB4500F107A6 /* WholeTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WholeTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		FE189B732DB0BB4600F107A6 /* WholeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WholeTests.swift; sourceTree = "<group>"; };
+		FE189B862DB2487300F107A6 /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
+		FE189B872DB2487300F107A6 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		FE189B882DB2487300F107A6 /* SubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionView.swift; sourceTree = "<group>"; };
+		FE189B892DB2487300F107A6 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
+		FE189B8A2DB2487300F107A6 /* WidgetSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSettingsView.swift; sourceTree = "<group>"; };
+		FE189B912DB250A100F107A6 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
+		FE189B952DB267AA00F107A6 /* QuoteShareCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteShareCardView.swift; sourceTree = "<group>"; };
 		FE69A33D2DAF62C80096F621 /* Whole.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Whole.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE69A34D2DAF62CA0096F621 /* WholeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WholeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE69A3572DAF62CA0096F621 /* WholeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WholeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -214,6 +228,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		FE189B922DB250A100F107A6 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				FE189B912DB250A100F107A6 /* UserProfileViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		FE69A3342DAF62C80096F621 = {
 			isa = PBXGroup;
 			children = (
@@ -229,6 +251,7 @@
 				FE69A3C32DAF66F70096F621 /* Services */,
 				FE69A3C72DAF66F70096F621 /* SupportingFiles */,
 				FE69A3CC2DAF66F70096F621 /* Tests */,
+				FE189B922DB250A100F107A6 /* ViewModels */,
 				FE69A3D12DAF66F70096F621 /* Utilities */,
 				FE69A3D92DAF66F70096F621 /* Whole.xcodeproj */,
 				FE69A3DB2DAF66F70096F621 /* WholeTests */,
@@ -322,6 +345,7 @@
 		FE69A3A52DAF66F70096F621 /* Quotes */ = {
 			isa = PBXGroup;
 			children = (
+				FE189B952DB267AA00F107A6 /* QuoteShareCardView.swift */,
 				FE69A3A32DAF66F70096F621 /* QuoteListView.swift */,
 				FE69A3A42DAF66F70096F621 /* QuoteViewModel.swift */,
 			);
@@ -331,6 +355,11 @@
 		FE69A3AA2DAF66F70096F621 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				FE189B862DB2487300F107A6 /* NotificationSettingsView.swift */,
+				FE189B872DB2487300F107A6 /* ProfileView.swift */,
+				FE189B882DB2487300F107A6 /* SubscriptionView.swift */,
+				FE189B892DB2487300F107A6 /* ThemeManager.swift */,
+				FE189B8A2DB2487300F107A6 /* WidgetSettingsView.swift */,
 				FE69A3A62DAF66F70096F621 /* CategorySelectionView.swift */,
 				FE69A3A72DAF66F70096F621 /* CustomizationView.swift */,
 				FE69A3A82DAF66F70096F621 /* SettingsView.swift */,
@@ -669,6 +698,7 @@
 			files = (
 				FE69A3E42DAF66F70096F621 /* CustomButton.swift in Sources */,
 				FE69A3E52DAF66F70096F621 /* Config.swift in Sources */,
+				FE189B942DB250A100F107A6 /* UserProfileViewModel.swift in Sources */,
 				FE69A3E72DAF66F70096F621 /* UserQuoteModel.swift in Sources */,
 				FE69A3E82DAF66F70096F621 /* QuoteWidget.swift in Sources */,
 				FE69A3E92DAF66F70096F621 /* SettingsView.swift in Sources */,
@@ -691,6 +721,7 @@
 				FE69A3FD2DAF66F70096F621 /* View+Extensions.swift in Sources */,
 				FE69A3FE2DAF66F70096F621 /* FavoritesViewModel.swift in Sources */,
 				FE69A3FF2DAF66F70096F621 /* PaywallView.swift in Sources */,
+				FE189B962DB267AA00F107A6 /* QuoteShareCardView.swift in Sources */,
 				FE69A4002DAF66F70096F621 /* SubscriptionModel.swift in Sources */,
 				FE69A4012DAF66F70096F621 /* CustomizationView.swift in Sources */,
 				FE69A4022DAF66F70096F621 /* SettingsViewModel.swift in Sources */,
@@ -700,6 +731,11 @@
 				FE69A4062DAF66F70096F621 /* CategorySelectionView.swift in Sources */,
 				FE69A4072DAF66F70096F621 /* QuoteListView.swift in Sources */,
 				FE69A4082DAF66F70096F621 /* Package.swift in Sources */,
+				FE189B8B2DB2487300F107A6 /* NotificationSettingsView.swift in Sources */,
+				FE189B8C2DB2487300F107A6 /* ProfileView.swift in Sources */,
+				FE189B8D2DB2487300F107A6 /* SubscriptionView.swift in Sources */,
+				FE189B8E2DB2487300F107A6 /* WidgetSettingsView.swift in Sources */,
+				FE189B8F2DB2487300F107A6 /* ThemeManager.swift in Sources */,
 				FE69A4092DAF66F70096F621 /* QuoteViewModel.swift in Sources */,
 				FE69A40A2DAF66F70096F621 /* WidgetEntry.swift in Sources */,
 				FE69A40B2DAF66F70096F621 /* PaywallViewModel.swift in Sources */,

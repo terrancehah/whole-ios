@@ -150,7 +150,8 @@ final class QuoteViewModel: ObservableObject {
     /// Generates a shareable image for the quote.
     func generateShareImage(for quote: Quote) -> UIImage? {
         // Delegate image generation to the QuoteImageGenerator utility for maintainability and reuse.
-        return QuoteImageGenerator.generateShareImage(for: quote)
+        // Pass isPremiumUser based on the user's subscription status.
+        return QuoteImageGenerator.generateShareImage(for: quote, isPremiumUser: !isFreeUser)
     }
 
     // MARK: - UI Presentation Methods
@@ -172,14 +173,6 @@ final class QuoteViewModel: ObservableObject {
         NotificationCenter.default.post(name: .showPaywall, object: nil)
     }
 
-    // MARK: - Notification Names
-    // These notifications can be observed in the main view to trigger modals or navigation.
-    extension Notification.Name {
-        static let showThemeSwitcher = Notification.Name("showThemeSwitcher")
-        static let showSettings = Notification.Name("showSettings")
-        static let showPaywall = Notification.Name("showPaywall")
-    }
-
     // MARK: - Preview Support
     #if DEBUG
     /// Preview instance for SwiftUI previews.
@@ -191,6 +184,14 @@ final class QuoteViewModel: ObservableObject {
     #endif
 }
 
+// MARK: - Notification Names
+// These notifications can be observed in the main view to trigger modals or navigation.
+extension Notification.Name {
+    static let showThemeSwitcher = Notification.Name("showThemeSwitcher")
+    static let showSettings = Notification.Name("showSettings")
+    static let showPaywall = Notification.Name("showPaywall")
+}
+
 // MARK: - Mock Data Extension for Preview/Testing
 extension Quote {
     /// Generates mock quotes for preview/testing.
@@ -200,7 +201,7 @@ extension Quote {
                 id: UUID().uuidString,
                 englishText: "Sample Quote \(i+1)",
                 chineseText: "示例语录 \(i+1)",
-                categories: [.inspiration, .life],
+                categories: [QuoteCategory.inspiration, QuoteCategory.life],
                 createdAt: Date(),
                 createdBy: nil
             )

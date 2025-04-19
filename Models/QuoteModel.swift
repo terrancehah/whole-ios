@@ -89,3 +89,23 @@ struct Quote: Codable, Identifiable {
         try container.encodeIfPresent(createdBy, forKey: .createdBy)
     }
 }
+
+// MARK: - Memberwise Initializer for Previews & Testing
+extension Quote {
+    /// Memberwise initializer for Quote, useful for previews and test data.
+    init(
+        id: String,
+        englishText: String,
+        chineseText: String,
+        categories: [QuoteCategory],
+        createdAt: Date? = nil,
+        createdBy: String? = nil
+    ) {
+        self.id = id
+        self.englishText = englishText
+        self.chineseText = chineseText
+        self.categories = categories
+        self.createdAt = createdAt
+        self.createdBy = createdBy
+    }
+}

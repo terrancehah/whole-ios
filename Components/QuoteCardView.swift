@@ -74,7 +74,7 @@ struct QuoteCardView_Previews: PreviewProvider {
                 id: "1",
                 englishText: "The best time to plant a tree was 20 years ago. The second best time is now.",
                 chineseText: "种一棵树最好的时间是二十年前，其次是现在。",
-                categories: [.inspiration, .life],
+                categories: [QuoteCategory.inspiration, QuoteCategory.life],
                 createdAt: nil,
                 createdBy: nil
             ),
@@ -89,7 +89,7 @@ struct QuoteCardView_Previews: PreviewProvider {
                 id: "2",
                 englishText: "Success is not final, failure is not fatal: It is the courage to continue that counts.",
                 chineseText: "成功不是终点，失败也不是终结，重要的是继续前进的勇气。",
-                categories: [.success, .courage],
+                categories: [QuoteCategory.motivation, QuoteCategory.wisdom],
                 createdAt: nil,
                 createdBy: nil
             ),

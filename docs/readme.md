@@ -28,21 +28,31 @@
 ---
 
 ## Project Roadmap (Summary)
-- ✅ **Step 1:** Data Models & ViewModels — Core models for users, quotes, and subscriptions. *(Complete)*
-- ✅ **Step 2:** Backend Integration — Supabase for real-time data, authentication, and quote management. *(Complete)*
-- ✅ **Step 3:** Reusable UI Components — Modular quote cards, theming, and previews. *(Complete)*
-- ✅ **Step 4:** Main Quote Browsing Interface — Swipeable quote list with premium gating and error handling. *(Complete)*
-- ✅ **Step 5:** Settings & Customization — User profile, theme selection, and notification preferences. *(Complete)*
-- ✅ **Step 6:** Sharing, Theming, and Paywall Polish — Share sheet, premium gating, and UI polish. *(Complete)*
-- ✅ **Step 7:** Widget Development — WidgetKit integration, always displays the last quote seen in the app. *(Complete 2025-04-18)*
-- 🟡 **Step 8:** Onboarding Flow — Guide new users, collect preferences, and introduce premium features. *(Ongoing)*
-- ⬜ **Step 9:** Favorites Feature — Allow users to save and revisit liked quotes. *(Todo)*
-- ⬜ **Step 10:** User-Generated Quotes — Premium users can create and submit their own quotes. *(Todo)*
-- ⬜ **Step 11:** Analytics & Daily Notifications — Track usage and deliver daily quotes via notification. *(Todo)*
-- ⬜ **Step 12:** Theming & Styling — Finalize cohesive design and polish UI. *(Todo)*
-- ⬜ **Step 13:** Testing & Quality Assurance — Unit tests and UI tests for critical flows. *(Todo)*
-- ⬜ **Step 14:** Final Review & Launch — App Store submission, analytics, and post-launch improvements. *(Todo)*
-- 🟦 **Ongoing/Future:** Advanced widget customization, additional sharing options, feature expansion based on user feedback. *(Planned)*
+- **Step 1:** Data Models & ViewModels — Core models for users, quotes, and subscriptions. *(Complete)*
+- **Step 2:** Backend Integration — Supabase for real-time data, authentication, and quote management. *(Complete)*
+- **Step 3:** Reusable UI Components — Modular quote cards, theming, and previews. *(Complete)*
+- **Step 4:** Main Quote Browsing Interface — Swipeable quote list with premium gating and error handling. *(Complete)*
+- **Step 5:** Settings & Customization — User profile, theme selection, and notification preferences. *(Complete)*
+- **Step 6:** Sharing, Theming, and Paywall Polish — Share sheet, premium gating, and UI polish. *(Complete)*
+- **Step 7:** Widget Development — WidgetKit integration, always displays the last quote seen in the app. *(Complete 2025-04-18)*
+- **Step 8:** Onboarding Flow (COMPLETE) — Guide new users, collect preferences, and introduce premium features.
+  - New users are guided through a multi-step onboarding process implemented in `OnboardingView.swift` and `OnboardingViewModel.swift`.
+  - Preferences are saved using the new `UserPreferences` model with type-safe category selection (`QuoteCategory`).
+- **Step 9:** Favorites Feature — Allow users to save and revisit liked quotes. *(Todo)*
+- **Step 10:** User-Generated Quotes — Premium users can create and submit their own quotes. *(Todo)*
+- **Step 11:** Analytics & Daily Notifications — Track usage and deliver daily quotes via notification. *(Todo)*
+- **Step 12:** Theming & Styling — Finalize cohesive design and polish UI. *(Todo)*
+- **Step 13:** Testing & Quality Assurance — Unit tests and UI tests for critical flows. *(Todo)*
+- **Step 14:** Final Review & Launch — App Store submission, analytics, and post-launch improvements. *(Todo)*
+- **Ongoing/Future:** Advanced widget customization, additional sharing options, feature expansion based on user feedback. *(Planned)*
+
+---
+
+## Premium Gating and Paywall Implementation
+- **Premium gating and paywall logic are now fully implemented and documented.**
+  - Unlimited quote swipes, theme/font customization, and watermark-free sharing are enforced using the user's subscription status and trial end date.
+  - Gating is handled in `QuoteListView.swift`, `CustomizationView.swift`, and `QuoteImageGenerator.swift`.
+  - All gating logic is clearly commented for maintainability.
 
 ---
 

@@ -50,7 +50,7 @@ This document describes the current schema and access policies for the Supabase 
 - **Purpose:** Stores user’s quote category preferences, notification time, widget settings.
 - **Columns:**
   - `user_id`: uuid, primary key, references users(id)
-  - `selected_categories`: text[], required
+  - `selected_categories`: text[], required (now stored as array of category strings from QuoteCategory enum)
   - `notification_time`: text, default '08:00'
 - **RLS:**
   - ALL: Only the user (user_id = auth.uid)
@@ -192,6 +192,19 @@ struct UserQuote: Codable, Identifiable {
 }
 ```
 - Maps to the `userquotes` table columns.
+
+## UserPreferences Model (Swift)
+
+User preferences are represented as follows (see `Models/UserPreferencesModel.swift`):
+
+```swift
+struct UserPreferences: Codable, Identifiable {
+    let userId: String
+    let selectedCategories: [QuoteCategory]
+    let notificationTime: String
+}
+```
+- Maps to the `userpreferences` table columns.
 
 ## QuoteViewModel (Swift)
 

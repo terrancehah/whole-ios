@@ -23,7 +23,7 @@ struct UserProfile: Codable, Identifiable {
     let subscriptionStartDate: Date?
     /// End date of paid subscription (optional).
     let subscriptionEndDate: Date?
-    /// Timestamp for when the user was created.
+    /// Timestamp for when the user profile was created.
     let createdAt: Date?
     /// Timestamp for last update.
     let updatedAt: Date?
@@ -41,5 +41,25 @@ struct UserProfile: Codable, Identifiable {
         case subscriptionEndDate = "subscription_end_date"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
+    }
+}
+
+// MARK: - Sample UserProfile for Previews & Testing
+extension UserProfile {
+    /// Provides a sample user profile matching the schema, useful for SwiftUI previews and tests.
+    static var sample: UserProfile {
+        UserProfile(
+            id: "sample-user-id",
+            email: "sample@wholeapp.com",
+            name: "Sample User",
+            gender: "Other",
+            goals: ["Personal Growth", "Inner Peace"],
+            subscriptionStatus: "free",
+            trialEndDate: nil,
+            subscriptionStartDate: nil,
+            subscriptionEndDate: nil,
+            createdAt: Date(),
+            updatedAt: Date()
+        )
     }
 }

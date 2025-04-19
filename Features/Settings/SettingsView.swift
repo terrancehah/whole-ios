@@ -1,6 +1,8 @@
 // SettingsView.swift
 // Main settings screen: categories, customization, subscription, widget, notifications.
 
+import SwiftUI
+
 /// Main Settings view that owns the user profile view model and passes it to child settings screens.
 struct SettingsView: View {
     // Own the user profile view model for all settings-related screens

@@ -1,6 +1,8 @@
 // PaywallView.swift
 // UI for displaying subscription options, free trial, and purchase flow.
 
+import SwiftUI
+
 /// Main paywall interface presenting free trial, timeline, and upgrade actions.
 struct PaywallView: View {
     @ObservedObject var viewModel: PaywallViewModel

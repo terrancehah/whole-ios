@@ -15,8 +15,8 @@ final class UserProfileViewModel: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
 
-    /// Initialize with a default or placeholder user profile.
-    init(user: UserProfile = UserProfile.placeholder) {
+    /// Initialize with a sample user profile.
+    init(user: UserProfile = UserProfile.sample) {
         self.user = user
     }
 
@@ -42,10 +42,10 @@ final class UserProfileViewModel: ObservableObject {
         fetchUserProfile(userId: userId)
     }
 
-    // MARK: - Mock for Previews
+    // MARK: - Preview
     #if DEBUG
-    static var mock: UserProfileViewModel {
-        UserProfileViewModel(user: UserProfile.mock)
+    static var preview: UserProfileViewModel {
+        UserProfileViewModel(user: UserProfile.sample)
     }
     #endif
 }

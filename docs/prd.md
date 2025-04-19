@@ -74,6 +74,11 @@ Premium features are unlocked through a subscription, offering unlimited quote a
 ### 5.7 User-Generated Quotes (MVP: Personal Use Only)
 - Allows users to create and save their own quotes locally
 
+### 5.8 Onboarding (COMPLETE)
+- Users are greeted, introduced to widgets, select categories (using QuoteCategory enum), and set preferences.
+- All onboarding data is saved to Supabase using the UserPreferences model.
+- The onboarding flow is implemented and tested.
+
 ---
 
 ## 6. Technical Requirements

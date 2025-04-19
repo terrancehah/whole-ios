@@ -15,14 +15,19 @@ struct QuoteListView: View {
     @State private var showPaywall: Bool = false
 
     // Gating logic: Only premium users (trial or paid) can swipe unlimited
+    // This logic checks the user's subscription status and trial end date to determine premium access
     var isPremiumUser: Bool {
         let now = Date()
+        // If user is 'free', only allow premium if trial is still active
         if userProfile.user.subscriptionStatus == "free" {
             if let trialEnd = userProfile.user.trialEndDate {
+                // User is premium if trial is active
                 return trialEnd > now
             }
+            // No trial, not premium
             return false
         }
+        // Any other subscription status is premium
         return true
     }
 
@@ -31,9 +36,11 @@ struct QuoteListView: View {
             ZStack(alignment: .bottom) {
                 // Horizontal swipeable quote cards
                 TabView(selection: $selectedIndex) {
+                    // Only allow free users to swipe up to the daily limit
                     ForEach(Array(viewModel.quotes.prefix(isPremiumUser ? viewModel.quotes.count : viewModel.swipeLimit).enumerated()), id: \ .element.id) { idx, quote in
                         QuoteShareCardView(quote: quote)
                             .tag(idx)
+                            // Disable cards beyond the limit for free users
                             .disabled(!isPremiumUser && viewModel.reachedSwipeLimit && idx >= viewModel.swipeLimit)
                     }
                 }
@@ -44,6 +51,7 @@ struct QuoteListView: View {
                         let currentQuote = viewModel.quotes[newIndex]
                         viewModel.saveQuoteForWidget(currentQuote)
                     }
+                    // If a free user hits the swipe limit, show limit popup and paywall modal
                     if !isPremiumUser && newIndex >= viewModel.swipeLimit {
                         showLimitPopup = true
                         showPaywall = true
@@ -60,7 +68,7 @@ struct QuoteListView: View {
                 .animation(.easeInOut, value: selectedIndex)
                 .padding(.bottom, 60)
 
-                // Paywall CTA button for free users only
+                // Paywall CTA button for free users only, appears when limit is hit
                 if viewModel.showPaywallCTA && !isPremiumUser {
                     Button(action: { showPaywall = true }) {
                         Text("Unlock Unlimited Quotes")
@@ -70,6 +78,7 @@ struct QuoteListView: View {
                             .foregroundColor(Color.accentColor)
                             .cornerRadius(12)
                             .shadow(color: Color.primary.opacity(0.15), radius: 10, x: 0, y: 4)
+                            // Animate CTA when popup is shown
                             .scaleEffect(showLimitPopup ? 1.1 : 1.0)
                             .animation(.spring(), value: showLimitPopup)
                     }
@@ -119,7 +128,7 @@ struct QuoteListView: View {
                     }
                 }, alignment: .bottom
             )
-            // Swipe limit popup
+            // Swipe limit popup for free users
             .overlay(
                 Group {
                     if showLimitPopup {
@@ -138,7 +147,7 @@ struct QuoteListView: View {
                     ShareSheet(activityItems: [shareImage])
                 }
             }
-            // Paywall modal
+            // Paywall modal appears when triggered by gating logic
             .sheet(isPresented: $showPaywall) {
                 PaywallView(viewModel: PaywallViewModel())
             }

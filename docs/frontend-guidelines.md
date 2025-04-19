@@ -82,6 +82,19 @@ Whole supports multiple visual styles to suit different user preferences. For la
 - Paywall CTA appears/highlights after limit is reached.
 - Default: Serene Minimalism theme.
 
+## 9. Onboarding UI
+### 9.1 Onboarding UI (UPDATED)
+- Onboarding is modular, using `OnboardingView.swift` and subviews for each step.
+- Category selection uses the `QuoteCategory` enum for type safety and consistency.
+- All user input is bound to the view model and validated.
+- Preferences are saved using the new `UserPreferences` model.
+
+## 10. Premium Gating Logic
+- **Premium gating logic is enforced and documented in code.**
+  - All premium actions (theme, sharing, unlimited swipes) are gated and trigger the paywall for free users.
+  - Lock icons and paywall CTAs are used for clear UX.
+  - See `QuoteListView.swift`, `CustomizationView.swift`, and `QuoteImageGenerator.swift` for implementation and comments.
+
 ---
 
 > **Note:** For implementation, start with Serene Minimalism. Use the other styles as reference for future expansion.

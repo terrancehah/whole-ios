@@ -136,15 +136,21 @@
 
 ---
 ### Premium Feature Gating & Paywall Logic (2025-04-17)
+- All premium gating logic is now fully implemented and clearly documented in the codebase.
 - Only users with an active trial or paid subscription (see `UserProfile.subscriptionStatus` and `trialEndDate`) can access premium features:
-  - Unlimited quote swipes
-  - Theme and font customization (except default theme)
+  - Unlimited quote swipes (gated in `QuoteListView.swift`)
+  - Theme and font customization (gated in `CustomizationView.swift`)
+  - Watermark-free quote images (gated in `QuoteImageGenerator.swift`)
 - Free users:
   - Are limited to 10 quotes/day
   - Can only use the default theme
   - See a lock icon and paywall prompt when attempting to access premium features
+- All gating logic is model-driven, based on the actual user profile fields, and updates reactively.
 - Paywall modal (`PaywallView`) is shown when a free user hits the swipe limit or tries to select a premium theme.
-- All gating logic is based on the actual user profile fields for reliability.
+- Code comments have been added for maintainability and future onboarding.
+
+### Onboarding Flow (COMPLETE)
+The onboarding flow guides new users through a welcome, widget introduction, category selection, and preference collection. It is implemented in `OnboardingView.swift` and managed by `OnboardingViewModel.swift`, with all user preferences saved to Supabase using the new `UserPreferences` model. All category selection is type-safe using the `QuoteCategory` enum.
 
 ### Theme Management
 - **Quote Theme (Card/Sharing Only):**

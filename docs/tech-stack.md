@@ -3,6 +3,7 @@
 ## Frontend
 - **iOS App**: SwiftUI (for building the main interface and views)
 - **Widget**: WidgetKit (for lock screen and standby mode widgets)
+- **Onboarding:** SwiftUI, Combine, and Supabase. Category selection uses the `QuoteCategory` enum and preferences are saved with the `UserPreferences` model.
 
 ## Backend
 - **Platform**: Supabase

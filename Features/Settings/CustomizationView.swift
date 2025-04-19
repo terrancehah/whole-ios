@@ -1,6 +1,8 @@
 // CustomizationView.swift
 // UI for changing app background, theme, and font (premium features).
 
+import SwiftUI
+
 /// Main customization view for theme and font selection.
 struct CustomizationView: View {
     // Observe the global theme manager
@@ -10,15 +12,19 @@ struct CustomizationView: View {
     // Controls paywall modal presentation
     @State private var showPaywall: Bool = false
     
+    // Determine if the user has a premium subscription
     var isPremiumUser: Bool {
         // User is premium if subscription is not free and trial is active
         let now = Date()
         if userProfile.user.subscriptionStatus == "free" {
             if let trialEnd = userProfile.user.trialEndDate {
+                // User is premium if trial is active
                 return trialEnd > now
             }
+            // No trial, not premium
             return false
         }
+        // Any other subscription status is premium
         return true
     }
     
@@ -43,10 +49,11 @@ struct CustomizationView: View {
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
+                            // Only allow premium users or free users selecting the default theme
                             if isPremiumUser || theme == .sereneMinimalism {
                                 themeManager.selectedTheme = theme
                             } else {
-                                // Block selection and show paywall
+                                // Block selection and show paywall for gated themes
                                 showPaywall = true
                             }
                         }
@@ -56,6 +63,7 @@ struct CustomizationView: View {
             }
             .navigationTitle("Customize")
             .sheet(isPresented: $showPaywall) {
+                // Paywall modal appears when a free user tries to access a premium theme
                 PaywallView(viewModel: PaywallViewModel())
             }
         }
