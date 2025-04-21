@@ -35,6 +35,7 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
+            .background(ThemeManager.shared.selectedTheme.theme.background)
             .onAppear {
                 // Sync the user profile on appear
                 userProfileViewModel.refresh(userId: userId)

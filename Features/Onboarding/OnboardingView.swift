@@ -51,7 +51,7 @@ struct OnboardingView: View {
         }
         .animation(.easeInOut, value: viewModel.currentStep)
         .padding()
-        .background(Color(.systemBackground))
+        .background(ThemeManager.shared.selectedTheme.theme.background)
         .edgesIgnoringSafeArea(.all)
     }
 }

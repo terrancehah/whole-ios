@@ -70,7 +70,7 @@
   - Paywall CTA button highlights/appears after limit is hit.
 - **Theme & Settings:**
   - Theme switcher and settings buttons on main interface.
-  - Default theme: Serene Minimalism.
+  - Default theme: Serene Minimalism with a warm palette (#ffeedf, #ffd1a4, #b65f3b, #ff9f68, #ff784f).
 - **Error Handling:**
   - Native-style retry button for load failures.
 
@@ -81,7 +81,7 @@
 
 - **Customization**
   - App background options.
-  - Theme selection (light/dark mode).
+  - Theme selection (light/dark mode) with semantic theme colors and fonts for backgrounds, cards, buttons, and text.
   - Font style choices.
   - Premium features locked for free users.
 
@@ -135,6 +135,10 @@
 - All code is clearly commented for future maintainability.
 
 ---
+### Analytics Tracking (Deferred for MVP)
+- `AnalyticsService.swift` is a placeholder for now; analytics integration will be implemented after MVP launch.
+- No analytics events are tracked in the current MVP build.
+
 ### Premium Feature Gating & Paywall Logic (2025-04-17)
 - All premium gating logic is now fully implemented and clearly documented in the codebase.
 - Only users with an active trial or paid subscription (see `UserProfile.subscriptionStatus` and `trialEndDate`) can access premium features:

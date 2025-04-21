@@ -12,7 +12,7 @@ struct CustomButton: View {
     /// The action to perform when the button is tapped.
     let action: () -> Void
     /// Optional: Custom color for the button.
-    var color: Color = .accentColor
+    var color: Color = Color(hex: "#ff9f68")
     /// Optional: Whether the button is disabled.
     var isDisabled: Bool = false
 

@@ -38,12 +38,12 @@ struct FavoritesView: View {
                             .font(.system(size: 48))
                             .foregroundColor(.pink)
                         Text("No favorites yet")
-                            .font(.title3)
-                            .foregroundColor(.secondary)
+                            .font(ThemeManager.shared.selectedTheme.theme.englishFont)
+                            .foregroundColor(ThemeManager.shared.selectedTheme.theme.englishColor)
                         Text("Tap the heart icon on any quote to add it to your favorites.")
-                            .font(.body)
+                            .font(ThemeManager.shared.selectedTheme.theme.chineseFont)
                             .multilineTextAlignment(.center)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(ThemeManager.shared.selectedTheme.theme.chineseColor)
                     }
                     .padding()
                 }

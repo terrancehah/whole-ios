@@ -45,14 +45,16 @@ extension AppTheme {
     var theme: Theme {
         switch self {
         case .sereneMinimalism:
+            // Updated to warm "leah valencia" palette
+            // background: solid #ffeedf, card: #ffd1a4, text: #b65f3b, accent: #ff9f68, secondary: #ff784f
             return Theme(
-                background: LinearGradient(gradient: Gradient(colors: [Color(hex: "#F8F9FA"), Color(hex: "#EDEFF1")]), startPoint: .top, endPoint: .bottom),
-                cardBackground: .white,
+                background: LinearGradient(gradient: Gradient(colors: [Color(hex: "#ffeedf"), Color(hex: "#ffeedf")]), startPoint: .top, endPoint: .bottom),
+                cardBackground: Color(hex: "#ffd1a4"),
                 englishFont: .system(size: 20, weight: .regular, design: .serif),
-                englishColor: Color(hex: "#2D3748"),
+                englishColor: Color(hex: "#b65f3b"),
                 chineseFont: .system(size: 18, weight: .regular, design: .default),
-                chineseColor: Color(hex: "#4A5568"),
-                shadow: Color.black.opacity(0.08)
+                chineseColor: Color(hex: "#ff784f"),
+                shadow: Color.black.opacity(0.09)
             )
         case .elegantMonochrome:
             return Theme(

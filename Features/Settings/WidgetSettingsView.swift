@@ -11,6 +11,7 @@ struct WidgetSettingsView: View {
                 Text("No widget category selection for MVP. The widget will display a random quote each day.")
             }
         }
+        .background(ThemeManager.shared.selectedTheme.theme.background)
         .navigationTitle("Widget")
     }
 }

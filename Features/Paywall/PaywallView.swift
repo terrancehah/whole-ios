@@ -11,7 +11,7 @@ struct PaywallView: View {
     var body: some View {
         ZStack {
             // System background for light/dark mode
-            Color(.systemBackground)
+            ThemeManager.shared.selectedTheme.theme.background
                 .ignoresSafeArea()
             VStack(spacing: 32) {
                 HStack {

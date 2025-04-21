@@ -101,7 +101,7 @@ struct QuoteListView: View {
                     .shadow(radius: 6)
                 }
             }
-            .background(Color(.systemBackground).ignoresSafeArea())
+            .background(ThemeManager.shared.selectedTheme.theme.background.ignoresSafeArea())
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {

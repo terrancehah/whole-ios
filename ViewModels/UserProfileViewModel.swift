@@ -57,6 +57,33 @@ final class UserProfileViewModel: ObservableObject {
         }
     }
 
+    /// Loads the latest shown quote from App Group UserDefaults (used for widget and notifications)
+    private func loadLatestQuoteFromUserDefaults() -> Quote? {
+        let appGroupID = "group.com.wholeapp" // Update to your actual App Group ID
+        let userDefaults = UserDefaults(suiteName: appGroupID)
+        guard let data = userDefaults?.data(forKey: "widgetDailyQuote") else { return nil }
+        let decoder = JSONDecoder()
+        return try? decoder.decode(Quote.self, from: data)
+    }
+
+    /// Schedules or cancels the daily quote notification based on user preferences.
+    private func updateDailyQuoteNotification() {
+        if user.notificationsEnabled {
+            // Parse notification time (HH:mm) to DateComponents
+            let formatter = DateFormatter()
+            formatter.dateFormat = "HH:mm"
+            guard let date = formatter.date(from: user.notificationTime) else { return }
+            let calendar = Calendar.current
+            let components = calendar.dateComponents([.hour, .minute], from: date)
+            // Load the latest shown quote
+            if let quote = loadLatestQuoteFromUserDefaults() {
+                NotificationService.shared.scheduleDailyQuoteNotification(at: components, quote: quote)
+            }
+        } else {
+            NotificationService.shared.cancelDailyQuoteNotification()
+        }
+    }
+
     /// Update notificationsEnabled and sync to Supabase, also schedule/cancel notifications
     func updateNotificationsEnabled(_ enabled: Bool) {
         user.notificationsEnabled = enabled
@@ -67,9 +94,10 @@ final class UserProfileViewModel: ObservableObject {
                     if enabled {
                         // Request permission and schedule notification if not already scheduled
                         self?.requestNotificationPermission()
+                        self?.updateDailyQuoteNotification() // Schedule notification
                     } else {
                         // Cancel any scheduled notifications
-                        NotificationService.shared.cancelDailyQuoteNotification()
+                        self?.updateDailyQuoteNotification() // Cancel notification
                     }
                 case .failure(let error):
                     self?.errorMessage = error.localizedDescription
@@ -90,8 +118,7 @@ final class UserProfileViewModel: ObservableObject {
                 case .success:
                     if self?.user.notificationsEnabled == true {
                         // Reschedule notification
-                        // Fetch latest quote if needed, or use placeholder
-                        // NotificationService.shared.scheduleDailyQuoteNotification(at: ...)
+                        self?.updateDailyQuoteNotification()
                     }
                 case .failure(let error):
                     self?.errorMessage = error.localizedDescription

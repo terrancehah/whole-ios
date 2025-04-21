@@ -61,6 +61,8 @@ This document provides a step-by-step guide for developing the Whole app, from b
     - [`QuoteShareCardView.swift`](../Features/Quotes/QuoteShareCardView.swift): Renders a quote as a shareable image, applies watermark for free users, and uses current theme styling.
     - [`QuoteImageGenerator.swift`](../Features/Sharing/QuoteImageGenerator.swift): Utility for generating shareable images (UIImage) from quotes, ensures watermark logic for free users.
 - Theming infrastructure is finalized and robust:
+    - The default theme, Serene Minimalism, now uses a warm "leah valencia" color palette: background #ffeedf, card #ffd1a4, primary text #b65f3b, accent #ff9f68, secondary #ff784f, and standard black shadow.
+    - All main screens and reusable UI components now reference theme colors and fonts for a consistent, inviting look.
     - [`ThemeManager.swift`](../Features/Settings/ThemeManager.swift): Centralized theme management, defines all themes, and provides global state for theme selection.
     - [`CustomizationView.swift`](../Features/Settings/CustomizationView.swift): UI for theme selection, premium gating, and paywall integration.
 - Paywall presentation and premium gating are consistent across all flows:
@@ -130,16 +132,17 @@ This document provides a step-by-step guide for developing the Whole app, from b
 - Set up `NotificationService.swift` for daily quote notifications (user-scheduled, permission-aware).
 - Implement `SupabaseService.swift` update methods for notification preferences (partial updates for `notificationsEnabled` and `notificationTime`).
 - Integrate notification preference UI into onboarding and settings flows (toggle, time picker, permission request).
+- Analytics is deferred; `AnalyticsService.swift` is a placeholder for now and will be implemented post-MVP.
 - All changes are robust, model-driven, and clearly commented.
 **Outcome:** Users receive daily quotes at their chosen time; notification preferences are seamlessly managed and synced.
 
 ---
 
-## Step 13: Theming & Styling — ⬜ TODO
+## Step 13: Theming & Styling — ✅ COMPLETED (2025-04-21)
 **Objective:** Ensure a cohesive, attractive design.
-- Use `Theme.swift` for colors, fonts, and appearance.
-- Apply consistent theming across all screens and components.
-**Outcome:** The app has a consistent, appealing look.
+- Used `Theme.swift` and `ThemeManager.swift` for all colors, fonts, and appearance.
+- Applied the new warm "leah valencia" palette as default, and ensured all screens/components use semantic theme colors and fonts.
+**Outcome:** The app has a consistent, appealing look that matches the latest design direction.
 
 ---
 
@@ -169,7 +172,9 @@ This document provides a step-by-step guide for developing the Whole app, from b
 - **Step 9: Paywall & Subscription Logic** is now ✅ COMPLETE.
 - **Step 10: Favorites Feature** is now ✅ COMPLETE.
 - **Step 11: User-Generated Quotes (Premium)** is now ✅ COMPLETE.
-- Next: Complete onboarding, user-generated quotes, and other features.
+- **Step 13: Theming & Styling** is now ✅ COMPLETE.
+- **Step 14: Testing & Quality Assurance** is next.
+- **Step 15: Final Review & Launch** will follow testing.
 
 ---
 

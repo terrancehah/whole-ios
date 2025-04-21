@@ -58,8 +58,8 @@ struct QuoteCardView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(Color(.systemBackground))
-                .shadow(color: Color.black.opacity(0.07), radius: 8, x: 0, y: 4)
+                .fill(ThemeManager.shared.selectedTheme.theme.cardBackground)
+                .shadow(color: ThemeManager.shared.selectedTheme.theme.shadow, radius: 8, x: 0, y: 4)
         )
         .padding(.horizontal)
         .padding(.vertical, 12)

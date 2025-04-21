@@ -20,6 +20,7 @@ struct ProfileView: View {
                 }
             }
         }
+        .background(ThemeManager.shared.selectedTheme.theme.background)
         .navigationTitle("Profile")
     }
 }
