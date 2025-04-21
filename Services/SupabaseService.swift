@@ -114,6 +114,28 @@ final class SupabaseService {
         }
     }
     
+    /// Fetches the full liked quote records for a specific user from the 'liked_quotes' table.
+    /// - Parameters:
+    ///   - userId: The ID of the current user.
+    ///   - completion: Completion handler with Result<[LikedQuote], Error>
+    func fetchFullLikedQuotes(forUser userId: String, completion: @escaping (Result<[LikedQuote], Error>) -> Void) {
+        Task {
+            do {
+                // Query liked_quotes for all records liked by this user
+                let response: [LikedQuote] = try await client
+                    .database
+                    .from("liked_quotes")
+                    .select()
+                    .eq("userId", value: userId)
+                    .execute()
+                    .value
+                completion(.success(response))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+    
     // MARK: - User Profile Operations
     /// Fetches the current user's profile from the 'users' table.
     /// - Parameters:

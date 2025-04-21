@@ -1,2 +1,62 @@
 // FavoritesViewModel.swift
-// Manages favorites list and persistence.
+// Manages the user's list of favorite (liked) quotes, syncing with Supabase.
+
+import Foundation
+import Combine
+
+/// ViewModel for managing the user's favorites (liked quotes).
+final class FavoritesViewModel: ObservableObject {
+    /// The user's full liked quotes (with metadata).
+    @Published var likedQuotes: [LikedQuote] = []
+    /// The user's current ID (must be set after login).
+    var userId: String?
+    /// Error message for UI display.
+    @Published var errorMessage: String? = nil
+    /// Loading state for UI feedback.
+    @Published var isLoading: Bool = false
+    /// Combine cancellables.
+    private var cancellables = Set<AnyCancellable>()
+
+    // MARK: - Fetch Liked Quotes
+    /// Loads all liked quotes for the current user from Supabase.
+    func fetchLikedQuotes() {
+        guard let userId = userId else {
+            likedQuotes = []
+            return
+        }
+        isLoading = true
+        SupabaseService.shared.fetchFullLikedQuotes(forUser: userId) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoading = false
+                switch result {
+                case .success(let quotes):
+                    self?.likedQuotes = quotes
+                case .failure(let error):
+                    self?.errorMessage = "Failed to load favorites: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
+    // MARK: - Remove from Favorites
+    /// Removes a liked quote from the user's favorites and updates Supabase.
+    func removeFromFavorites(likedQuote: LikedQuote) {
+        guard let userId = userId else { return }
+        SupabaseService.shared.unlikeQuote(quoteId: likedQuote.quoteId, userId: userId) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    self?.likedQuotes.removeAll { $0.quoteId == likedQuote.quoteId }
+                case .failure(let error):
+                    self?.errorMessage = "Failed to remove favorite: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
+    // MARK: - Utility
+    /// Checks if a given quote is in the user's favorites.
+    func isFavorite(quoteId: String) -> Bool {
+        likedQuotes.contains { $0.quoteId == quoteId }
+    }
+}
