@@ -74,7 +74,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 7: Widget Development — ✅ COMPLETED (2025-04-18)
+## Step 7: Widget Development — ✅ COMPLETED
 **Objective:** Deliver quotes directly to users’ lock screen/standby.
 - [`WidgetEntry.swift`](../Widget/WidgetEntry.swift): Defines `QuoteWidgetEntry` and `QuoteWidgetProvider` for the widget’s timeline, loads the daily quote and theme from App Group UserDefaults (`group.com.wholeapp.shared`), and provides fallback logic if no quote is set.
 - [`QuoteListView.swift`](../Features/Quotes/QuoteListView.swift): On every swipe or launch, saves the currently displayed quote to App Group UserDefaults for widget consumption, ensuring widget and app remain in sync.
@@ -86,7 +86,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 8: Onboarding Flow — ✅ DONE
+## Step 8: Onboarding Flow — ✅ COMPLETED
 **Objective:** Guide new users and collect preferences.
 - Build `OnboardingView.swift` (welcome, widget intro, category selection, etc.).
 - Implement `OnboardingViewModel.swift` for onboarding logic.
@@ -94,7 +94,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 9: Paywall & Subscription Logic — ✅ COMPLETE
+## Step 9: Paywall & Subscription Logic — ✅ COMPLETED
 **Objective:** Monetize via subscriptions and manage access.
 - Implemented `PaywallView.swift` for subscription options/free trial.
 - Developed `PaywallViewModel.swift` for StoreKit integration and subscription logic (stubs in place, ready for StoreKit 2).
@@ -105,27 +105,33 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 10: Favorites Feature — ⬜ TODO
+## Step 10: Favorites Feature — ✅ COMPLETED
 **Objective:** Enable saving and revisiting favorite quotes.
-- Build `FavoritesView.swift` to display saved quotes.
-- Create `FavoritesViewModel.swift` for managing favorites (persisted via Supabase).
-**Outcome:** Users can save and revisit liked quotes.
+- Built `FavoritesView.swift` to display saved quotes.
+- Created `FavoritesViewModel.swift` for managing favorites (persisted via Supabase `LikedQuotes` table).
+- Integrated Favorites as a dedicated tab in the main TabView navigation.
+- All logic is robust, model-driven, and clearly commented.
+**Outcome:** Users can save and revisit liked quotes. Favorites are synced in real time and easy to maintain.
 
 ---
 
-## Step 11: User-Generated Quotes (Premium) — ⬜ TODO
+## Step 11: User-Generated Quotes (Premium) — ✅ COMPLETED (2025-04-21)
 **Objective:** Let premium users create and submit their own quotes.
-- Build `UserQuoteEditorView.swift` for quote creation.
-- Add moderation/approval flow for submitted quotes.
-**Outcome:** Premium users can contribute content, increasing engagement and value.
+- Implemented `UserQuoteEditorView.swift` with a modern, minimal UI for submitting bilingual quotes.
+- The editor uses soft backgrounds, pastel chips, and robust validation for a delightful UX.
+- Quotes are saved to the `userquotes` table in Supabase.
+- Moderation/approval logic is planned for future versions.
+**Outcome:** Premium users can now contribute original quotes, increasing engagement and value.
 
 ---
 
-## Step 12: Notifications & Analytics — ⬜ TODO
+## Step 12: Notifications & Analytics — ⬜ IN PROGRESS
 **Objective:** Enhance engagement and gather usage insights.
-- Set up `NotificationService.swift` for daily quote notifications (user-scheduled).
-- Implement `AnalyticsService.swift` for tracking user behavior.
-**Outcome:** Users receive daily quotes and analytics provide actionable insights.
+- Set up `NotificationService.swift` for daily quote notifications (user-scheduled, permission-aware).
+- Implement `SupabaseService.swift` update methods for notification preferences (partial updates for `notificationsEnabled` and `notificationTime`).
+- Integrate notification preference UI into onboarding and settings flows (toggle, time picker, permission request).
+- All changes are robust, model-driven, and clearly commented.
+**Outcome:** Users receive daily quotes at their chosen time; notification preferences are seamlessly managed and synced.
 
 ---
 
@@ -154,14 +160,16 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-### Progress & Next Steps (as of 2025-04-18)
+### Progress & Next Steps (as of 2025-04-21)
 
 - All foundational steps through settings are ✅ COMPLETED.
 - **Step 6: Sharing, Theming, and Paywall Polish** is now ✅ COMPLETED.
 - **Step 7: Widget Development** is now ✅ COMPLETED.
 - **Step 8: Onboarding Flow** is now ✅ DONE.
 - **Step 9: Paywall & Subscription Logic** is now ✅ COMPLETE.
-- Next: Complete onboarding, favorites, and other features.
+- **Step 10: Favorites Feature** is now ✅ COMPLETE.
+- **Step 11: User-Generated Quotes (Premium)** is now ✅ COMPLETE.
+- Next: Complete onboarding, user-generated quotes, and other features.
 
 ---
 

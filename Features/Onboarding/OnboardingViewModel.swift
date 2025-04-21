@@ -16,6 +16,8 @@ final class OnboardingViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     @Published var onboardingCompleted: Bool = false
+    @Published var notificationsEnabled: Bool = true // Default ON for onboarding UX
+    @Published var notificationTime: String = "08:00" // Default time
 
     // Available options (could be fetched from backend in future)
     let allCategories = QuoteCategory.allCases.filter { $0 != .unknown }
@@ -30,6 +32,7 @@ final class OnboardingViewModel: ObservableObject {
         case welcome
         case widgetIntro
         case preferences
+        case notificationPreferences // NEW: Notification onboarding step
         case subscriptionIntro
         case completed
     }
@@ -71,7 +74,8 @@ final class OnboardingViewModel: ObservableObject {
         let userPreferences = UserPreferences(
             userId: userId,
             selectedCategories: Array(selectedCategories),
-            notificationTime: "08:00" // Default, could be customized later
+            notificationTime: notificationTime,
+            notificationsEnabled: notificationsEnabled // Pass new field
         )
 
         // Save both profile and preferences using SupabaseService
@@ -95,4 +99,20 @@ final class OnboardingViewModel: ObservableObject {
     func skipName() { name = "" }
     func skipGender() { gender = "" }
     func skipGoals() { goals = [] }
+
+    /// Requests notification permission if notifications are enabled.
+    func requestNotificationPermission() {
+        if notificationsEnabled {
+            NotificationService.shared.requestAuthorization { granted in
+                DispatchQueue.main.async {
+                    if granted {
+                        // Optionally, schedule notification here if needed
+                    } else {
+                        // Optionally, handle denied state (show alert, etc.)
+                        self.notificationsEnabled = false
+                    }
+                }
+            }
+        }
+    }
 }

@@ -1,5 +1,5 @@
 // OnboardingView.swift
-// Displays the onboarding flow: welcome, widget intro, preferences, and subscription intro.
+// Displays the onboarding flow: welcome, widget intro, preferences, notification preferences, and subscription intro.
 
 import SwiftUI
 
@@ -27,6 +27,13 @@ struct OnboardingView: View {
                     onSkipName: viewModel.skipName,
                     onSkipGender: viewModel.skipGender,
                     onSkipGoals: viewModel.skipGoals
+                )
+            case .notificationPreferences:
+                NotificationPreferencesStepView(
+                    notificationsEnabled: $viewModel.notificationsEnabled,
+                    notificationTime: $viewModel.notificationTime,
+                    onRequestPermission: viewModel.requestNotificationPermission,
+                    onContinue: viewModel.nextStep
                 )
             case .subscriptionIntro:
                 SubscriptionIntroStepView(onContinue: viewModel.nextStep)
@@ -157,6 +164,74 @@ struct PreferencesStepView: View {
             }
             .padding()
         }
+    }
+}
+
+/// Notification preferences step: Asks user for notification permission and time.
+struct NotificationPreferencesStepView: View {
+    @Binding var notificationsEnabled: Bool
+    @Binding var notificationTime: String
+    let onRequestPermission: () -> Void
+    let onContinue: () -> Void
+
+    @State private var showPermissionAlert = false
+    @State private var selectedDate = Date()
+
+    var body: some View {
+        VStack(spacing: 24) {
+            Text("Daily Quote Notifications")
+                .font(.title2).bold()
+                .accessibilityAddTraits(.isHeader)
+            Toggle(isOn: $notificationsEnabled) {
+                Text("Enable daily notifications")
+            }
+            .accessibilityIdentifier("NotificationsToggle")
+            .onChange(of: notificationsEnabled) { enabled in
+                if enabled { showPermissionAlert = true }
+            }
+            if notificationsEnabled {
+                DatePicker("Notification Time", selection: $selectedDate, displayedComponents: .hourAndMinute)
+                    .datePickerStyle(.wheel)
+                    .onChange(of: selectedDate) { date in
+                        notificationTime = Self.formatTime(date)
+                    }
+                    .accessibilityIdentifier("NotificationTimePicker")
+            }
+            Text("You can always change this in Settings. We respect your privacy and will never spam you.")
+                .font(.footnote)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+            Button("Allow Notifications") {
+                onRequestPermission()
+            }
+            .disabled(!notificationsEnabled)
+            .alert(isPresented: $showPermissionAlert) {
+                Alert(
+                    title: Text("Permission Required"),
+                    message: Text("Please allow notifications to receive daily quotes."),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
+            Button("Continue", action: onContinue)
+                .buttonStyle(.borderedProminent)
+        }
+        .padding()
+        .onAppear {
+            selectedDate = Self.parseTime(notificationTime)
+        }
+    }
+
+    // Helper to format time string
+    static func formatTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter.string(from: date)
+    }
+    // Helper to parse time string
+    static func parseTime(_ time: String) -> Date {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter.date(from: time) ?? Date()
     }
 }
 

@@ -47,23 +47,21 @@ This document describes the current schema and access policies for the Supabase 
   - INSERT: id must match auth.uid
 
 ### 3. `userpreferences`
-- **Purpose:** Stores user’s quote category preferences, notification time, widget settings.
+- **Purpose:** Stores user’s quote category preferences, notification time, widget settings, and notification enable/disable state.
 - **Columns:**
   - `user_id`: uuid, primary key, references users(id)
   - `selected_categories`: text[], required (now stored as array of category strings from QuoteCategory enum)
   - `notification_time`: text, default '08:00'
+  - `notifications_enabled`: boolean, default true (whether daily notifications are enabled)
 - **RLS:**
   - ALL: Only the user (user_id = auth.uid)
   - INSERT: user_id must match auth.uid
 
 ### 4. `userquotes`
-- **Purpose:** Stores quotes created by users (premium feature).
-- **Columns:**
-  - `id`: uuid, primary key, auto-generated
-  - `user_id`: uuid, references users(id)
-  - `english_text`: text, required
-  - `chinese_text`: text, required
-  - `created_at`: timestamp, default now()
+- Stores quotes created by users (premium feature).
+- Columns: `id`, `user_id`, `english_text`, `chinese_text`, `categories`, `created_at`.
+- All submitted quotes are linked to the creating user.
+- Used by the app for user-generated quote creation and future moderation flows.
 - **RLS:**
   - ALL: Only the user (user_id = auth.uid)
   - INSERT: user_id must match auth.uid
@@ -78,6 +76,37 @@ This document describes the current schema and access policies for the Supabase 
   - ALL: Only the user (user_id = auth.uid)
   - INSERT: user_id must match auth.uid
 
+### 6. `LikedQuotes` Table (NEW)
+- Stores user favorites (liked quotes).
+- Columns: `id`, `user_id`, `quote_id`, `created_at`.
+- Foreign keys to `Users` and `Quotes` ensure referential integrity.
+- Used by the app to fetch, add, and remove favorites in real time.
+
+---
+
+## User Preferences Table (userpreferences)
+- Stores per-user notification and category preferences.
+- **Fields:**
+  - `user_id` (UUID, PK, FK to users)
+  - `selected_categories` (string[])
+  - `notification_time` (string, format HH:mm)
+  - `notifications_enabled` (boolean)
+- **Updated via:**
+  - `SupabaseService.updateUserPreferences(userId:notificationsEnabled:completion:)`
+  - `SupabaseService.updateUserPreferences(userId:notificationTime:completion:)`
+- **Usage:**
+  - Synced from onboarding and settings flows.
+  - Drives notification scheduling logic in `NotificationService`.
+  - Changes reflected immediately in app and backend.
+
+## Notification Logic
+- **Scheduling:**
+  - `NotificationService.scheduleDailyQuoteNotification(at:quote:)` uses user preferences to schedule/cancel notifications.
+- **Permissions:**
+  - Requested during onboarding and in settings (`requestNotificationPermission`).
+- **Sync:**
+  - All changes are persisted to Supabase and update local notification schedule.
+
 ---
 
 ## Row Level Security (RLS) Summary
@@ -88,6 +117,7 @@ This document describes the current schema and access policies for the Supabase 
 | userpreferences | Only self (user_id = auth.uid) | Only self (user_id = auth.uid) | Only self (user_id = auth.uid) |
 | userquotes      | Only self (user_id = auth.uid) | Only self (user_id = auth.uid) | Only self (user_id = auth.uid) |
 | liked_quotes    | Only self (user_id = auth.uid) | Only self (user_id = auth.uid) | Only self (user_id = auth.uid) |
+| LikedQuotes     | Only self (user_id = auth.uid) | Only self (user_id = auth.uid) | Only self (user_id = auth.uid) |
 
 ---
 
@@ -202,6 +232,7 @@ struct UserPreferences: Codable, Identifiable {
     let userId: String
     let selectedCategories: [QuoteCategory]
     let notificationTime: String
+    let notificationsEnabled: Bool
 }
 ```
 - Maps to the `userpreferences` table columns.

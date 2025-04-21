@@ -95,6 +95,18 @@ Whole supports multiple visual styles to suit different user preferences. For la
   - Lock icons and paywall CTAs are used for clear UX.
   - See `QuoteListView.swift`, `CustomizationView.swift`, and `QuoteImageGenerator.swift` for implementation and comments.
 
+## 11. Favorites Tab
+- **Favorites Tab:**
+  - Users can access a dedicated Favorites tab to see all their liked quotes.
+  - The tab uses a minimal, modern list UI with swipe-to-remove and empty/error states.
+  - All logic is model-driven and robust.
+
+## 12. User Quote Editor
+- **User Quote Editor:**
+  - Premium users access a dedicated quote creation screen with a soft, minimal UI.
+  - Editor uses clear fields, pastel category chips, and robust validation.
+  - All user input is validated and commented for maintainability.
+
 ---
 
 > **Note:** For implementation, start with Serene Minimalism. Use the other styles as reference for future expansion.

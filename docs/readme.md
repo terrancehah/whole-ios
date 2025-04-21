@@ -39,7 +39,14 @@
   - New users are guided through a multi-step onboarding process implemented in `OnboardingView.swift` and `OnboardingViewModel.swift`.
   - Preferences are saved using the new `UserPreferences` model with type-safe category selection (`QuoteCategory`).
 - **Step 9:** Favorites Feature — Allow users to save and revisit liked quotes. *(Todo)*
+  - **Favorites (Liked Quotes):**
+    - Users can save and revisit favorite quotes in a dedicated tab.
+    - Favorites are synced in real time with Supabase and persist across devices.
+    - Removing a favorite updates both UI and backend instantly.
 - **Step 10:** User-Generated Quotes — Premium users can create and submit their own quotes. *(Todo)*
+  - Premium users access a dedicated editor to submit bilingual quotes.
+  - Editor features minimal, soft UI and robust validation.
+  - User quotes are saved to Supabase for future moderation.
 - **Step 11:** Analytics & Daily Notifications — Track usage and deliver daily quotes via notification. *(Todo)*
 - **Step 12:** Theming & Styling — Finalize cohesive design and polish UI. *(Todo)*
 - **Step 13:** Testing & Quality Assurance — Unit tests and UI tests for critical flows. *(Todo)*

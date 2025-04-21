@@ -71,13 +71,21 @@ Premium features are unlocked through a subscription, offering unlimited quote a
 ### 5.6 Quote Sharing
 - Generates shareable quote images (with watermarks for free users)
 
-### 5.7 User-Generated Quotes (MVP: Personal Use Only)
-- Allows users to create and save their own quotes locally
+### 5.7 User-Generated Quotes (Premium)
+- Premium users can create and submit bilingual quotes via a dedicated editor.
+- The editor uses a modern, minimal UI and robust validation.
+- Submitted quotes are saved to the backend and will be subject to moderation in future releases.
 
 ### 5.8 Onboarding (COMPLETE)
 - Users are greeted, introduced to widgets, select categories (using QuoteCategory enum), and set preferences.
 - All onboarding data is saved to Supabase using the UserPreferences model.
 - The onboarding flow is implemented and tested.
+
+### 5.9 Favorites
+- **Favorites (Liked Quotes):**
+  - Users can save quotes as favorites and revisit them in a dedicated tab.
+  - Favorites are synced to the backend and persist across devices.
+  - Removing a favorite updates both UI and backend in real time.
 
 ---
 

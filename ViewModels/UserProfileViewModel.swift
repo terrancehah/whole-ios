@@ -42,6 +42,75 @@ final class UserProfileViewModel: ObservableObject {
         fetchUserProfile(userId: userId)
     }
 
+    // MARK: - Notification Preferences
+    /// Bindable date for the notification time picker
+    var notificationTimeDate: Date {
+        get {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "HH:mm"
+            return formatter.date(from: user.notificationTime) ?? Date()
+        }
+        set {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "HH:mm"
+            user.notificationTime = formatter.string(from: newValue)
+        }
+    }
+
+    /// Update notificationsEnabled and sync to Supabase, also schedule/cancel notifications
+    func updateNotificationsEnabled(_ enabled: Bool) {
+        user.notificationsEnabled = enabled
+        SupabaseService.shared.updateUserPreferences(userId: user.userId, notificationsEnabled: enabled) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    if enabled {
+                        // Request permission and schedule notification if not already scheduled
+                        self?.requestNotificationPermission()
+                    } else {
+                        // Cancel any scheduled notifications
+                        NotificationService.shared.cancelDailyQuoteNotification()
+                    }
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+
+    /// Update notification time and sync to Supabase, also reschedule notification
+    func updateNotificationTime(_ date: Date) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        let timeString = formatter.string(from: date)
+        user.notificationTime = timeString
+        SupabaseService.shared.updateUserPreferences(userId: user.userId, notificationTime: timeString) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    if self?.user.notificationsEnabled == true {
+                        // Reschedule notification
+                        // Fetch latest quote if needed, or use placeholder
+                        // NotificationService.shared.scheduleDailyQuoteNotification(at: ...)
+                    }
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+
+    /// Request notification permission from settings
+    func requestNotificationPermission() {
+        NotificationService.shared.requestAuthorization { granted in
+            DispatchQueue.main.async {
+                if !granted {
+                    self.user.notificationsEnabled = false
+                }
+            }
+        }
+    }
+
     // MARK: - Preview
     #if DEBUG
     static var preview: UserProfileViewModel {

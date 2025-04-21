@@ -149,6 +149,14 @@
 - Paywall modal (`PaywallView`) is shown when a free user hits the swipe limit or tries to select a premium theme.
 - Code comments have been added for maintainability and future onboarding.
 
+### Favorites (Liked Quotes) Feature (2025-04-21)
+- Users can now save and revisit favorite quotes ("Liked Quotes").
+- Favorites are displayed in a dedicated tab (`FavoritesView`) in the main TabView navigation.
+- All favorites are synced with Supabase in real-time using the new `LikedQuotes` table.
+- The feature is managed by `FavoritesViewModel` and uses a robust, model-driven approach.
+- Users can remove favorites with swipe actions; empty and error states are handled gracefully.
+- The UI is minimal, modern, and clearly commented for maintainability.
+
 ### Onboarding Flow (COMPLETE)
 The onboarding flow guides new users through a welcome, widget introduction, category selection, and preference collection. It is implemented in `OnboardingView.swift` and managed by `OnboardingViewModel.swift`, with all user preferences saved to Supabase using the new `UserPreferences` model. All category selection is type-safe using the `QuoteCategory` enum.
 
@@ -238,3 +246,17 @@ The onboarding flow guides new users through a welcome, widget introduction, cat
   - Provides robust error handling for all backend operations.
 
 ---
+### Notification Preferences Flow (2025-04-21)
+- Onboarding and Settings screens allow users to enable/disable daily quote notifications and set preferred delivery time.
+- Preferences are stored in the `userpreferences` table (`notifications_enabled`, `notification_time`).
+- All updates are synced to Supabase via `SupabaseService` partial update methods.
+- `NotificationService` schedules/cancels notifications based on current preferences.
+- Permission requests are handled natively and robustly in both onboarding and settings.
+- All flows are clearly commented and tested for reliability.
+
+### User-Generated Quotes (Premium) (2025-04-21)
+- Premium users can create and submit their own bilingual quotes using an aesthetic, minimal editor (`UserQuoteEditorView`).
+- The editor features soft backgrounds, clear input fields, pastel category chips, and robust validation.
+- All submitted quotes are saved to the `userquotes` table in Supabase.
+- Moderation/approval flow is planned for future releases.
+- The UI and logic are fully commented and match the app's Serene Minimalism guidelines.

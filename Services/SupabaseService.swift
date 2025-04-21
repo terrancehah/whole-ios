@@ -162,6 +162,52 @@ final class SupabaseService {
             }
         }
     }
+    
+    // MARK: - User Preferences Updates
+    
+    /// Updates the notificationsEnabled field for the user in the userpreferences table.
+    /// - Parameters:
+    ///   - userId: The ID of the user.
+    ///   - notificationsEnabled: The new value for notificationsEnabled.
+    ///   - completion: Completion handler with Result<Void, Error>
+    func updateUserPreferences(userId: String, notificationsEnabled: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
+        Task {
+            do {
+                let updateData = ["notifications_enabled": notificationsEnabled]
+                _ = try await client
+                    .database
+                    .from("userpreferences")
+                    .update(values: updateData)
+                    .eq("user_id", value: userId)
+                    .execute()
+                completion(.success(()))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Updates the notificationTime field for the user in the userpreferences table.
+    /// - Parameters:
+    ///   - userId: The ID of the user.
+    ///   - notificationTime: The new notification time (HH:mm string).
+    ///   - completion: Completion handler with Result<Void, Error>
+    func updateUserPreferences(userId: String, notificationTime: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        Task {
+            do {
+                let updateData = ["notification_time": notificationTime]
+                _ = try await client
+                    .database
+                    .from("userpreferences")
+                    .update(values: updateData)
+                    .eq("user_id", value: userId)
+                    .execute()
+                completion(.success(()))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
 }
 
 // MARK: - LikedQuote Model for decoding liked_quotes table

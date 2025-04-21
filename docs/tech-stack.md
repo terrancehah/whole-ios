@@ -4,6 +4,12 @@
 - **iOS App**: SwiftUI (for building the main interface and views)
 - **Widget**: WidgetKit (for lock screen and standby mode widgets)
 - **Onboarding:** SwiftUI, Combine, and Supabase. Category selection uses the `QuoteCategory` enum and preferences are saved with the `UserPreferences` model.
+- **Favorites (Liked Quotes):**
+  - Implemented with SwiftUI, Combine, and Supabase real-time backend sync.
+  - Uses a dedicated `LikedQuotes` table in Supabase for persistence and cross-device access.
+- **User-Generated Quotes:**
+  - Implemented with SwiftUI and Combine for a modern, reactive editor UI.
+  - Supabase is used for backend storage and future moderation flows.
 
 ## Backend
 - **Platform**: Supabase
