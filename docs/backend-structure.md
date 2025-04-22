@@ -42,6 +42,9 @@ This document describes the current schema and access policies for the Supabase 
   - `subscription_end_date`: timestamp
   - `created_at`: timestamp, default now()
   - `updated_at`: timestamp, default now()
+- **Insert:**
+  - New user profiles are inserted via the app's onboarding flow using the `insertUserProfile` method in SupabaseService.
+  - Robust error handling ensures the profile is only created if all required data is valid.
 - **RLS:**
   - ALL: Only the user (id = auth.uid)
   - INSERT: id must match auth.uid
@@ -53,6 +56,9 @@ This document describes the current schema and access policies for the Supabase 
   - `selected_categories`: text[], required (now stored as array of category strings from QuoteCategory enum)
   - `notification_time`: text, default '08:00'
   - `notifications_enabled`: boolean, default true (whether daily notifications are enabled)
+- **Insert:**
+  - New user preferences are inserted via the app's onboarding flow using the `insertUserPreferences` method in SupabaseService.
+  - Error handling ensures preferences are only created if all required data is valid.
 - **RLS:**
   - ALL: Only the user (user_id = auth.uid)
   - INSERT: user_id must match auth.uid

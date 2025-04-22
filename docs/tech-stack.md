@@ -4,6 +4,9 @@
 - **iOS App**: SwiftUI (for building the main interface and views)
 - **Widget**: WidgetKit (for lock screen and standby mode widgets)
 - **Onboarding:** SwiftUI, Combine, and Supabase. Category selection uses the `QuoteCategory` enum and preferences are saved with the `UserPreferences` model.
+  - User profile and preferences are saved to Supabase using dedicated insert methods (`insertUserProfile`, `insertUserPreferences`) during onboarding.
+  - Notification permission is requested only if enabled by the user.
+  - Error handling ensures onboarding only completes if both inserts succeed.
 - **Favorites (Liked Quotes):**
   - Implemented with SwiftUI, Combine, and Supabase real-time backend sync.
   - Uses a dedicated `LikedQuotes` table in Supabase for persistence and cross-device access.

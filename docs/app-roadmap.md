@@ -88,11 +88,13 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 8: Onboarding Flow — ✅ COMPLETED
-**Objective:** Guide new users and collect preferences.
-- Build `OnboardingView.swift` (welcome, widget intro, category selection, etc.).
-- Implement `OnboardingViewModel.swift` for onboarding logic.
-**Outcome:** New users are smoothly introduced and their preferences are captured.
+## Step 8: Onboarding Flow and Data Sync — ✅ COMPLETED
+**Objective:** Guide new users through onboarding and save their data to Supabase.
+- [`OnboardingView.swift`](../Features/Onboarding/OnboardingView.swift) and [`OnboardingViewModel.swift`](../Features/Onboarding/OnboardingViewModel.swift) implement a multi-step onboarding process, including notification preferences and premium intro.
+- User profile and preferences are now saved using dedicated insert methods (`insertUserProfile`, `insertUserPreferences`) for new users.
+- Robust error handling ensures onboarding only completes if both inserts succeed.
+- All onboarding data is stored in the `users` and `userpreferences` tables, following the backend schema.
+**Outcome:** Onboarding is robust, modular, and seamlessly syncs new user data to Supabase.
 
 ---
 
@@ -127,14 +129,16 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 12: Notifications & Analytics — ⬜ IN PROGRESS
+## Step 12: Notifications & Analytics — ✅ COMPLETED (2025-04-22)
 **Objective:** Enhance engagement and gather usage insights.
-- Set up `NotificationService.swift` for daily quote notifications (user-scheduled, permission-aware).
-- Implement `SupabaseService.swift` update methods for notification preferences (partial updates for `notificationsEnabled` and `notificationTime`).
-- Integrate notification preference UI into onboarding and settings flows (toggle, time picker, permission request).
+- Refactored notification settings logic to use the `UserPreferences` model exclusively, eliminating legacy references from `UserProfile`.
+- Updated `UserPreferences` struct: `selectedCategories`, `notificationTime`, and `notificationsEnabled` are now mutable (`var`) to support real-time UI changes and syncing.
+- Updated `NotificationSettingsView.swift` and related UI to bind directly to `userProfile.userPreferences`, enabling robust, two-way data flow.
+- Added a static `mock` property to `UserProfileViewModel` for improved SwiftUI previews and testing.
+- Removed duplicate `LikedQuote` struct from `SupabaseService.swift` to ensure a single source of truth for liked quotes, preventing redeclaration errors.
+- All notification preference logic, scheduling, and Supabase syncs are now model-driven and robustly commented.
 - Analytics is deferred; `AnalyticsService.swift` is a placeholder for now and will be implemented post-MVP.
-- All changes are robust, model-driven, and clearly commented.
-**Outcome:** Users receive daily quotes at their chosen time; notification preferences are seamlessly managed and synced.
+**Outcome:** Users can reliably enable, disable, and schedule daily notifications; preferences are seamlessly managed and synced with the backend. Codebase is maintainable and aligned with backend schema.
 
 ---
 
@@ -163,15 +167,16 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-### Progress & Next Steps (as of 2025-04-21)
+### Progress & Next Steps (as of 2025-04-22)
 
 - All foundational steps through settings are ✅ COMPLETED.
 - **Step 6: Sharing, Theming, and Paywall Polish** is now ✅ COMPLETED.
 - **Step 7: Widget Development** is now ✅ COMPLETED.
-- **Step 8: Onboarding Flow** is now ✅ DONE.
+- **Step 8: Onboarding Flow and Data Sync** is now ✅ COMPLETE.
 - **Step 9: Paywall & Subscription Logic** is now ✅ COMPLETE.
 - **Step 10: Favorites Feature** is now ✅ COMPLETE.
 - **Step 11: User-Generated Quotes (Premium)** is now ✅ COMPLETE.
+- **Step 12: Notifications & Analytics** is now ✅ COMPLETE.
 - **Step 13: Theming & Styling** is now ✅ COMPLETE.
 - **Step 14: Testing & Quality Assurance** is next.
 - **Step 15: Final Review & Launch** will follow testing.

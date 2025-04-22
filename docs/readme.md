@@ -16,7 +16,7 @@
 
 ---
 
-## MVP Feature Summary (2025-04-18)
+## MVP Feature Summary (2025-04-22)
 - Horizontal quote browsing (carousel style), 10/day for free users.
 - Like = Save, with native feedback.
 - Share via native iOS share sheet.
@@ -32,26 +32,18 @@
 - **Step 2:** Backend Integration — Supabase for real-time data, authentication, and quote management. *(Complete)*
 - **Step 3:** Reusable UI Components — Modular quote cards, theming, and previews. *(Complete)*
 - **Step 4:** Main Quote Browsing Interface — Swipeable quote list with premium gating and error handling. *(Complete)*
-- **Step 5:** Settings & Customization — User profile, theme selection, and notification preferences. *(Complete)*
-- **Step 6:** Sharing, Theming, and Paywall Polish — Share sheet, premium gating, and UI polish. *(Complete)*
-- **Step 7:** Widget Development — WidgetKit integration, always displays the last quote seen in the app. *(Complete 2025-04-18)*
-- **Step 8:** Onboarding Flow (COMPLETE) — Guide new users, collect preferences, and introduce premium features.
-  - New users are guided through a multi-step onboarding process implemented in `OnboardingView.swift` and `OnboardingViewModel.swift`.
-  - Preferences are saved using the new `UserPreferences` model with type-safe category selection (`QuoteCategory`).
-- **Step 9:** Favorites Feature — Allow users to save and revisit liked quotes. *(Todo)*
-  - **Favorites (Liked Quotes):**
-    - Users can save and revisit favorite quotes in a dedicated tab.
-    - Favorites are synced in real time with Supabase and persist across devices.
-    - Removing a favorite updates both UI and backend instantly.
-- **Step 10:** User-Generated Quotes — Premium users can create and submit their own quotes. *(Todo)*
-  - Premium users access a dedicated editor to submit bilingual quotes.
-  - Editor features minimal, soft UI and robust validation.
-  - User quotes are saved to Supabase for future moderation.
-- **Step 11:** Analytics & Daily Notifications — Track usage and deliver daily quotes via notification. *(Todo)*
-- **Step 12:** Theming & Styling — Finalize cohesive design and polish UI. *(Todo)*
-- **Step 13:** Testing & Quality Assurance — Unit tests and UI tests for critical flows. *(Todo)*
-- **Step 14:** Final Review & Launch — App Store submission, analytics, and post-launch improvements. *(Todo)*
-- **Ongoing/Future:** Advanced widget customization, additional sharing options, feature expansion based on user feedback. *(Planned)*
+- **Step 5:** Complete Settings Sections — Full-featured settings, including profile, theme, subscription, widget, and notification preferences. *(Complete)*
+- **Step 6:** Sharing, Theming, and Paywall Polish — Share sheet, premium gating, watermark logic, and UI polish. *(Complete)*
+- **Step 7:** Widget Development — WidgetKit integration, always displays the last quote seen in the app, robust sync and theming. *(Complete)*
+- **Step 8:** Onboarding Flow and Data Sync — Multi-step onboarding (welcome, widget, preferences, notification, subscription), robust error handling, and Supabase insert logic. *(Complete)*
+- **Step 9:** Paywall & Subscription Logic — StoreKit integration, premium gating, and robust paywall logic. *(Complete)*
+- **Step 10:** Favorites Feature — Save and revisit liked quotes, synced with Supabase. *(Complete)*
+- **Step 11:** User-Generated Quotes (Premium) — Premium users can create and submit their own quotes via a modern editor. *(Complete)*
+- **Step 12:** Notifications & Analytics — Notification logic refactored for robust syncing; analytics service stubbed for post-MVP. *(Complete)*
+- **Step 13:** Theming & Styling — Cohesive design, semantic theme colors, and consistent appearance. *(Complete)*
+- **Step 14:** Testing & Quality Assurance — Unit/UI tests for reliability (Todo).
+- **Step 15:** Final Review & Launch — App Store submission and launch (Todo).
+- **Ongoing/Future:** Advanced widget customization, additional sharing, and feature expansion based on user feedback. *(Planned)*
 
 ---
 

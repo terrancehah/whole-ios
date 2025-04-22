@@ -76,10 +76,12 @@ Premium features are unlocked through a subscription, offering unlimited quote a
 - The editor uses a modern, minimal UI and robust validation.
 - Submitted quotes are saved to the backend and will be subject to moderation in future releases.
 
-### 5.8 Onboarding (COMPLETE)
-- Users are greeted, introduced to widgets, select categories (using QuoteCategory enum), and set preferences.
-- All onboarding data is saved to Supabase using the UserPreferences model.
-- The onboarding flow is implemented and tested.
+### 5.8 Onboarding (COMPLETE, UPDATED)
+- Users are guided through a modular onboarding flow: welcome, widget intro, preferences, notification preferences, and subscription intro.
+- Notification time and enable/disable state are collected and saved.
+- User profile and preferences are saved to Supabase using dedicated insert methods (`insertUserProfile`, `insertUserPreferences`).
+- Onboarding only completes if both inserts succeed, with robust error handling.
+- All onboarding data is stored in the `users` and `userpreferences` tables following backend schema.
 
 ### 5.9 Favorites
 - **Favorites (Liked Quotes):**

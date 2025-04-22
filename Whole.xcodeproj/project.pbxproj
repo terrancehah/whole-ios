@@ -21,10 +21,11 @@
 		FE189B8F2DB2487300F107A6 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE189B892DB2487300F107A6 /* ThemeManager.swift */; };
 		FE189B942DB250A100F107A6 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE189B912DB250A100F107A6 /* UserProfileViewModel.swift */; };
 		FE189B962DB267AA00F107A6 /* QuoteShareCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE189B952DB267AA00F107A6 /* QuoteShareCardView.swift */; };
+		FE4AF0682DB72D5700A8AD78 /* LikedQuoteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AF0662DB72D5700A8AD78 /* LikedQuoteModel.swift */; };
+		FE4AF0692DB72D5700A8AD78 /* UserPreferencesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AF0672DB72D5700A8AD78 /* UserPreferencesModel.swift */; };
 		FE69A3E42DAF66F70096F621 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A38D2DAF66F70096F621 /* CustomButton.swift */; };
 		FE69A3E52DAF66F70096F621 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3CD2DAF66F70096F621 /* Config.swift */; };
 		FE69A3E72DAF66F70096F621 /* UserQuoteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3B42DAF66F70096F621 /* UserQuoteModel.swift */; };
-		FE69A3E82DAF66F70096F621 /* QuoteWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3DF2DAF66F70096F621 /* QuoteWidget.swift */; };
 		FE69A3E92DAF66F70096F621 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3A82DAF66F70096F621 /* SettingsView.swift */; };
 		FE69A3EA2DAF66F70096F621 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3CE2DAF66F70096F621 /* Constants.swift */; };
 		FE69A3EB2DAF66F70096F621 /* SubscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3C12DAF66F70096F621 /* SubscriptionService.swift */; };
@@ -107,6 +108,8 @@
 		FE189B8A2DB2487300F107A6 /* WidgetSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSettingsView.swift; sourceTree = "<group>"; };
 		FE189B912DB250A100F107A6 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
 		FE189B952DB267AA00F107A6 /* QuoteShareCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteShareCardView.swift; sourceTree = "<group>"; };
+		FE4AF0662DB72D5700A8AD78 /* LikedQuoteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikedQuoteModel.swift; sourceTree = "<group>"; };
+		FE4AF0672DB72D5700A8AD78 /* UserPreferencesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferencesModel.swift; sourceTree = "<group>"; };
 		FE69A33D2DAF62C80096F621 /* Whole.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Whole.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE69A34D2DAF62CA0096F621 /* WholeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WholeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE69A3572DAF62CA0096F621 /* WholeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WholeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -402,6 +405,8 @@
 		FE69A3B52DAF66F70096F621 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				FE4AF0662DB72D5700A8AD78 /* LikedQuoteModel.swift */,
+				FE4AF0672DB72D5700A8AD78 /* UserPreferencesModel.swift */,
 				FE69A3B12DAF66F70096F621 /* QuoteModel.swift */,
 				FE69A3B22DAF66F70096F621 /* SubscriptionModel.swift */,
 				FE69A3B32DAF66F70096F621 /* UserModel.swift */,
@@ -700,7 +705,6 @@
 				FE69A3E52DAF66F70096F621 /* Config.swift in Sources */,
 				FE189B942DB250A100F107A6 /* UserProfileViewModel.swift in Sources */,
 				FE69A3E72DAF66F70096F621 /* UserQuoteModel.swift in Sources */,
-				FE69A3E82DAF66F70096F621 /* QuoteWidget.swift in Sources */,
 				FE69A3E92DAF66F70096F621 /* SettingsView.swift in Sources */,
 				FE69A3EA2DAF66F70096F621 /* Constants.swift in Sources */,
 				FE69A3EB2DAF66F70096F621 /* SubscriptionService.swift in Sources */,
@@ -713,6 +717,8 @@
 				FE69A3F42DAF66F70096F621 /* ShareSheet.swift in Sources */,
 				FE69A3F62DAF66F70096F621 /* QuoteModel.swift in Sources */,
 				FE69A3F72DAF66F70096F621 /* AuthService.swift in Sources */,
+				FE4AF0682DB72D5700A8AD78 /* LikedQuoteModel.swift in Sources */,
+				FE4AF0692DB72D5700A8AD78 /* UserPreferencesModel.swift in Sources */,
 				FE69A3F82DAF66F70096F621 /* AppDelegate.swift in Sources */,
 				FE69A3F92DAF66F70096F621 /* UserModel.swift in Sources */,
 				FE69A3FA2DAF66F70096F621 /* OnboardingView.swift in Sources */,

@@ -8,20 +8,21 @@ struct NotificationSettingsView: View {
     var body: some View {
         Form {
             Section(header: Text("Notifications")) {
-                Toggle("Daily Quote Reminder", isOn: $userProfile.user.notificationsEnabled)
-                    .onChange(of: userProfile.user.notificationsEnabled) { enabled in
+                // Toggle to enable/disable daily quote notifications, bound to userPreferences
+                Toggle("Daily Quote Reminder", isOn: $userProfile.userPreferences.notificationsEnabled)
+                    .onChange(of: userProfile.userPreferences.notificationsEnabled) { enabled in
                         userProfile.updateNotificationsEnabled(enabled)
                     }
-                if userProfile.user.notificationsEnabled {
-                    DatePicker("Notification Time", selection: $userProfile.notificationTimeDate, displayedComponents: .hourAndMinute)
-                        .datePickerStyle(.wheel)
-                        .onChange(of: userProfile.notificationTimeDate) { date in
-                            userProfile.updateNotificationTime(date)
-                        }
+                if userProfile.userPreferences.notificationsEnabled {
+                    // Show time picker only if notifications are enabled
+                    DatePicker("Notification Time", selection: Binding(
+                        get: { userProfile.notificationTimeDate },
+                        set: { userProfile.updateNotificationTime($0) }
+                    ), displayedComponents: .hourAndMinute)
                 }
                 Button("Allow Notifications") {
                     userProfile.requestNotificationPermission()
-                }.disabled(!userProfile.user.notificationsEnabled)
+                }.disabled(!userProfile.userPreferences.notificationsEnabled)
             }
         }
         .navigationTitle("Notifications")

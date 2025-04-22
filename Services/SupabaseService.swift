@@ -163,6 +163,53 @@ final class SupabaseService {
         }
     }
     
+    /// Inserts a new user profile into the 'users' table in Supabase.
+    /// - Parameters:
+    ///   - profile: The UserProfile object to insert.
+    ///   - completion: Completion handler with Result<Void, Error>.
+    func insertUserProfile(profile: UserProfile, completion: @escaping (Result<Void, Error>) -> Void) {
+        Task {
+            do {
+                // Prepare the profile dictionary for insertion, mapping coding keys to Supabase columns.
+                let encoder = JSONEncoder()
+                encoder.dateEncodingStrategy = .iso8601
+                let data = try encoder.encode(profile)
+                let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] ?? [:]
+                _ = try await client
+                    .database
+                    .from("users")
+                    .insert(values: [json])
+                    .execute()
+                completion(.success(()))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Inserts a new user preferences record into the 'userpreferences' table in Supabase.
+    /// - Parameters:
+    ///   - preferences: The UserPreferences object to insert.
+    ///   - completion: Completion handler with Result<Void, Error>.
+    func insertUserPreferences(preferences: UserPreferences, completion: @escaping (Result<Void, Error>) -> Void) {
+        Task {
+            do {
+                // Prepare the preferences dictionary for insertion, mapping coding keys to Supabase columns.
+                let encoder = JSONEncoder()
+                let data = try encoder.encode(preferences)
+                let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] ?? [:]
+                _ = try await client
+                    .database
+                    .from("userpreferences")
+                    .insert(values: [json])
+                    .execute()
+                completion(.success(()))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+    
     // MARK: - User Preferences Updates
     
     /// Updates the notificationsEnabled field for the user in the userpreferences table.
@@ -211,9 +258,4 @@ final class SupabaseService {
 }
 
 // MARK: - LikedQuote Model for decoding liked_quotes table
-/// Represents a liked quote record for decoding Supabase responses.
-struct LikedQuote: Codable {
-    let id: String?
-    let userId: String
-    let quoteId: String
-}
+// Removed duplicate LikedQuote struct. Use the canonical model from Models/LikedQuoteModel.swift instead.

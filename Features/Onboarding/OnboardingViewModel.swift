@@ -52,6 +52,9 @@ final class OnboardingViewModel: ObservableObject {
     }
 
     /// Save user preferences and profile to backend
+    /// 
+    /// This function now uses insertUserProfile and insertUserPreferences for new users,
+    /// replacing any save/update calls. This is the recommended approach for new users.
     func savePreferencesAndProfile(userId: String, email: String) {
         isLoading = true
         errorMessage = nil
@@ -78,17 +81,30 @@ final class OnboardingViewModel: ObservableObject {
             notificationsEnabled: notificationsEnabled // Pass new field
         )
 
-        // Save both profile and preferences using SupabaseService
-        SupabaseService.shared.saveUserProfileAndPreferences(
-            profile: userProfile,
-            preferences: userPreferences
-        ) { [weak self] result in
+        // Insert user profile first, then preferences
+        // This approach ensures data consistency and avoids potential update conflicts
+        SupabaseService.shared.insertUserProfile(
+            profile: userProfile
+        ) { [weak self] profileResult in
             DispatchQueue.main.async {
-                self?.isLoading = false
-                switch result {
+                switch profileResult {
                 case .success:
-                    self?.onboardingCompleted = true
+                    // If profile insert succeeds, insert preferences
+                    SupabaseService.shared.insertUserPreferences(
+                        preferences: userPreferences
+                    ) { [weak self] prefResult in
+                        DispatchQueue.main.async {
+                            self?.isLoading = false
+                            switch prefResult {
+                            case .success:
+                                self?.onboardingCompleted = true
+                            case .failure(let error):
+                                self?.errorMessage = error.localizedDescription
+                            }
+                        }
+                    }
                 case .failure(let error):
+                    self?.isLoading = false
                     self?.errorMessage = error.localizedDescription
                 }
             }

@@ -8,6 +8,8 @@ import Combine
 final class UserProfileViewModel: ObservableObject {
     /// Published user profile for use in the UI.
     @Published var user: UserProfile
+    /// Published user preferences for notification and category settings.
+    @Published var userPreferences: UserPreferences = UserPreferences(userId: "", selectedCategories: [], notificationTime: "08:00", notificationsEnabled: false)
     /// Published property to track loading state.
     @Published var isLoading: Bool = false
     /// Published property for error messages.
@@ -48,12 +50,12 @@ final class UserProfileViewModel: ObservableObject {
         get {
             let formatter = DateFormatter()
             formatter.dateFormat = "HH:mm"
-            return formatter.date(from: user.notificationTime) ?? Date()
+            return formatter.date(from: userPreferences.notificationTime) ?? Date()
         }
         set {
             let formatter = DateFormatter()
             formatter.dateFormat = "HH:mm"
-            user.notificationTime = formatter.string(from: newValue)
+            userPreferences.notificationTime = formatter.string(from: newValue)
         }
     }
 
@@ -68,11 +70,11 @@ final class UserProfileViewModel: ObservableObject {
 
     /// Schedules or cancels the daily quote notification based on user preferences.
     private func updateDailyQuoteNotification() {
-        if user.notificationsEnabled {
+        if userPreferences.notificationsEnabled {
             // Parse notification time (HH:mm) to DateComponents
             let formatter = DateFormatter()
             formatter.dateFormat = "HH:mm"
-            guard let date = formatter.date(from: user.notificationTime) else { return }
+            guard let date = formatter.date(from: userPreferences.notificationTime) else { return }
             let calendar = Calendar.current
             let components = calendar.dateComponents([.hour, .minute], from: date)
             // Load the latest shown quote
@@ -86,8 +88,8 @@ final class UserProfileViewModel: ObservableObject {
 
     /// Update notificationsEnabled and sync to Supabase, also schedule/cancel notifications
     func updateNotificationsEnabled(_ enabled: Bool) {
-        user.notificationsEnabled = enabled
-        SupabaseService.shared.updateUserPreferences(userId: user.userId, notificationsEnabled: enabled) { [weak self] result in
+        userPreferences.notificationsEnabled = enabled
+        SupabaseService.shared.updateUserPreferences(userId: userPreferences.userId, notificationsEnabled: enabled) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success:
@@ -111,12 +113,12 @@ final class UserProfileViewModel: ObservableObject {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
         let timeString = formatter.string(from: date)
-        user.notificationTime = timeString
-        SupabaseService.shared.updateUserPreferences(userId: user.userId, notificationTime: timeString) { [weak self] result in
+        userPreferences.notificationTime = timeString
+        SupabaseService.shared.updateUserPreferences(userId: userPreferences.userId, notificationTime: timeString) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success:
-                    if self?.user.notificationsEnabled == true {
+                    if self?.userPreferences.notificationsEnabled == true {
                         // Reschedule notification
                         self?.updateDailyQuoteNotification()
                     }
@@ -132,7 +134,7 @@ final class UserProfileViewModel: ObservableObject {
         NotificationService.shared.requestAuthorization { granted in
             DispatchQueue.main.async {
                 if !granted {
-                    self.user.notificationsEnabled = false
+                    self.userPreferences.notificationsEnabled = false
                 }
             }
         }
@@ -145,3 +147,25 @@ final class UserProfileViewModel: ObservableObject {
     }
     #endif
 }
+
+// MARK: - Mock for Previews & Testing
+#if DEBUG
+extension UserProfileViewModel {
+    /// Provides a mock instance of UserProfileViewModel for SwiftUI previews and testing.
+    static var mock: UserProfileViewModel {
+        // Create a mock user profile using the sample extension
+        let mockProfile = UserProfile.sample
+        // Create mock user preferences (update selectedCategories as needed)
+        let mockPreferences = UserPreferences(
+            userId: mockProfile.id,
+            selectedCategories: [], // Add mock categories if desired
+            notificationTime: "08:00",
+            notificationsEnabled: true
+        )
+        // Initialize the view model and assign mock preferences
+        let viewModel = UserProfileViewModel(user: mockProfile)
+        viewModel.userPreferences = mockPreferences
+        return viewModel
+    }
+}
+#endif

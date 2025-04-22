@@ -89,6 +89,13 @@ Whole supports multiple visual styles to suit different user preferences. For la
 - All user input is bound to the view model and validated.
 - Preferences are saved using the new `UserPreferences` model.
 
+## 9. Onboarding Flow & Data Sync
+- The onboarding flow is modular and guides users through welcome, widget intro, preferences, notification settings, and subscription intro steps.
+- User profile and preferences are saved to Supabase using dedicated insert methods (`insertUserProfile`, `insertUserPreferences`).
+- Notification permission is requested only if notifications are enabled by the user.
+- Error handling ensures onboarding only completes if both inserts succeed.
+- All onboarding and settings flows use the `UserPreferences` model for consistency.
+
 ## 10. Premium Gating Logic
 - **Premium gating logic is enforced and documented in code.**
   - All premium actions (theme, sharing, unlimited swipes) are gated and trigger the paywall for free users.

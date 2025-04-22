@@ -15,9 +15,10 @@ class PaywallViewModel: ObservableObject {
     @Published var isProcessing: Bool = false
     @Published var errorMessage: String? = nil
     @Published var subscriptionStatus: String = "free" // free, trial, monthly, yearly
-    @Published var trialEndDate:procee Date? = nil
+    @Published var trialEndDate: Date? = nil
     @Published var subscriptionStartDate: Date? = nil
     @Published var subscriptionEndDate: Date? = nil
+    
     @Published var purchaseSuccess: Bool = false
 
     // Subscription info (updated for 7-day trial)

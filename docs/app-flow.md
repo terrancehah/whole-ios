@@ -21,9 +21,17 @@
        - Gender: Optional single-choice (e.g., Male, Female, Other, Prefer Not to Say) with a "Skip" option.
        - Goals: Multiple-choice (e.g., Personal Growth, Career Success, Inner Peace).
        - Additional Customization Questions: Optional multiple-choice questions.
-    4. Subscription Model Introduction
+    4. Notification Preferences
+       - User sets notification time and enables/disables daily notifications.
+       - Requests permission for notifications if enabled.
+    5. Subscription Model Introduction
        - Brief overview: "Unlock unlimited quotes and premium features with a 7-day free trial."
        - Transitions to the paywall screen.
+
+- **Onboarding Data Saving**
+  - User profile and preferences are now saved to Supabase using dedicated insert methods (`insertUserProfile`, `insertUserPreferences`) for new users.
+  - Robust error handling ensures onboarding only completes if both inserts succeed.
+  - All onboarding data is stored in the `users` and `userpreferences` tables, following the backend schema.
 
 - **Paywall Screen**
   - Purpose: Encourage subscription while offering a free trial or limited access.
