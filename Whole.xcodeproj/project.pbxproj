@@ -23,6 +23,7 @@
 		FE189B962DB267AA00F107A6 /* QuoteShareCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE189B952DB267AA00F107A6 /* QuoteShareCardView.swift */; };
 		FE4AF0682DB72D5700A8AD78 /* LikedQuoteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AF0662DB72D5700A8AD78 /* LikedQuoteModel.swift */; };
 		FE4AF0692DB72D5700A8AD78 /* UserPreferencesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AF0672DB72D5700A8AD78 /* UserPreferencesModel.swift */; };
+		FE4AF06A2DB795CB00A8AD78 /* WholeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3DC2DAF66F70096F621 /* WholeUITests.swift */; };
 		FE69A3E42DAF66F70096F621 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A38D2DAF66F70096F621 /* CustomButton.swift */; };
 		FE69A3E52DAF66F70096F621 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3CD2DAF66F70096F621 /* Config.swift */; };
 		FE69A3E72DAF66F70096F621 /* UserQuoteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3B42DAF66F70096F621 /* UserQuoteModel.swift */; };
@@ -58,7 +59,6 @@
 		FE69A4092DAF66F70096F621 /* QuoteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3A42DAF66F70096F621 /* QuoteViewModel.swift */; };
 		FE69A40A2DAF66F70096F621 /* WidgetEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3E02DAF66F70096F621 /* WidgetEntry.swift */; };
 		FE69A40B2DAF66F70096F621 /* PaywallViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3A12DAF66F70096F621 /* PaywallViewModel.swift */; };
-		FE69A40C2DAF66F70096F621 /* WholeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3DC2DAF66F70096F621 /* WholeUITests.swift */; };
 		FE69A40D2DAF66F70096F621 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3BE2DAF66F70096F621 /* AnalyticsService.swift */; };
 		FE69A40E2DAF66F70096F621 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3BC2DAF66F70096F621 /* Assets.xcassets */; };
 		FE69A40F2DAF66F70096F621 /* entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3C42DAF66F70096F621 /* entitlements.plist */; };
@@ -745,7 +745,6 @@
 				FE69A4092DAF66F70096F621 /* QuoteViewModel.swift in Sources */,
 				FE69A40A2DAF66F70096F621 /* WidgetEntry.swift in Sources */,
 				FE69A40B2DAF66F70096F621 /* PaywallViewModel.swift in Sources */,
-				FE69A40C2DAF66F70096F621 /* WholeUITests.swift in Sources */,
 				FE69A40D2DAF66F70096F621 /* AnalyticsService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -763,6 +762,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FE189B792DB0C5A000F107A6 /* WholeUITestsLaunchTests.swift in Sources */,
+				FE4AF06A2DB795CB00A8AD78 /* WholeUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

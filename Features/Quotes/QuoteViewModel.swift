@@ -154,6 +154,18 @@ final class QuoteViewModel: ObservableObject {
         return QuoteImageGenerator.generateShareImage(for: quote, isPremiumUser: !isFreeUser)
     }
 
+    /// Saves the currently displayed quote to App Group UserDefaults for widget access.
+    /// This keeps the widget in sync with the main interface.
+    func saveQuoteForWidget(_ quote: Quote) {
+        let appGroupID = "group.com.wholeapp" // Ensure this matches your App Group ID
+        if let userDefaults = UserDefaults(suiteName: appGroupID) {
+            let encoder = JSONEncoder()
+            if let data = try? encoder.encode(quote) {
+                userDefaults.set(data, forKey: "widgetDailyQuote")
+            }
+        }
+    }
+
     // MARK: - UI Presentation Methods
     /// Presents the theme switcher UI by posting a notification.
     func showThemeSwitcher() {

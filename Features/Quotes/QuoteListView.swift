@@ -52,6 +52,7 @@ struct QuoteListView: View {
             // Save the currently displayed quote for the widget whenever the user swipes to a new quote.
             if viewModel.quotes.indices.contains(newIndex) {
                 let currentQuote = viewModel.quotes[newIndex]
+                // Call the new saveQuoteForWidget method on the viewModel
                 viewModel.saveQuoteForWidget(currentQuote)
             }
             // If a free user hits the swipe limit, show limit popup and paywall modal
@@ -65,6 +66,7 @@ struct QuoteListView: View {
             // Save the initial quote for the widget when the view appears.
             if viewModel.quotes.indices.contains(selectedIndex) {
                 let currentQuote = viewModel.quotes[selectedIndex]
+                // Call the new saveQuoteForWidget method on the viewModel
                 viewModel.saveQuoteForWidget(currentQuote)
             }
         }
