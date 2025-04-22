@@ -49,6 +49,7 @@
 
 ## Recent Changes
 - **Universal UUID Migration:** All identifiers in models, view models, services, and widgets are now UUIDs. All SupabaseService methods and usages updated accordingly. All sample/mock data now uses UUID().
+- **SwiftUI Performance Refactor:** `QuoteListView` was refactored to extract the TabView and overlays into computed properties, resolving SwiftUI type-checking errors and improving maintainability.
 
 ---
 

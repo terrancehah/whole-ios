@@ -31,42 +31,52 @@ struct QuoteListView: View {
         return true
     }
 
+    // Computed property to provide enumerated quotes for display, breaking up complex expressions for compiler performance
+    private var enumeratedQuotesToShow: [(offset: Int, element: Quote)] {
+        let quotesToShow = Array(viewModel.quotes.prefix(isPremiumUser ? viewModel.quotes.count : viewModel.swipeLimit))
+        return Array(quotesToShow.enumerated())
+    }
+
+    // Extracted TabView for quotes to reduce complexity in main body and help the compiler
+    private var quoteTabView: some View {
+        TabView(selection: $selectedIndex) {
+            ForEach(enumeratedQuotesToShow, id: \.element.id) { idx, quote in
+                QuoteShareCardView(quote: quote)
+                    .tag(idx)
+                    // Disable cards beyond the limit for free users
+                    .disabled(!isPremiumUser && viewModel.reachedSwipeLimit && idx >= viewModel.swipeLimit)
+            }
+        }
+        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+        .onChange(of: selectedIndex) { newIndex in
+            // Save the currently displayed quote for the widget whenever the user swipes to a new quote.
+            if viewModel.quotes.indices.contains(newIndex) {
+                let currentQuote = viewModel.quotes[newIndex]
+                viewModel.saveQuoteForWidget(currentQuote)
+            }
+            // If a free user hits the swipe limit, show limit popup and paywall modal
+            if !isPremiumUser && newIndex >= viewModel.swipeLimit {
+                showLimitPopup = true
+                showPaywall = true
+                viewModel.showPaywallCTA = true
+            }
+        }
+        .onAppear {
+            // Save the initial quote for the widget when the view appears.
+            if viewModel.quotes.indices.contains(selectedIndex) {
+                let currentQuote = viewModel.quotes[selectedIndex]
+                viewModel.saveQuoteForWidget(currentQuote)
+            }
+        }
+        .animation(.easeInOut, value: selectedIndex)
+        .padding(.bottom, 60)
+    }
+
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottom) {
-                // Horizontal swipeable quote cards
-                TabView(selection: $selectedIndex) {
-                    // Only allow free users to swipe up to the daily limit
-                    ForEach(Array(viewModel.quotes.prefix(isPremiumUser ? viewModel.quotes.count : viewModel.swipeLimit).enumerated()), id: \ .element.id) { idx, quote in
-                        QuoteShareCardView(quote: quote)
-                            .tag(idx)
-                            // Disable cards beyond the limit for free users
-                            .disabled(!isPremiumUser && viewModel.reachedSwipeLimit && idx >= viewModel.swipeLimit)
-                    }
-                }
-                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
-                .onChange(of: selectedIndex) { newIndex in
-                    // Save the currently displayed quote for the widget whenever the user swipes to a new quote.
-                    if viewModel.quotes.indices.contains(newIndex) {
-                        let currentQuote = viewModel.quotes[newIndex]
-                        viewModel.saveQuoteForWidget(currentQuote)
-                    }
-                    // If a free user hits the swipe limit, show limit popup and paywall modal
-                    if !isPremiumUser && newIndex >= viewModel.swipeLimit {
-                        showLimitPopup = true
-                        showPaywall = true
-                        viewModel.showPaywallCTA = true
-                    }
-                }
-                .onAppear {
-                    // Save the initial quote for the widget when the view appears.
-                    if viewModel.quotes.indices.contains(selectedIndex) {
-                        let currentQuote = viewModel.quotes[selectedIndex]
-                        viewModel.saveQuoteForWidget(currentQuote)
-                    }
-                }
-                .animation(.easeInOut, value: selectedIndex)
-                .padding(.bottom, 60)
+                // Use extracted TabView for quotes
+                quoteTabView
 
                 // Paywall CTA button for free users only, appears when limit is hit
                 if viewModel.showPaywallCTA && !isPremiumUser {

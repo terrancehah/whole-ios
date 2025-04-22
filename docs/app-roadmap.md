@@ -191,6 +191,10 @@ This document provides a step-by-step guide for developing the Whole app, from b
 - Hardcoded sample quotes and widget demo data now use `UUID()` for IDs.
 - Codebase is now free of String/UUID conversion errors and is type-safe throughout.
 
+### 2025-04-22: SwiftUI Performance Optimization
+- Refactored `QuoteListView` to extract the main TabView and break up complex expressions, resolving compiler errors and improving maintainability.
+- Ensured overlays/popups remain modular and commented for future extensibility.
+
 ### Next Steps
 - Continue to monitor for any lingering type mismatches or legacy String IDs.
 - Ensure all documentation remains up-to-date with model and service changes.

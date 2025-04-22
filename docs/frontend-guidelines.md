@@ -122,6 +122,10 @@ Whole supports multiple visual styles to suit different user preferences. For la
 ## 14. Widget Guidelines
 - Widget demo data must use UUID for quote IDs, matching the main app.
 
+## 15. SwiftUI Performance Best Practices
+- For large or complex SwiftUI views (such as quote carousels), extract subviews and break up complex expressions (e.g., ForEach with chained enumerated/prefix) into computed properties or helper views.
+- This approach is now used in `QuoteListView.swift` for the main TabView and overlays, resolving type-checking errors and improving code clarity.
+
 ---
 
 > **Note:** For implementation, start with Serene Minimalism. Use the other styles as reference for future expansion.

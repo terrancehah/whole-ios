@@ -281,3 +281,4 @@ This format was chosen because Supabase's CSV importer expects a plain text valu
 - No cross-user access is allowed unless explicitly enabled.
 - Admins can manage curated quotes; users can only manage their own data.
 - Update this document whenever you change the database schema or policies.
+- No backend changes required for SwiftUI performance refactor in `QuoteListView.swift`. All changes are front-end only, improving UI maintainability and compile times.

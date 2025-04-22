@@ -97,6 +97,10 @@ Premium features are unlocked through a subscription, offering unlimited quote a
 #### Developer Experience
 - All code and documentation updated to reflect UUID migration for robust type safety and future-proofing.
 
+### 5.11 UI Performance & Maintainability
+- Refactored `QuoteListView` to extract the TabView and overlays into computed properties for improved SwiftUI compile times and maintainability.
+- All UI logic remains robust and clearly commented for future expansion.
+
 ---
 
 ## 6. Technical Requirements

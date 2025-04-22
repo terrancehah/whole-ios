@@ -11,7 +11,8 @@ final class FavoritesViewModel: ObservableObject {
     /// The user's current ID (must be set after login).
     var userId: UUID?
     /// Error message for UI display.
-    @Published var errorMessage: String? = nil
+    // Replace String? errorMessage with ErrorMessage? for alert compatibility
+    @Published var errorMessage: ErrorMessage?
     /// Loading state for UI feedback.
     @Published var isLoading: Bool = false
     /// Combine cancellables.
@@ -32,7 +33,10 @@ final class FavoritesViewModel: ObservableObject {
                 case .success(let quotes):
                     self?.likedQuotes = quotes
                 case .failure(let error):
-                    self?.errorMessage = "Failed to load favorites: \(error.localizedDescription)"
+                    // When assigning error messages, wrap them in ErrorMessage(message: ...)
+                    // Example:
+                    // self.errorMessage = ErrorMessage(message: "Failed to fetch favorites")
+                    self?.errorMessage = ErrorMessage(message: "Failed to load favorites: \(error.localizedDescription)")
                 }
             }
         }
@@ -48,7 +52,7 @@ final class FavoritesViewModel: ObservableObject {
                 case .success:
                     self?.likedQuotes.removeAll { $0.quoteId == likedQuote.quoteId }
                 case .failure(let error):
-                    self?.errorMessage = "Failed to remove favorite: \(error.localizedDescription)"
+                    self?.errorMessage = ErrorMessage(message: "Failed to remove favorite: \(error.localizedDescription)")
                 }
             }
         }

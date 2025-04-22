@@ -50,7 +50,7 @@ struct FavoritesView: View {
             }
             .navigationTitle("Favorites")
             .alert(item: $viewModel.errorMessage) { error in
-                Alert(title: Text("Error"), message: Text(error), dismissButton: .default(Text("OK")))
+                Alert(title: Text("Error"), message: Text(error.message), dismissButton: .default(Text("OK")))
             }
         }
     }
@@ -63,4 +63,10 @@ struct FavoritesView_Previews: PreviewProvider {
         vm.likedQuotes = [] // Empty state for preview
         return FavoritesView(viewModel: vm)
     }
+}
+
+// ErrorMessage struct for Identifiable error alerts
+struct ErrorMessage: Identifiable {
+    let id = UUID()
+    let message: String
 }

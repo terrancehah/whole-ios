@@ -26,10 +26,9 @@ struct WholeApp: App {
             }
             .onAppear {
                 // Set the userId and fetch favorites after login
-                if let userId = userProfileViewModel.user?.id {
-                    favoritesViewModel.userId = userId
-                    favoritesViewModel.fetchLikedQuotes()
-                }
+                let userId = userProfileViewModel.user.id
+                favoritesViewModel.userId = userId
+                favoritesViewModel.fetchLikedQuotes()
             }
         }
     }

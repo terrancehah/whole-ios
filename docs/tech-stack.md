@@ -13,6 +13,8 @@
 - **User-Generated Quotes:**
   - Implemented with SwiftUI and Combine for a modern, reactive editor UI.
   - Supabase is used for backend storage and future moderation flows.
+- SwiftUI performance best practices implemented: Large views (e.g., quote carousels) now use extracted subviews and computed properties to avoid compiler errors and improve maintainability.
+- Example: `QuoteListView` refactor (2025-04-22).
 
 ## Backend
 - **Platform**: Supabase

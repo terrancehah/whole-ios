@@ -161,6 +161,12 @@
 - Paywall modal (`PaywallView`) is shown when a free user hits the swipe limit or tries to select a premium theme.
 - Code comments have been added for maintainability and future onboarding.
 
+### SwiftUI Performance Optimization (2025-04-22):
+  - Refactored `QuoteListView.swift` to extract the main `TabView` into a private computed property (`quoteTabView`) and broke up complex expressions for `ForEach`.
+  - This change resolves SwiftUI compiler type-checking errors in large views and improves maintainability.
+  - All overlays and popups remain modular and clearly commented for future extensibility.
+  - See the section on premium gating for details about where this refactor is applied.
+
 ### Favorites (Liked Quotes) Feature (2025-04-21)
 - Users can now save and revisit favorite quotes ("Liked Quotes").
 - Favorites are displayed in a dedicated tab (`FavoritesView`) in the main TabView navigation.
