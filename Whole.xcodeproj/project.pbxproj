@@ -24,6 +24,7 @@
 		FE4AF0682DB72D5700A8AD78 /* LikedQuoteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AF0662DB72D5700A8AD78 /* LikedQuoteModel.swift */; };
 		FE4AF0692DB72D5700A8AD78 /* UserPreferencesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AF0672DB72D5700A8AD78 /* UserPreferencesModel.swift */; };
 		FE4AF06A2DB795CB00A8AD78 /* WholeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3DC2DAF66F70096F621 /* WholeUITests.swift */; };
+		FE4AF06C2DB7FD5C00A8AD78 /* PastelButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AF06B2DB7FD5C00A8AD78 /* PastelButtonStyle.swift */; };
 		FE69A3E42DAF66F70096F621 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A38D2DAF66F70096F621 /* CustomButton.swift */; };
 		FE69A3E52DAF66F70096F621 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3CD2DAF66F70096F621 /* Config.swift */; };
 		FE69A3E72DAF66F70096F621 /* UserQuoteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69A3B42DAF66F70096F621 /* UserQuoteModel.swift */; };
@@ -110,6 +111,7 @@
 		FE189B952DB267AA00F107A6 /* QuoteShareCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteShareCardView.swift; sourceTree = "<group>"; };
 		FE4AF0662DB72D5700A8AD78 /* LikedQuoteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikedQuoteModel.swift; sourceTree = "<group>"; };
 		FE4AF0672DB72D5700A8AD78 /* UserPreferencesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferencesModel.swift; sourceTree = "<group>"; };
+		FE4AF06B2DB7FD5C00A8AD78 /* PastelButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastelButtonStyle.swift; sourceTree = "<group>"; };
 		FE69A33D2DAF62C80096F621 /* Whole.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Whole.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE69A34D2DAF62CA0096F621 /* WholeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WholeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE69A3572DAF62CA0096F621 /* WholeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WholeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -313,6 +315,7 @@
 		FE69A3992DAF66F70096F621 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				FE4AF06B2DB7FD5C00A8AD78 /* PastelButtonStyle.swift */,
 				FE69A3982DAF66F70096F621 /* View+Extensions.swift */,
 			);
 			path = Extensions;
@@ -701,6 +704,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE4AF06C2DB7FD5C00A8AD78 /* PastelButtonStyle.swift in Sources */,
 				FE69A3E42DAF66F70096F621 /* CustomButton.swift in Sources */,
 				FE69A3E52DAF66F70096F621 /* Config.swift in Sources */,
 				FE189B942DB250A100F107A6 /* UserProfileViewModel.swift in Sources */,

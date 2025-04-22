@@ -84,16 +84,10 @@ struct QuoteListView: View {
                 if viewModel.showPaywallCTA && !isPremiumUser {
                     Button(action: { showPaywall = true }) {
                         Text("Unlock Unlimited Quotes")
-                            .fontWeight(.bold)
+                            .headingFont(size: 18) // Use heading font for CTA
                             .padding()
-                            .background(Color(.systemBackground))
-                            .foregroundColor(Color.accentColor)
-                            .cornerRadius(12)
-                            .shadow(color: Color.primary.opacity(0.15), radius: 10, x: 0, y: 4)
-                            // Animate CTA when popup is shown
-                            .scaleEffect(showLimitPopup ? 1.1 : 1.0)
-                            .animation(.spring(), value: showLimitPopup)
                     }
+                    .buttonStyle(.borderedProminent)
                     .padding(.bottom, 24)
                 }
 
@@ -101,10 +95,11 @@ struct QuoteListView: View {
                 if let error = viewModel.errorMessage {
                     VStack {
                         Text(error)
-                            .foregroundColor(.red)
+                            .bodyFont(size: 16).foregroundColor(.red)
                         Button("Retry") {
                             viewModel.retryFetchQuotes()
                         }
+                        .bodyFont(size: 15)
                         .padding(.top, 4)
                     }
                     .padding()
@@ -173,7 +168,7 @@ struct PopupView: View {
     let message: String
     var body: some View {
         Text(message)
-            .font(.subheadline)
+            .captionFont(size: 15) // Use caption font for popups
             .padding(.vertical, 12)
             .padding(.horizontal, 32)
             .background(BlurView(style: .systemMaterial))

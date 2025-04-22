@@ -20,7 +20,7 @@ final class OnboardingViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     @Published var onboardingCompleted: Bool = false
-    @Published var notificationsEnabled: Bool = true // Default ON for onboarding UX
+    @Published var notificationsEnabled: Bool = false // Default OFF for onboarding
     @Published var notificationTime: String = "08:00" // Default time
 
     // Available options (could be fetched from backend in future)

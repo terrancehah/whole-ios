@@ -38,8 +38,14 @@ Whole supports multiple visual styles to suit different user preferences. For la
   - English: Georgia or serif, #2D3748, 20px
   - Chinese: PingFang SC or clean sans-serif, #4A5568, 18px
   - Line spacing: 1.5x
-- **Buttons:** Outline heart icon (#A0AEC0, filled #E53E3E when liked), minimal share icon (#A0AEC0)
-- **Navigation:** Transparent top bar, bottom tab bar with icons in #718096 (active: #2B6CB0)
+- **Buttons:**
+  - Primary: Use accent color from Serene Minimalism palette (#ff9f68) for background, white text, and rounded corners.
+  - Secondary: Use secondary color (#ff784f) for background, white or dark text depending on contrast, and rounded corners.
+  - Avoid pastel blue. All button colors must reference the Serene Minimalism palette.
+  - Button states (pressed/disabled) use lighter/darker shades of the above.
+- **Navigation:**
+  - Icons and highlights use accent color (#ff9f68).
+  - Active tab uses secondary color (#ff784f).
 - **Vibe:** Light, airy, serene, quote as centerpiece
 
 ### 7.2 Elegant Monochrome

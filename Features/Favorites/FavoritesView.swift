@@ -10,46 +10,60 @@ struct FavoritesView: View {
     var body: some View {
         NavigationView {
             Group {
+                // Display loading indicator while data is being fetched
                 if viewModel.isLoading {
                     ProgressView("Loading favorites...")
+                        .bodyFont(size: 16) // Use body font for loading text
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else if !viewModel.likedQuotes.isEmpty {
+                } 
+                // Display list of liked quotes if data is available
+                else if !viewModel.likedQuotes.isEmpty {
                     List {
                         ForEach(viewModel.likedQuotes) { likedQuote in
                             VStack(alignment: .leading, spacing: 8) {
+                                // Display quote ID with heading font
                                 Text("Quote ID: \(likedQuote.quoteId)")
-                                    .font(.headline)
+                                    .headingFont(size: 18) // Use heading font for quote id
+                                // Display timestamp with caption font
                                 Text("Liked at: \(likedQuote.createdAt.formatted())")
-                                    .font(.caption)
+                                    .captionFont(size: 13) // Use caption font for timestamp
                                     .foregroundColor(.secondary)
                             }
                             .swipeActions(edge: .trailing) {
+                                // Button to remove quote from favorites
                                 Button(role: .destructive) {
                                     viewModel.removeFromFavorites(likedQuote: likedQuote)
                                 } label: {
                                     Label("Remove", systemImage: "heart.slash")
+                                        .bodyFont(size: 15)
                                 }
                             }
                         }
                     }
-                } else {
+                } 
+                // Display empty state if no quotes are liked
+                else {
                     VStack(spacing: 16) {
                         Image(systemName: "heart")
                             .font(.system(size: 48))
                             .foregroundColor(.pink)
+                        // Display heading text with heading font
                         Text("No favorites yet")
-                            .font(ThemeManager.shared.selectedTheme.theme.englishFont)
+                            .headingFont(size: 20)
                             .foregroundColor(ThemeManager.shared.selectedTheme.theme.englishColor)
+                        // Display body text with body font
                         Text("Tap the heart icon on any quote to add it to your favorites.")
-                            .font(ThemeManager.shared.selectedTheme.theme.chineseFont)
+                            .bodyFont(size: 15)
                             .multilineTextAlignment(.center)
                             .foregroundColor(ThemeManager.shared.selectedTheme.theme.chineseColor)
                     }
                     .padding()
                 }
             }
+            // Set navigation title (cannot apply custom font directly)
             .navigationTitle("Favorites")
             .alert(item: $viewModel.errorMessage) { error in
+                // Use standard Text for title/message (font cannot be customized in native Alert)
                 Alert(title: Text("Error"), message: Text(error.message), dismissButton: .default(Text("OK")))
             }
         }

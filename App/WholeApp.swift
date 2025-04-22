@@ -21,13 +21,16 @@ struct WholeApp: App {
                 TabView {
                     // Quotes Tab (placeholder)
                     Text("Quotes")
+                        .headingFont(size: 22) // Apply heading font to tab label
                         .tabItem {
                             Label("Quotes", systemImage: "quote.bubble")
+                                .bodyFont(size: 12) // Tab label font
                         }
                     // Favorites Tab
                     FavoritesView(viewModel: favoritesViewModel)
                         .tabItem {
                             Label("Favorites", systemImage: "heart.fill")
+                                .bodyFont(size: 12)
                         }
                 }
                 .onAppear {
