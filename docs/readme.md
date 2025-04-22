@@ -50,6 +50,25 @@
 ## Recent Changes
 - **Universal UUID Migration:** All identifiers in models, view models, services, and widgets are now UUIDs. All SupabaseService methods and usages updated accordingly. All sample/mock data now uses UUID().
 - **SwiftUI Performance Refactor:** `QuoteListView` was refactored to extract the TabView and overlays into computed properties, resolving SwiftUI type-checking errors and improving maintainability.
+- **Onboarding Completion Persistence:** Onboarding completion is now tracked persistently using @AppStorage. Users only see onboarding on first launch, as per app-flow.md.
+
+---
+
+## Changelog
+- Refactored onboarding flow to a multi-step experience:
+  - Preferences split into categories, name, and goals, each with their own screen.
+  - Categories and goals now use a grid selection UI with colored borders.
+  - Back and skip buttons added for better navigation.
+  - Notification permission is now triggered directly by the toggle.
+  - Widget install prompt moved after preferences and notifications.
+  - Trial screen improved with a reminder toggle, clear description, and skip option.
+  - Theme color now applies to the entire onboarding background.
+
+- Updated documentation to reflect the new onboarding logic and UI/UX.
+
+- **Universal UUID Migration:** All identifiers in models, view models, services, and widgets are now UUIDs. All SupabaseService methods and usages updated accordingly. All sample/mock data now uses UUID().
+- **SwiftUI Performance Refactor:** `QuoteListView` was refactored to extract the TabView and overlays into computed properties, resolving SwiftUI type-checking errors and improving maintainability.
+- **Onboarding Completion Persistence:** Onboarding completion is now tracked persistently using @AppStorage. Users only see onboarding on first launch, as per app-flow.md.
 
 ---
 

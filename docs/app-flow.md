@@ -9,29 +9,54 @@
 - **Onboarding Screens**
   - Objective: Introduce the app and collect user preferences to personalize the experience.
   - Screens:
-    1. Welcome Message and App Purpose
-       - Brief text: "Welcome to Whole – your daily dose of inspiration in English and Chinese."
-       - Highlights the app's value: bilingual quotes for motivation and reflection.
-    2. Widget Feature Introduction
-       - Explains the lock screen/standby mode widget: "Get daily quotes without unlocking your phone."
-       - Includes a prompt to install the widget, with a "Later" option to skip.
-    3. Interactive User Preference Form
-       - Quote Categories: Multiple-choice selection (e.g., Inspiration, Love, Success, Wisdom).
-       - Name: Optional text input with a "Skip" button.
-       - Gender: Optional single-choice (e.g., Male, Female, Other, Prefer Not to Say) with a "Skip" option.
-       - Goals: Multiple-choice (e.g., Personal Growth, Career Success, Inner Peace).
-       - Additional Customization Questions: Optional multiple-choice questions.
-    4. Notification Preferences
-       - User sets notification time and enables/disables daily notifications.
-       - Requests permission for notifications if enabled.
-    5. Subscription Model Introduction
-       - Brief overview: "Unlock unlimited quotes and premium features with a 7-day free trial."
-       - Transitions to the paywall screen.
+    1. **Welcome Screen**
+       - Brief intro to the app.
+       - Only a continue button is shown.
+    2. **Preferred Categories**
+       - User selects their preferred quote categories using a grid layout.
+       - Each category displays as a selectable card with a colored border when selected.
+       - Continue button is enabled only when at least one category is selected.
+       - Skip button at top right allows proceeding without selection.
+    3. **Name**
+       - User can enter their name (optional).
+       - Skip button at top right.
+    4. **Goals**
+       - User selects personal goals in a grid layout (same UX as categories).
+       - Continue button enabled only when at least one goal is selected.
+       - Skip button at top right.
+    5. **Notification Preferences**
+       - User can enable daily quote notifications with a toggle.
+       - When enabled, the system notification permission prompt appears immediately.
+       - User can set notification time if enabled.
+       - Continue button to proceed.
+    6. **Widget Installation**
+       - User is prompted to install the widget after preferences and notifications.
+       - "Install Widget" and "Later" buttons.
+    7. **Trial / Subscription**
+       - Clear trial description and reminder toggle.
+       - "Start Free Trial" and "Skip Trial" buttons.
+    8. **Completion**
+       - Onboarding is marked as complete and user proceeds to the main app.
+
+- **Navigation:**
+  - Back button is present on all steps except the first.
+  - Skip button is at the top right for all skippable steps.
+
+- **Theme:**
+  - Theme color now applies to the entire onboarding screen background.
+
+- **Persistence:**
+  - Onboarding completion is tracked with a persistent flag, so returning users skip onboarding.
 
 - **Onboarding Data Saving**
   - User profile and preferences are saved to Supabase using `insertUserProfile` and `insertUserPreferences` for new users. All IDs are passed as `UUID`.
   - Robust error handling ensures onboarding only completes if both inserts succeed.
   - All onboarding data is stored in the `users` and `userpreferences` tables, following the backend schema and using UUIDs for all identifiers.
+
+- **Onboarding Completion Persistence**
+  - The app now uses a persistent flag (`didCompleteOnboarding` via `@AppStorage`) to track onboarding completion.
+  - On first launch, users see the onboarding flow. After completion, the main interface is shown on subsequent launches.
+  - The onboarding flow is managed by `OnboardingView` and `OnboardingViewModel`, with an `onCompletion` closure to update the persistent flag.
 
 - **Paywall Screen**
   - Purpose: Encourage subscription while offering a free trial or limited access.

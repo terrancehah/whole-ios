@@ -7,6 +7,9 @@ import UIKit
 
 ///ViewModel to manage onboarding flow, user input, and backend integration.
 final class OnboardingViewModel: ObservableObject {
+    // Add completion handler for onboarding
+    private var onCompletion: (() -> Void)?
+
     // Published properties for each onboarding step
     @Published var currentStep: OnboardingStep = .welcome
     @Published var selectedCategories: Set<QuoteCategory> = []
@@ -28,12 +31,19 @@ final class OnboardingViewModel: ObservableObject {
     // Combine cancellables
     private var cancellables = Set<AnyCancellable>()
 
+    /// Add initializer with completion handler
+    init(onCompletion: (() -> Void)? = nil) {
+        self.onCompletion = onCompletion
+    }
+
     /// Enum representing each onboarding step
     enum OnboardingStep: Int, CaseIterable {
         case welcome
+        case categories
+        case name
+        case goals
+        case notificationPreferences
         case widgetIntro
-        case preferences
-        case notificationPreferences // NEW: Notification onboarding step
         case subscriptionIntro
         case completed
     }
@@ -42,12 +52,16 @@ final class OnboardingViewModel: ObservableObject {
     func nextStep() {
         if let next = OnboardingStep(rawValue: currentStep.rawValue + 1) {
             currentStep = next
+            if next == .completed {
+                // Call completion handler when onboarding is done
+                onCompletion?()
+            }
         }
     }
 
     /// Go back to the previous step
     func previousStep() {
-        if let prev = OnboardingStep(rawValue: currentStep.rawValue - 1) {
+        if let prev = OnboardingStep(rawValue: currentStep.rawValue - 1), prev != .welcome {
             currentStep = prev
         }
     }
