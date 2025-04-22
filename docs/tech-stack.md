@@ -19,6 +19,8 @@
   - **Authentication**: Handles user sign-up, login, and security
   - **Database**: PostgreSQL (for storing quotes, user data, and preferences)
   - **Real-time Updates**: Supports future features like live quote sharing
+  - All identifiers in the app and backend (Supabase) are now UUIDs for type safety and consistency.
+  - SupabaseService API updated to require UUID for all IDs.
 
 ## Analytics
 - **Tool**: Firebase Analytics (for tracking user behavior and engagement)

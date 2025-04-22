@@ -49,8 +49,8 @@ final class SupabaseService {
     /// Fetches the IDs of quotes liked by a specific user from the 'liked_quotes' table.
     /// - Parameters:
     ///   - userId: The ID of the current user.
-    ///   - completion: Completion handler with Result<[String], Error>
-    func fetchLikedQuoteIDs(forUser userId: String, completion: @escaping (Result<[String], Error>) -> Void) {
+    ///   - completion: Completion handler with Result<[UUID], Error>
+    func fetchLikedQuoteIDs(forUser userId: UUID, completion: @escaping (Result<[UUID], Error>) -> Void) {
         Task {
             do {
                 // Query liked_quotes for all quoteIds liked by this user
@@ -58,7 +58,7 @@ final class SupabaseService {
                     .database
                     .from("liked_quotes")
                     .select()
-                    .eq("userId", value: userId)
+                    .eq("userId", value: userId.uuidString)
                     .execute()
                     .value
                 // Map to quoteId array
@@ -75,14 +75,14 @@ final class SupabaseService {
     ///   - quoteId: The ID of the quote to like.
     ///   - userId: The ID of the current user.
     ///   - completion: Completion handler with Result<Void, Error>
-    func likeQuote(quoteId: String, userId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    func likeQuote(quoteId: UUID, userId: UUID, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
-                let insertData = ["userId": userId, "quoteId": quoteId]
+                let insertData = ["userId": userId.uuidString, "quoteId": quoteId.uuidString]
                 _ = try await client
                     .database
                     .from("liked_quotes")
-                    .insert(values: [insertData])
+                    .insert([insertData])
                     .execute()
                 completion(.success(()))
             } catch {
@@ -96,7 +96,7 @@ final class SupabaseService {
     ///   - quoteId: The ID of the quote to unlike.
     ///   - userId: The ID of the current user.
     ///   - completion: Completion handler with Result<Void, Error>
-    func unlikeQuote(quoteId: String, userId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    func unlikeQuote(quoteId: UUID, userId: UUID, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
                 // Delete the like where both userId and quoteId match
@@ -104,8 +104,8 @@ final class SupabaseService {
                     .database
                     .from("liked_quotes")
                     .delete()
-                    .eq("userId", value: userId)
-                    .eq("quoteId", value: quoteId)
+                    .eq("userId", value: userId.uuidString)
+                    .eq("quoteId", value: quoteId.uuidString)
                     .execute()
                 completion(.success(()))
             } catch {
@@ -118,7 +118,7 @@ final class SupabaseService {
     /// - Parameters:
     ///   - userId: The ID of the current user.
     ///   - completion: Completion handler with Result<[LikedQuote], Error>
-    func fetchFullLikedQuotes(forUser userId: String, completion: @escaping (Result<[LikedQuote], Error>) -> Void) {
+    func fetchFullLikedQuotes(forUser userId: UUID, completion: @escaping (Result<[LikedQuote], Error>) -> Void) {
         Task {
             do {
                 // Query liked_quotes for all records liked by this user
@@ -126,7 +126,7 @@ final class SupabaseService {
                     .database
                     .from("liked_quotes")
                     .select()
-                    .eq("userId", value: userId)
+                    .eq("userId", value: userId.uuidString)
                     .execute()
                     .value
                 completion(.success(response))
@@ -141,14 +141,14 @@ final class SupabaseService {
     /// - Parameters:
     ///   - userId: The ID of the user.
     ///   - completion: Completion handler with Result<UserProfile, Error>
-    func fetchUserProfile(userId: String, completion: @escaping (Result<UserProfile, Error>) -> Void) {
+    func fetchUserProfile(userId: UUID, completion: @escaping (Result<UserProfile, Error>) -> Void) {
         Task {
             do {
                 let profiles: [UserProfile] = try await client
                     .database
                     .from("users")
                     .select()
-                    .eq("id", value: userId)
+                    .eq("id", value: userId.uuidString)
                     .limit(1)
                     .execute()
                     .value
@@ -170,15 +170,10 @@ final class SupabaseService {
     func insertUserProfile(profile: UserProfile, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
-                // Prepare the profile dictionary for insertion, mapping coding keys to Supabase columns.
-                let encoder = JSONEncoder()
-                encoder.dateEncodingStrategy = .iso8601
-                let data = try encoder.encode(profile)
-                let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] ?? [:]
                 _ = try await client
                     .database
                     .from("users")
-                    .insert(values: [json])
+                    .insert([profile])
                     .execute()
                 completion(.success(()))
             } catch {
@@ -194,14 +189,10 @@ final class SupabaseService {
     func insertUserPreferences(preferences: UserPreferences, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
-                // Prepare the preferences dictionary for insertion, mapping coding keys to Supabase columns.
-                let encoder = JSONEncoder()
-                let data = try encoder.encode(preferences)
-                let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] ?? [:]
                 _ = try await client
                     .database
                     .from("userpreferences")
-                    .insert(values: [json])
+                    .insert([preferences])
                     .execute()
                 completion(.success(()))
             } catch {
@@ -217,15 +208,16 @@ final class SupabaseService {
     ///   - userId: The ID of the user.
     ///   - notificationsEnabled: The new value for notificationsEnabled.
     ///   - completion: Completion handler with Result<Void, Error>
-    func updateUserPreferences(userId: String, notificationsEnabled: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
+    func updateUserPreferences(userId: UUID, notificationsEnabled: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
-                let updateData = ["notifications_enabled": notificationsEnabled]
+                // Use [String: Bool] for update dictionary to avoid existential Encodable issue
+                let updateData: [String: Bool] = ["notifications_enabled": notificationsEnabled]
                 _ = try await client
                     .database
                     .from("userpreferences")
-                    .update(values: updateData)
-                    .eq("user_id", value: userId)
+                    .update(updateData)
+                    .eq("user_id", value: userId.uuidString)
                     .execute()
                 completion(.success(()))
             } catch {
@@ -239,15 +231,16 @@ final class SupabaseService {
     ///   - userId: The ID of the user.
     ///   - notificationTime: The new notification time (HH:mm string).
     ///   - completion: Completion handler with Result<Void, Error>
-    func updateUserPreferences(userId: String, notificationTime: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    func updateUserPreferences(userId: UUID, notificationTime: String, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
-                let updateData = ["notification_time": notificationTime]
+                // Use [String: String] for update dictionary to avoid existential Encodable issue
+                let updateData: [String: String] = ["notification_time": notificationTime]
                 _ = try await client
                     .database
                     .from("userpreferences")
-                    .update(values: updateData)
-                    .eq("user_id", value: userId)
+                    .update(updateData)
+                    .eq("user_id", value: userId.uuidString)
                     .execute()
                 completion(.success(()))
             } catch {

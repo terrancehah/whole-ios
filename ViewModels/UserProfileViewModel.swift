@@ -9,7 +9,7 @@ final class UserProfileViewModel: ObservableObject {
     /// Published user profile for use in the UI.
     @Published var user: UserProfile
     /// Published user preferences for notification and category settings.
-    @Published var userPreferences: UserPreferences = UserPreferences(userId: "", selectedCategories: [], notificationTime: "08:00", notificationsEnabled: false)
+    @Published var userPreferences: UserPreferences = UserPreferences(userId: UUID(), selectedCategories: [], notificationTime: "08:00", notificationsEnabled: false)
     /// Published property to track loading state.
     @Published var isLoading: Bool = false
     /// Published property for error messages.
@@ -23,7 +23,7 @@ final class UserProfileViewModel: ObservableObject {
     }
 
     /// Fetch the current user's profile from Supabase using SupabaseService.
-    func fetchUserProfile(userId: String) {
+    func fetchUserProfile(userId: UUID) {
         isLoading = true
         errorMessage = nil
         SupabaseService.shared.fetchUserProfile(userId: userId) { [weak self] result in
@@ -40,7 +40,7 @@ final class UserProfileViewModel: ObservableObject {
     }
 
     /// Refresh the user profile (call after purchase/restore or on app launch).
-    func refresh(userId: String) {
+    func refresh(userId: UUID) {
         fetchUserProfile(userId: userId)
     }
 
@@ -55,7 +55,7 @@ final class UserProfileViewModel: ObservableObject {
         set {
             let formatter = DateFormatter()
             formatter.dateFormat = "HH:mm"
-            userPreferences.notificationTime = formatter.string(from: newValue)
+            self.userPreferences = UserPreferences(userId: userPreferences.userId, selectedCategories: userPreferences.selectedCategories, notificationTime: formatter.string(from: newValue), notificationsEnabled: userPreferences.notificationsEnabled)
         }
     }
 
@@ -88,7 +88,7 @@ final class UserProfileViewModel: ObservableObject {
 
     /// Update notificationsEnabled and sync to Supabase, also schedule/cancel notifications
     func updateNotificationsEnabled(_ enabled: Bool) {
-        userPreferences.notificationsEnabled = enabled
+        self.userPreferences = UserPreferences(userId: userPreferences.userId, selectedCategories: userPreferences.selectedCategories, notificationTime: userPreferences.notificationTime, notificationsEnabled: enabled)
         SupabaseService.shared.updateUserPreferences(userId: userPreferences.userId, notificationsEnabled: enabled) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
@@ -113,7 +113,7 @@ final class UserProfileViewModel: ObservableObject {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
         let timeString = formatter.string(from: date)
-        userPreferences.notificationTime = timeString
+        self.userPreferences = UserPreferences(userId: userPreferences.userId, selectedCategories: userPreferences.selectedCategories, notificationTime: timeString, notificationsEnabled: userPreferences.notificationsEnabled)
         SupabaseService.shared.updateUserPreferences(userId: userPreferences.userId, notificationTime: timeString) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
@@ -134,7 +134,7 @@ final class UserProfileViewModel: ObservableObject {
         NotificationService.shared.requestAuthorization { granted in
             DispatchQueue.main.async {
                 if !granted {
-                    self.userPreferences.notificationsEnabled = false
+                    self.userPreferences = UserPreferences(userId: self.userPreferences.userId, selectedCategories: self.userPreferences.selectedCategories, notificationTime: self.userPreferences.notificationTime, notificationsEnabled: false)
                 }
             }
         }
@@ -157,7 +157,7 @@ extension UserProfileViewModel {
         let mockProfile = UserProfile.sample
         // Create mock user preferences (update selectedCategories as needed)
         let mockPreferences = UserPreferences(
-            userId: mockProfile.id,
+            userId: UUID(),
             selectedCategories: [], // Add mock categories if desired
             notificationTime: "08:00",
             notificationsEnabled: true
@@ -169,3 +169,7 @@ extension UserProfileViewModel {
     }
 }
 #endif
+
+// When updating userPreferences, always assign a new value:
+// Example:
+// self.userPreferences = UserPreferences(userId: ..., selectedCategories: ..., notificationTime: ..., notificationsEnabled: ...)

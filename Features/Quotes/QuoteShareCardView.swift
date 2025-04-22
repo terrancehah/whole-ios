@@ -25,8 +25,9 @@ struct QuoteShareCardView: View {
                     .font(themeManager.selectedTheme.theme.chineseFont)
                     .foregroundColor(themeManager.selectedTheme.theme.chineseColor)
                     .multilineTextAlignment(.center)
+                // Display createdBy as a uuidString for clarity
                 if let createdBy = quote.createdBy {
-                    Text("— " + createdBy)
+                    Text("— " + createdBy.uuidString)
                         .font(.footnote)
                         .foregroundColor(.secondary)
                         .padding(.top, 8)
@@ -65,13 +66,14 @@ struct QuoteShareCardView: View {
 struct QuoteShareCardView_Previews: PreviewProvider {
     static var previews: some View {
         // Use QuoteCategory enum for categories
+        // Use UUID() for id and createdBy to resolve type mismatch errors
         QuoteShareCardView(quote: Quote(
-            id: "1",
+            id: UUID(),
             englishText: "The best way to get started is to quit talking and begin doing.",
             chineseText: "开始的最好方法就是停止说话并开始行动。",
             categories: [.motivation],
             createdAt: Date(),
-            createdBy: "Walt Disney"
+            createdBy: UUID()
         ), showWatermark: true)
     }
 }

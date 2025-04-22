@@ -184,3 +184,13 @@ This document provides a step-by-step guide for developing the Whole app, from b
 ---
 
 > For detailed guidance on each step, refer to the respective documentation files in `/docs`.
+
+### 2025-04-22: Universal UUID Migration
+- All identifiers (userId, quoteId, etc.) across models, view models, and services now use `UUID` for type safety and backend consistency.
+- All SupabaseService methods and all usages updated to expect and use `UUID` for IDs.
+- Hardcoded sample quotes and widget demo data now use `UUID()` for IDs.
+- Codebase is now free of String/UUID conversion errors and is type-safe throughout.
+
+### Next Steps
+- Continue to monitor for any lingering type mismatches or legacy String IDs.
+- Ensure all documentation remains up-to-date with model and service changes.

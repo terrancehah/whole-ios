@@ -5,10 +5,10 @@ import Foundation
 
 /// Represents a quote created by a user (premium feature), matching the Supabase 'userquotes' table.
 struct UserQuote: Codable, Identifiable {
-    /// Unique identifier for the user quote (UUID string).
-    let id: String
+    /// Unique identifier for the user quote (UUID, matches Supabase)
+    let id: UUID
     /// UUID of the user who created the quote.
-    let userId: String
+    let userId: UUID
     /// English text of the quote.
     let englishText: String
     /// Chinese translation of the quote.

@@ -71,12 +71,12 @@ struct QuoteCardView_Previews: PreviewProvider {
     static var previews: some View {
         QuoteCardView(
             quote: Quote(
-                id: "1",
+                id: UUID(),
                 englishText: "The best time to plant a tree was 20 years ago. The second best time is now.",
                 chineseText: "种一棵树最好的时间是二十年前，其次是现在。",
                 categories: [QuoteCategory.inspiration, QuoteCategory.life],
                 createdAt: nil,
-                createdBy: nil
+                createdBy: UUID()
             ),
             onLike: {},
             onShare: {},
@@ -86,12 +86,12 @@ struct QuoteCardView_Previews: PreviewProvider {
         .preferredColorScheme(.light)
         QuoteCardView(
             quote: Quote(
-                id: "2",
+                id: UUID(),
                 englishText: "Success is not final, failure is not fatal: It is the courage to continue that counts.",
                 chineseText: "成功不是终点，失败也不是终结，重要的是继续前进的勇气。",
                 categories: [QuoteCategory.motivation, QuoteCategory.wisdom],
                 createdAt: nil,
-                createdBy: nil
+                createdBy: UUID()
             ),
             onLike: {},
             onShare: {},

@@ -9,7 +9,7 @@ final class FavoritesViewModel: ObservableObject {
     /// The user's full liked quotes (with metadata).
     @Published var likedQuotes: [LikedQuote] = []
     /// The user's current ID (must be set after login).
-    var userId: String?
+    var userId: UUID?
     /// Error message for UI display.
     @Published var errorMessage: String? = nil
     /// Loading state for UI feedback.
@@ -56,7 +56,7 @@ final class FavoritesViewModel: ObservableObject {
 
     // MARK: - Utility
     /// Checks if a given quote is in the user's favorites.
-    func isFavorite(quoteId: String) -> Bool {
+    func isFavorite(quoteId: UUID) -> Bool {
         likedQuotes.contains { $0.quoteId == quoteId }
     }
 }

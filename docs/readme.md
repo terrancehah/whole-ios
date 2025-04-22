@@ -47,6 +47,16 @@
 
 ---
 
+## Recent Changes
+- **Universal UUID Migration:** All identifiers in models, view models, services, and widgets are now UUIDs. All SupabaseService methods and usages updated accordingly. All sample/mock data now uses UUID().
+
+---
+
+## Data Model
+- All IDs (`userId`, `quoteId`, etc.) are UUIDs throughout the codebase and database schema.
+
+---
+
 ## Premium Gating and Paywall Implementation
 - **Premium gating and paywall logic are now fully implemented and documented.**
   - Unlimited quote swipes, theme/font customization, and watermark-free sharing are enforced using the user's subscription status and trial end date.

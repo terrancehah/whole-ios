@@ -20,7 +20,8 @@ struct QuoteImageGenerator {
         // Set the desired size for the rendered image
         let targetSize = CGSize(width: 600, height: 800)
         view?.bounds = CGRect(origin: .zero, size: targetSize)
-        view?.backgroundColor = Color.clear
+        // Use UIColor.clear for UIKit compatibility
+        view?.backgroundColor = UIColor.clear
         // Render the view hierarchy to an image
         let renderer = UIGraphicsImageRenderer(size: targetSize)
         return renderer.image { _ in
@@ -34,12 +35,12 @@ struct QuoteImageGenerator_Previews: PreviewProvider {
     static var previews: some View {
         // Use QuoteCategory enum for categories
         let quote = Quote(
-            id: "1",
+            id: UUID(),
             englishText: "The best way to get started is to quit talking and begin doing.",
             chineseText: "开始的最好方法就是停止说话并开始行动。",
             categories: [.motivation],
             createdAt: Date(),
-            createdBy: "Walt Disney"
+            createdBy: UUID()
         )
         // Show both with and without watermark for preview
         VStack {

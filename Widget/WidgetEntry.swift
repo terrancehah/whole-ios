@@ -45,21 +45,21 @@ struct QuoteWidgetProvider: TimelineProvider {
     private func fetchQuoteSync(categories: [QuoteCategory]) -> Quote {
         // NOTE: WidgetKit does not support async fetches. For MVP, use static data or shared cache. In production, pre-cache quotes in app and read from shared storage.
         // Here, fallback to static demo quote.
-        return Quote(id: "demo", englishText: "Stay hungry, stay foolish.", chineseText: "求知若饥，虚心若愚。", categories: [.inspiration], createdAt: nil, createdBy: nil)
+        return Quote(id: UUID(), englishText: "Stay hungry, stay foolish.", chineseText: "求知若饥，虚心若愚。", categories: [.inspiration], createdAt: nil, createdBy: nil)
     }
 
     func placeholder(in context: Context) -> QuoteWidgetEntry {
-        QuoteWidgetEntry(date: Date(), quote: Quote(id: "demo", englishText: "Stay hungry, stay foolish.", chineseText: "求知若饥，虚心若愚。", categories: [.inspiration], createdAt: nil, createdBy: nil), theme: .sereneMinimalism)
+        QuoteWidgetEntry(date: Date(), quote: Quote(id: UUID(), englishText: "Stay hungry, stay foolish.", chineseText: "求知若饥，虚心若愚。", categories: [.inspiration], createdAt: nil, createdBy: nil), theme: .sereneMinimalism)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (QuoteWidgetEntry) -> ()) {
-        let quote = loadWidgetDailyQuote() ?? Quote(id: "demo", englishText: "Stay hungry, stay foolish.", chineseText: "求知若饥，虚心若愚。", categories: [.inspiration], createdAt: nil, createdBy: nil)
+        let quote = loadWidgetDailyQuote() ?? Quote(id: UUID(), englishText: "Stay hungry, stay foolish.", chineseText: "求知若饥，虚心若愚。", categories: [.inspiration], createdAt: nil, createdBy: nil)
         let entry = QuoteWidgetEntry(date: Date(), quote: quote, theme: loadSelectedTheme())
         completion(entry)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<QuoteWidgetEntry>) -> ()) {
-        let quote = loadWidgetDailyQuote() ?? Quote(id: "demo", englishText: "Stay hungry, stay foolish.", chineseText: "求知若饥，虚心若愚。", categories: [.inspiration], createdAt: nil, createdBy: nil)
+        let quote = loadWidgetDailyQuote() ?? Quote(id: UUID(), englishText: "Stay hungry, stay foolish.", chineseText: "求知若饥，虚心若愚。", categories: [.inspiration], createdAt: nil, createdBy: nil)
         let theme = loadSelectedTheme()
         let entry = QuoteWidgetEntry(date: Date(), quote: quote, theme: theme)
         let nextUpdate = Calendar.current.startOfDay(for: Date().addingTimeInterval(86400))

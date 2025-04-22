@@ -8,7 +8,7 @@ struct SettingsView: View {
     // Own the user profile view model for all settings-related screens
     @StateObject private var userProfileViewModel = UserProfileViewModel()
     // Example: Assume you have a way to get the current user id (e.g. from auth)
-    let userId: String
+    let userId: UUID
 
     var body: some View {
         NavigationView {
@@ -47,7 +47,7 @@ struct SettingsView: View {
 #if DEBUG
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView(userId: "mock-user-id")
+        SettingsView(userId: UUID())
     }
 }
 #endif

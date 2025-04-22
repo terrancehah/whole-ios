@@ -53,9 +53,10 @@ struct UserQuoteEditorView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Categories")
                             .font(.headline)
-                        // Show as chips
-                        WrapHStack(spacing: 8) {
-                            ForEach(allCategories, id: \ .self) { category in
+                        // Use a LazyVGrid for native, wrapping chip layout
+                        let columns = [GridItem(.adaptive(minimum: 100), spacing: 8)]
+                        LazyVGrid(columns: columns, spacing: 8) {
+                            ForEach(allCategories, id: \.self) { category in
                                 CategoryChip(
                                     category: category,
                                     isSelected: selectedCategories.contains(category),
@@ -159,102 +160,5 @@ struct CategoryChip: View {
                     .stroke(isSelected ? Color.accentColor : Color(.systemGray4), lineWidth: 1)
             )
             .onTapGesture(perform: onTap)
-    }
-}
-
-// MARK: - WrapHStack
-/// A utility view to wrap chips to the next line if needed.
-struct WrapHStack<Content: View>: View {
-    let spacing: CGFloat
-    let content: () -> Content
-    init(spacing: CGFloat = 8, @ViewBuilder content: @escaping () -> Content) {
-        self.spacing = spacing
-        self.content = content
-    }
-    var body: some View {
-        FlexibleView(
-            availableWidth: UIScreen.main.bounds.width - 48,
-            spacing: spacing,
-            alignment: .leading,
-            content: content
-        )
-    }
-}
-
-// MARK: - FlexibleView (for wrapping chips)
-/// A generic flexible layout for wrapping chips (copied from community best practices)
-struct FlexibleView<Content: View>: View {
-    let availableWidth: CGFloat
-    let spacing: CGFloat
-    let alignment: HorizontalAlignment
-    let content: () -> Content
-    init(availableWidth: CGFloat, spacing: CGFloat, alignment: HorizontalAlignment, @ViewBuilder content: @escaping () -> Content) {
-        self.availableWidth = availableWidth
-        self.spacing = spacing
-        self.alignment = alignment
-        self.content = content
-    }
-    var body: some View {
-        let content = self.content()
-        return _FlexibleView(availableWidth: availableWidth, spacing: spacing, alignment: alignment, content: content)
-    }
-}
-
-private struct _FlexibleView<Content: View>: View {
-    let availableWidth: CGFloat
-    let spacing: CGFloat
-    let alignment: HorizontalAlignment
-    let content: Content
-    @State private var totalHeight: CGFloat = .zero
-    var body: some View {
-        VStack(alignment: alignment, spacing: spacing) {
-            GeometryReader { geometry in
-                self.generateContent(in: geometry)
-            }
-        }
-        .frame(height: totalHeight)
-    }
-    private func generateContent(in geometry: GeometryProxy) -> some View {
-        var width = CGFloat.zero
-        var rows: [[Content]] = [[]]
-        let contentViews = Mirror(reflecting: content).children.compactMap { $0.value as? Content }
-        var currentRow: [Content] = []
-        for view in contentViews {
-            let viewWidth = view.sizeThatFits(CGSize(width: .greatestFiniteMagnitude, height: .greatestFiniteMagnitude)).width
-            if width + viewWidth + spacing > availableWidth {
-                rows.append(currentRow)
-                currentRow = [view]
-                width = viewWidth + spacing
-            } else {
-                currentRow.append(view)
-                width += viewWidth + spacing
-            }
-        }
-        if !currentRow.isEmpty { rows.append(currentRow) }
-        return VStack(alignment: alignment, spacing: spacing) {
-            ForEach(0..<rows.count, id: \ .self) { rowIndex in
-                HStack(spacing: spacing) {
-                    ForEach(0..<rows[rowIndex].count, id: \ .self) { colIndex in
-                        rows[rowIndex][colIndex]
-                    }
-                }
-            }
-        }
-        .background(
-            GeometryReader { proxy in
-                Color.clear
-                    .preference(key: FlexibleViewHeightKey.self, value: proxy.size.height)
-            }
-        )
-        .onPreferenceChange(FlexibleViewHeightKey.self) { height in
-            self.totalHeight = height
-        }
-    }
-}
-
-private struct FlexibleViewHeightKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = max(value, nextValue())
     }
 }

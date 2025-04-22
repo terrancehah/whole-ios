@@ -114,6 +114,14 @@ Whole supports multiple visual styles to suit different user preferences. For la
   - Editor uses clear fields, pastel category chips, and robust validation.
   - All user input is validated and commented for maintainability.
 
+## 13. Identifier Handling
+- All models, view models, and services must use `UUID` for all identifiers (userId, quoteId, etc.).
+- Use `.uuidString` only when interacting with the backend (Supabase).
+- All sample/mock data and previews must use `UUID()` for IDs.
+
+## 14. Widget Guidelines
+- Widget demo data must use UUID for quote IDs, matching the main app.
+
 ---
 
 > **Note:** For implementation, start with Serene Minimalism. Use the other styles as reference for future expansion.

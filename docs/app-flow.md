@@ -29,9 +29,9 @@
        - Transitions to the paywall screen.
 
 - **Onboarding Data Saving**
-  - User profile and preferences are now saved to Supabase using dedicated insert methods (`insertUserProfile`, `insertUserPreferences`) for new users.
+  - User profile and preferences are saved to Supabase using `insertUserProfile` and `insertUserPreferences` for new users. All IDs are passed as `UUID`.
   - Robust error handling ensures onboarding only completes if both inserts succeed.
-  - All onboarding data is stored in the `users` and `userpreferences` tables, following the backend schema.
+  - All onboarding data is stored in the `users` and `userpreferences` tables, following the backend schema and using UUIDs for all identifiers.
 
 - **Paywall Screen**
   - Purpose: Encourage subscription while offering a free trial or limited access.
@@ -193,7 +193,7 @@ The onboarding flow guides new users through a welcome, widget introduction, cat
 - **Swift Model:**
   - File: `Models/QuoteModel.swift`
   - Structure:
-    - `id: String` (UUID)
+    - `id: UUID` (UUID)
     - `englishText: String`
     - `chineseText: String`
     - `categories: [String]`
@@ -206,7 +206,7 @@ The onboarding flow guides new users through a welcome, widget introduction, cat
 - **Swift Model:**
   - File: `Models/UserModel.swift`
   - Structure:
-    - `id: String` (UUID)
+    - `id: UUID` (UUID)
     - `email: String`
     - `name: String?`
     - `gender: String?`
@@ -234,8 +234,8 @@ The onboarding flow guides new users through a welcome, widget introduction, cat
 - **Swift Model:**
   - File: `Models/UserQuoteModel.swift`
   - Structure:
-    - `id: String` (UUID)
-    - `userId: String`
+    - `id: UUID` (UUID)
+    - `userId: UUID`
     - `englishText: String`
     - `chineseText: String`
     - `createdAt: Date?`
@@ -245,9 +245,9 @@ The onboarding flow guides new users through a welcome, widget introduction, cat
 - **Swift Model:**
   - File: `Services/SupabaseService.swift`
   - Structure:
-    - `id: String?`
-    - `userId: String`
-    - `quoteId: String`
+    - `id: UUID?`
+    - `userId: UUID`
+    - `quoteId: UUID`
 - **Maps to Supabase table:** `liked_quotes`
 
 ### View Models
@@ -258,6 +258,11 @@ The onboarding flow guides new users through a welcome, widget introduction, cat
   - Provides robust error handling for all backend operations.
 
 ---
+### Data Model Consistency
+- All identifiers (userId, quoteId, etc.) are now consistently represented as `UUID` in all models, view models, and service methods.
+- All Supabase interactions use `.uuidString` for IDs when required by the backend.
+- All hardcoded sample quotes in code and widget logic now use `UUID()` for IDs to ensure type safety.
+
 ### Notification Preferences Flow (2025-04-21)
 - Onboarding and Settings screens allow users to enable/disable daily quote notifications and set preferred delivery time.
 - Preferences are stored in the `userpreferences` table (`notifications_enabled`, `notification_time`).
@@ -272,3 +277,10 @@ The onboarding flow guides new users through a welcome, widget introduction, cat
 - All submitted quotes are saved to the `userquotes` table in Supabase.
 - Moderation/approval flow is planned for future releases.
 - The UI and logic are fully commented and match the app's Serene Minimalism guidelines.
+
+### Widget Demo Data
+- The widget's demo/static quote now uses a `UUID()` for the quote ID, matching the rest of the codebase.
+
+### Recent Refactoring
+- All code, including previews, mocks, and tests, now uses `UUID` for all identifiers to ensure consistency and type safety across the app.
+- All SupabaseService methods and all usages have been updated to expect and use `UUID` instead of `String` for IDs.

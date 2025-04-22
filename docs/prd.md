@@ -89,6 +89,14 @@ Premium features are unlocked through a subscription, offering unlimited quote a
   - Favorites are synced to the backend and persist across devices.
   - Removing a favorite updates both UI and backend in real time.
 
+### 5.10 UUID Migration
+#### Data Model and Backend Consistency
+- All identifiers (userId, quoteId, etc.) are now `UUID` in both the app and backend schema.
+- All API/service calls, onboarding, and widget demo data reflect this change.
+
+#### Developer Experience
+- All code and documentation updated to reflect UUID migration for robust type safety and future-proofing.
+
 ---
 
 ## 6. Technical Requirements

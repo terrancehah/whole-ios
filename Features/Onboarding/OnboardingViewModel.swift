@@ -3,8 +3,9 @@
 
 import Foundation
 import Combine
+import UIKit
 
-/// ViewModel to manage onboarding flow, user input, and backend integration.
+///ViewModel to manage onboarding flow, user input, and backend integration.
 final class OnboardingViewModel: ObservableObject {
     // Published properties for each onboarding step
     @Published var currentStep: OnboardingStep = .welcome
@@ -55,7 +56,7 @@ final class OnboardingViewModel: ObservableObject {
     /// 
     /// This function now uses insertUserProfile and insertUserPreferences for new users,
     /// replacing any save/update calls. This is the recommended approach for new users.
-    func savePreferencesAndProfile(userId: String, email: String) {
+    func savePreferencesAndProfile(userId: UUID, email: String) {
         isLoading = true
         errorMessage = nil
 

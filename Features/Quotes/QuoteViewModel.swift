@@ -11,7 +11,7 @@ final class QuoteViewModel: ObservableObject {
     /// The list of quotes loaded for the user.
     @Published var quotes: [Quote] = []
     /// Set of quote IDs that have been liked by the user.
-    @Published var likedQuoteIDs: Set<String> = []
+    @Published var likedQuoteIDs: Set<UUID> = [] // Changed from Set<String> to Set<UUID> for type safety
     /// Error message for UI display.
     @Published var errorMessage: String? = nil
     /// Whether to show the paywall CTA.
@@ -198,7 +198,7 @@ extension Quote {
     static func mockQuotes(limit: Int) -> [Quote] {
         (0..<limit).map { i in
             Quote(
-                id: UUID().uuidString,
+                id: UUID(), // Use UUID for id to match model
                 englishText: "Sample Quote \(i+1)",
                 chineseText: "示例语录 \(i+1)",
                 categories: [QuoteCategory.inspiration, QuoteCategory.life],

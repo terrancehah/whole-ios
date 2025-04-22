@@ -5,8 +5,8 @@ import Foundation
 
 /// Represents a user profile, matching the Supabase 'users' table.
 struct UserProfile: Codable, Identifiable {
-    /// Unique identifier for the user (UUID string, matches auth.uid).
-    let id: String
+    /// Unique identifier for the user (UUID, matches auth.uid and Supabase)
+    let id: UUID
     /// User's email address.
     let email: String
     /// User's display name (optional).
@@ -23,7 +23,7 @@ struct UserProfile: Codable, Identifiable {
     let subscriptionStartDate: Date?
     /// End date of paid subscription (optional).
     let subscriptionEndDate: Date?
-    /// Timestamp for when the user profile was created.
+    /// Timestamp for creation.
     let createdAt: Date?
     /// Timestamp for last update.
     let updatedAt: Date?
@@ -49,7 +49,7 @@ extension UserProfile {
     /// Provides a sample user profile matching the schema, useful for SwiftUI previews and tests.
     static var sample: UserProfile {
         UserProfile(
-            id: "sample-user-id",
+            id: UUID(),
             email: "sample@wholeapp.com",
             name: "Sample User",
             gender: "Other",
