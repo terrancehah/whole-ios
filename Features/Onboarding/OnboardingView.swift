@@ -45,7 +45,7 @@ struct OnboardingView: View {
                 case .welcome:
                     WelcomeStepView(onContinue: viewModel.nextStep)
                 case .categories:
-                    CategoriesStepView(selectedCategories: $viewModel.selectedCategories, allCategories: viewModel.allCategories, onContinue: viewModel.nextStep)
+                    CategoriesStepView(selectedCategories: $viewModel.selectedCategories, allCategories: QuoteCategory.allCases.filter { $0 != .unknown }, onContinue: viewModel.nextStep)
                 case .name:
                     NameStepView(name: $viewModel.name, onContinue: viewModel.nextStep)
                 case .goals:
@@ -185,13 +185,21 @@ struct NameStepView: View {
     let onContinue: () -> Void
 
     var body: some View {
-        VStack(spacing: 28) {
+        VStack(spacing: 32) {
             Text("What's your name?")
-                .font(Font.custom("Baskerville", size: 24).weight(.bold))
+                .headingFont(size: 24)
+                .multilineTextAlignment(.center)
             TextField("Enter your name (optional)", text: $name)
-                .font(Font.custom("SF Compact", size: 16))
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding(.horizontal)
+                .bodyFont(size: 16)
+                .padding(.vertical, 18) // Add more vertical padding for comfort
+                .padding(.horizontal, 14)
+                .background(Color(.systemBackground))
+                .cornerRadius(10)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                )
+                .padding(.bottom, 8)
             Button("Continue", action: onContinue)
                 .buttonStyle(WarmPrimaryButtonStyle())
         }
@@ -275,14 +283,18 @@ struct NotificationPreferencesStepView: View {
                     NotificationService.shared.requestAuthorization { _ in }
                 }
             }
-            HStack {
-                Text("Time:")
-                    .font(Font.custom("SF Compact", size: 16))
-                DatePicker("", selection: $selectedDate, displayedComponents: .hourAndMinute)
-                    .labelsHidden()
-                    .onChange(of: selectedDate) { date in
-                        notificationTime = Self.formatTime(date)
-                    }
+            // Show time picker only if notifications are enabled
+            if notificationsEnabled {
+                HStack {
+                    Text("Time:")
+                        .font(Font.custom("SF Compact", size: 16))
+                    DatePicker("", selection: $selectedDate, displayedComponents: .hourAndMinute)
+                        .labelsHidden()
+                        .onChange(of: selectedDate) { date in
+                            notificationTime = Self.formatTime(date)
+                        }
+                }
+                .padding(.horizontal)
             }
             Text("You can always change this in Settings. We respect your privacy and will never spam you.")
                 .font(Font.custom("SF Compact", size: 13))
@@ -312,37 +324,94 @@ struct NotificationPreferencesStepView: View {
 // MARK: - Widget Intro Step (moved after preferences)
 struct WidgetIntroStepView: View {
     let onContinue: () -> Void
+    @State private var showInstructions = false
     var body: some View {
         VStack(spacing: 28) {
-            Image(systemName: "rectangle.stack.fill.badge.plus")
-                .resizable().scaledToFit().frame(height: 80)
-                .foregroundColor(.accentColor)
+            // Widget preview or placeholder image
+            Image("widget-preview-placeholder")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 80)
+                .cornerRadius(16)
+                .shadow(radius: 8)
+                .padding(.bottom, 8)
             Text("Get daily quotes on your lock screen with the Whole widget.")
                 .bodyFont(size: 18)
                 .multilineTextAlignment(.center)
-            Button("Install Widget", action: onContinue)
-                .buttonStyle(WarmPrimaryButtonStyle())
+            Button("Install Widget") {
+                showInstructions = true
+            }
+            .buttonStyle(WarmPrimaryButtonStyle())
+        }
+        .sheet(isPresented: $showInstructions) {
+            WidgetInstallInstructionsSheet(onContinue: onContinue)
         }
     }
 }
 
+// MARK: - Widget Install Instructions Sheet
+/// Sheet shown when user taps Install Widget, with step-by-step guide and placeholder image
+struct WidgetInstallInstructionsSheet: View {
+    let onContinue: () -> Void
+    @Environment(\.presentationMode) var presentationMode
+    var body: some View {
+        VStack(spacing: 24) {
+            Text("How to Add the Widget")
+                .headingFont(size: 22)
+                .multilineTextAlignment(.center)
+            // Placeholder for instructional image (replace with real image/animation as needed)
+            Image("widget-instructions-placeholder")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 160)
+                .cornerRadius(16)
+                .shadow(radius: 8)
+                .padding(.vertical)
+            VStack(alignment: .leading, spacing: 12) {
+                Text("1. Long-press on your home screen until the icons jiggle.")
+                Text("2. Tap the '+' button in the top left corner.")
+                Text("3. Search for 'Whole' in the widget gallery.")
+                Text("4. Select your preferred widget size and tap 'Add Widget'.")
+                Text("5. Place the widget where you like and tap 'Done'.")
+            }
+            .bodyFont(size: 16)
+            .padding(.horizontal)
+            Button("Got it!") {
+                presentationMode.wrappedValue.dismiss()
+                onContinue()
+            }
+            .buttonStyle(WarmPrimaryButtonStyle())
+            .padding(.top, 8)
+        }
+        .padding()
+        .presentationDetents([.medium, .large])
+    }
+}
+
 // MARK: - Subscription/Trial Step
+/// Presents the free trial offer with a clear call-to-action to start the trial.
 struct SubscriptionIntroStepView: View {
     let onContinue: () -> Void
     @State private var trialReminder: Bool = true
+
     var body: some View {
         VStack(spacing: 28) {
+            // Clearly present the free trial offer
             Text("Unlock Unlimited Quotes & Premium Features")
                 .headingFont(size: 24)
                 .multilineTextAlignment(.center)
-            Text("Start a 7-day free trial to access all features. You will not be charged until the trial ends. We'll remind you before your trial expires.")
+            Text("Start a 7-day free trial to access all features. You will not be charged until the trial ends.")
                 .bodyFont(size: 16)
                 .multilineTextAlignment(.center)
+
+            // Offer a reminder toggle for the trial end date
             Toggle(isOn: $trialReminder) {
                 Text("Remind me before trial ends")
                     .bodyFont(size: 15)
             }
             .padding(.horizontal)
+
+            // Clear call-to-action to start the trial
             Button("Start Free Trial", action: onContinue)
                 .buttonStyle(WarmPrimaryButtonStyle())
         }

@@ -16,7 +16,7 @@ struct WarmPrimaryButtonStyle: ButtonStyle {
             .cornerRadius(14)
             .opacity(configuration.isPressed ? 0.85 : 1.0)
             .shadow(color: Color.black.opacity(0.04), radius: 4, x: 0, y: 2)
-            .padding(.horizontal)
+            .padding(.horizontal, 24) // Standard margin on both sides
     }
 }
 
@@ -32,6 +32,6 @@ struct WarmSecondaryButtonStyle: ButtonStyle {
             .cornerRadius(14)
             .opacity(configuration.isPressed ? 0.8 : 1.0)
             .shadow(color: Color.black.opacity(0.02), radius: 2, x: 0, y: 1)
-            .padding(.horizontal)
+            .padding(.horizontal, 24) // Standard margin on both sides
     }
 }

@@ -26,7 +26,18 @@ final class OnboardingViewModel: ObservableObject {
     // Available options (could be fetched from backend in future)
     let allCategories = QuoteCategory.allCases.filter { $0 != .unknown }
     let allGenders = ["Male", "Female", "Other", "Prefer Not to Say"]
-    let allGoals = ["Personal Growth", "Career Success", "Inner Peace"]
+    // First-person, narrative goals for onboarding to foster user engagement and manifestation
+    let allGoals = [
+        "I am becoming more resilient in the face of challenges.",
+        "I practice mindfulness and live in the present moment.",
+        "I am improving my overall health and well-being.",
+        "I am achieving greater financial stability.",
+        "I stay curious and keep learning new things.",
+        "I am succeeding and growing in my career.",
+        "I find inner peace and balance in my life.",
+        "I am building stronger, more meaningful relationships.",
+        "I make personal growth a daily habit."
+    ]
 
     // Combine cancellables
     private var cancellables = Set<AnyCancellable>()
