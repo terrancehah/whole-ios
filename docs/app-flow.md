@@ -67,6 +67,16 @@
       - Reminder Toggle: "Remind me before trial ends" (default: on).
       - Close Button: Access free version with limitations.
 
+## Subscription & Paywall Logic (Updated 2025-04-24)
+- StoreKit 2 is now integrated for all subscription and paywall flows.
+- The paywall allows users to start a 7-day free trial or restore purchases.
+- Subscription restoration uses StoreKit 2's recommended approach:
+    - All verified transactions are collected using `for try await`.
+    - Only non-revoked, correct-product transactions are considered.
+    - The latest transaction's `purchaseDate` is used as the start date, and `renewalDate` from `renewalInfo` as the end date.
+- All error handling is robust and follows Swift concurrency best practices.
+- All subscription and trial state changes are ready to be synced with Supabase backend.
+
 ## 2. Main Interface
 - **Quote Cards**
   - Display: Single quote per card with English text on top, Chinese translation below.

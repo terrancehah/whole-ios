@@ -4,7 +4,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 1: Data Models & ViewModels — ✅ COMPLETED
+## Step 1: Data Models & ViewModels — 
 **Objective:** Establish core data structures and logic.
 - [`UserModel.swift`](../Models/UserModel.swift) defines the user profile, including subscription and trial fields, mapped to Supabase.
 - [`SubscriptionModel.swift`](../Models/SubscriptionModel.swift) encapsulates subscription state and dates for robust premium logic.
@@ -14,7 +14,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 2: Backend Integration — ✅ COMPLETED
+## Step 2: Backend Integration — 
 **Objective:** Connect the app to Supabase for real-time data, auth, and storage.
 - [`SupabaseService.swift`](../Services/SupabaseService.swift) manages all database operations, including fetching quotes, liking/unliking, and retrieving user profiles.
 - [`AuthService.swift`](../Services/AuthService.swift) provides robust user authentication, session management, and password reset, with published properties for reactive UI.
@@ -23,7 +23,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 3: Build Reusable UI Components — ✅ COMPLETED
+## Step 3: Build Reusable UI Components — 
 **Objective:** Create modular UI for consistent user experience.
 - [`QuoteCardView.swift`](../Components/QuoteCardView.swift) is a semantic, reusable card for displaying bilingual quotes, categories, and actions, with clear separation of concerns and preview support.
 - [`CustomButton.swift`](../Components/CustomButton.swift) provides a flexible, consistent button used across all interactive UI.
@@ -32,7 +32,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 4: Main Quote Browsing Interface — ✅ COMPLETED
+## Step 4: Main Quote Browsing Interface — 
 **Objective:** Enable users to browse and interact with quotes.
 - [`QuoteListView.swift`](../Features/Quotes/QuoteListView.swift) provides a horizontally swipeable interface for browsing daily bilingual quotes.
 - Integrates Like and Share actions, with clear visual feedback and premium gating logic.
@@ -42,7 +42,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 5: Complete Settings Sections — ✅ COMPLETED
+## Step 5: Complete Settings Sections — 
 **Objective:** Provide users with a full-featured settings experience.
 - [`SettingsView.swift`](../Features/Settings/SettingsView.swift) is the central hub, integrating all settings sections and passing a reactive `UserProfileViewModel` to each for robust premium gating and paywall logic.
 - [`CustomizationView.swift`](../Features/Settings/CustomizationView.swift) allows theme selection with premium gating and paywall integration.
@@ -55,7 +55,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 6: Sharing, Theming, and Paywall Polish — ✅ COMPLETED
+## Step 6: Sharing, Theming, and Paywall Polish — 
 **Objective:** Enhance user engagement and monetization.
 - Sharing capabilities for quotes are implemented and polished:
     - [`QuoteShareCardView.swift`](../Features/Quotes/QuoteShareCardView.swift): Renders a quote as a shareable image, applies watermark for free users, and uses current theme styling.
@@ -76,7 +76,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 7: Widget Development — ✅ COMPLETED
+## Step 7: Widget Development — 
 **Objective:** Deliver quotes directly to users’ lock screen/standby.
 - [`WidgetEntry.swift`](../Widget/WidgetEntry.swift): Defines `QuoteWidgetEntry` and `QuoteWidgetProvider` for the widget’s timeline, loads the daily quote and theme from App Group UserDefaults (`group.com.wholeapp.shared`), and provides fallback logic if no quote is set.
 - [`QuoteListView.swift`](../Features/Quotes/QuoteListView.swift): On every swipe or launch, saves the currently displayed quote to App Group UserDefaults for widget consumption, ensuring widget and app remain in sync.
@@ -88,7 +88,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 8: Onboarding Flow and Data Sync — ✅ COMPLETED
+## Step 8: Onboarding Flow and Data Sync — 
 **Objective:** Guide new users through onboarding and save their data to Supabase.
 - [`OnboardingView.swift`](../Features/Onboarding/OnboardingView.swift) and [`OnboardingViewModel.swift`](../Features/Onboarding/OnboardingViewModel.swift) implement a multi-step onboarding process, including notification preferences and premium intro.
 - User profile and preferences are now saved using dedicated insert methods (`insertUserProfile`, `insertUserPreferences`) for new users.
@@ -98,18 +98,20 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 9: Paywall & Subscription Logic — ✅ COMPLETED
+## Step 9: Paywall & Subscription Logic — 
 **Objective:** Monetize via subscriptions and manage access.
 - Implemented `PaywallView.swift` for subscription options/free trial.
 - Developed `PaywallViewModel.swift` for StoreKit integration and subscription logic (stubs in place, ready for StoreKit 2).
 - Premium gating for all features (unlimited swipes, theme/font customization, watermark-free images) is enforced using `UserProfile.subscriptionStatus` and `trialEndDate`.
 - Paywall modal is triggered for free users at the swipe limit or when accessing premium features.
 - All logic is model-driven, robust against backend changes, and clearly documented in the codebase.
+- [x] StoreKit 2 integration for subscriptions and paywall logic (2025-04-24)
+- [x] Apple-native restore logic and error handling (2025-04-24)
 **Outcome:** Users can subscribe for unlimited/premium features. Premium gating and paywall logic are fully implemented and commented for maintainability.
 
 ---
 
-## Step 10: Favorites Feature — ✅ COMPLETED
+## Step 10: Favorites Feature — 
 **Objective:** Enable saving and revisiting favorite quotes.
 - Built `FavoritesView.swift` to display saved quotes.
 - Created `FavoritesViewModel.swift` for managing favorites (persisted via Supabase `LikedQuotes` table).
@@ -119,7 +121,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 11: User-Generated Quotes (Premium) — ✅ COMPLETED (2025-04-21)
+## Step 11: User-Generated Quotes (Premium) — 
 **Objective:** Let premium users create and submit their own quotes.
 - Implemented `UserQuoteEditorView.swift` with a modern, minimal UI for submitting bilingual quotes.
 - The editor uses soft backgrounds, pastel chips, and robust validation for a delightful UX.
@@ -129,7 +131,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 12: Notifications & Analytics — ✅ COMPLETED (2025-04-22)
+## Step 12: Notifications & Analytics — 
 **Objective:** Enhance engagement and gather usage insights.
 - Refactored notification settings logic to use the `UserPreferences` model exclusively, eliminating legacy references from `UserProfile`.
 - Updated `UserPreferences` struct: `selectedCategories`, `notificationTime`, and `notificationsEnabled` are now mutable (`var`) to support real-time UI changes and syncing.
@@ -142,7 +144,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 13: Theming & Styling — ✅ COMPLETED (2025-04-21)
+## Step 13: Theming & Styling — 
 **Objective:** Ensure a cohesive, attractive design.
 - Used `Theme.swift` and `ThemeManager.swift` for all colors, fonts, and appearance.
 - Applied the new warm "leah valencia" palette as default, and ensured all screens/components use semantic theme colors and fonts.
@@ -150,7 +152,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 14: Testing & Quality Assurance — ⬜ TODO
+## Step 14: Testing & Quality Assurance — 
 **Objective:** Ensure reliability and catch bugs before release.
 - Write unit tests for critical models/services (e.g., `QuoteViewModel.swift`, `AuthService.swift`).
 - Create UI tests for key flows (onboarding, paywall, quote browsing).
@@ -158,7 +160,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
-## Step 15: Final Review & Launch — ⬜ TODO
+## Step 15: Final Review & Launch — 
 **Objective:** Prepare for App Store submission and launch.
 - Review all features, polish UI, and fix outstanding bugs.
 - Prepare App Store assets, descriptions, and screenshots.
@@ -169,15 +171,15 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ### Progress & Next Steps (as of 2025-04-22)
 
-- All foundational steps through settings are ✅ COMPLETED.
-- **Step 6: Sharing, Theming, and Paywall Polish** is now ✅ COMPLETED.
-- **Step 7: Widget Development** is now ✅ COMPLETED.
-- **Step 8: Onboarding Flow and Data Sync** is now ✅ COMPLETE.
-- **Step 9: Paywall & Subscription Logic** is now ✅ COMPLETE.
-- **Step 10: Favorites Feature** is now ✅ COMPLETE.
-- **Step 11: User-Generated Quotes (Premium)** is now ✅ COMPLETE.
-- **Step 12: Notifications & Analytics** is now ✅ COMPLETE.
-- **Step 13: Theming & Styling** is now ✅ COMPLETE.
+- All foundational steps through settings are .
+- **Step 6: Sharing, Theming, and Paywall Polish** is now .
+- **Step 7: Widget Development** is now .
+- **Step 8: Onboarding Flow and Data Sync** is now .
+- **Step 9: Paywall & Subscription Logic** is now .
+- **Step 10: Favorites Feature** is now .
+- **Step 11: User-Generated Quotes (Premium)** is now .
+- **Step 12: Notifications & Analytics** is now .
+- **Step 13: Theming & Styling** is now .
 - **Step 14: Testing & Quality Assurance** is next.
 - **Step 15: Final Review & Launch** will follow testing.
 

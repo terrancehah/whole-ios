@@ -29,7 +29,7 @@
 
 ## Other Frameworks
 - **Notifications**: UserNotifications (for daily quote notifications)
-- **In-App Purchases**: StoreKit (for managing subscriptions and paywall)
+- **In-App Purchases**: StoreKit 2 (async/await, robust error handling, Apple-native restore flow)
 - **Image Generation**: SwiftUI rendering (for creating shareable quote images)
 
 ---

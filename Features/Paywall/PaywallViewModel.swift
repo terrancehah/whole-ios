@@ -92,24 +92,55 @@ class PaywallViewModel: ObservableObject {
         }
     }
 
-    /// Restore previous purchases using StoreKit 2
+    /// Restore previous purchases using StoreKit 2, using the most native Apple approach.
+    /// This fetches the latest verified transaction for the subscription product to determine the start date,
+    /// and uses renewalInfo.renewalDate for the end date (after unwrapping). All logic is commented for clarity.
     func restorePurchase() {
         isProcessing = true
         errorMessage = nil
         Task {
             do {
-                // Sync StoreKit transactions
+                // Sync StoreKit transactions to ensure all purchases are up-to-date
                 try await AppStore.sync()
-                // Check for active subscription
-                let statuses = await Product.SubscriptionInfo.status(for: productID)
+                // Check for active subscription status
+                let statuses = try await Product.SubscriptionInfo.status(for: productID)
                 if let status = statuses.first, status.state == .subscribed {
-                    await MainActor.run {
-                        self.subscriptionStatus = "yearly"
-                        self.subscriptionStartDate = status.renewalInfo.originalPurchaseDate
-                        self.subscriptionEndDate = status.renewalInfo.expirationDate
-                        self.isProcessing = false
-                        self.purchaseSuccess = true
-                        // TODO: Save to backend (Supabase) and update user profile
+                    // Step 1: Collect all verified transactions from the async sequence (can throw)
+                    var verifiedTransactions: [StoreKit.Transaction] = []
+                    for try await result in StoreKit.Transaction.currentEntitlements {
+                        if case .verified(let transaction) = result {
+                            verifiedTransactions.append(transaction)
+                        }
+                    }
+                    // Step 2: Filter for the correct product and non-revoked (active) transactions
+                    let activeTransactions = verifiedTransactions.filter { $0.productID == productID && $0.revocationDate == nil }
+                    // Step 3: Sort by purchase date (most recent first)
+                    let sortedTransactions = activeTransactions.sorted { $0.purchaseDate > $1.purchaseDate }
+
+                    if let transaction = sortedTransactions.first {
+                        // Step 4: Unwrap renewalInfo to get expirationDate
+                        if case .verified(let renewalInfo) = status.renewalInfo {
+                            await MainActor.run {
+                                self.subscriptionStatus = "yearly"
+                                self.subscriptionStartDate = transaction.purchaseDate
+                                // Use renewalInfo.renewalDate as the official expiration/renewal date per Apple docs:
+                                // https://developer.apple.com/documentation/storekit/product/subscriptioninfo/renewalinfo/renewaldate
+                                self.subscriptionEndDate = renewalInfo.renewalDate
+                                self.isProcessing = false
+                                self.purchaseSuccess = true
+                                // TODO: Save to backend (Supabase) and update user profile
+                            }
+                        } else {
+                            await MainActor.run {
+                                self.errorMessage = "Failed to verify renewal info."
+                                self.isProcessing = false
+                            }
+                        }
+                    } else {
+                        await MainActor.run {
+                            self.errorMessage = "Active subscription found, but no valid transaction."
+                            self.isProcessing = false
+                        }
                     }
                 } else {
                     await MainActor.run {
