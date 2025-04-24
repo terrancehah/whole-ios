@@ -29,37 +29,100 @@ class PaywallViewModel: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
 
-    // MARK: - StoreKit Integration (Stubbed for now)
-    /// Start the 7-day free trial and initiate purchase flow.
+    // MARK: - StoreKit Integration (Production)
+    /// Start the 7-day free trial and initiate purchase flow using StoreKit 2.
     func startTrial() {
         isProcessing = true
         errorMessage = nil
-        // TODO: Integrate with StoreKit 2 purchase API
-        // Simulate success for now
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-            self.isTrialActive = true
-            self.trialDay = 1
-            self.trialEndDate = Calendar.current.date(byAdding: .day, value: self.trialLengthDays, to: Date())
-            self.subscriptionStatus = "trial"
-            self.isProcessing = false
-            self.purchaseSuccess = true
-            // TODO: Save to backend (Supabase) and update user profile
+        // Integrate with StoreKit 2 purchase API for free trial
+        Task {
+            do {
+                // Fetch the product for the yearly subscription
+                guard let product = try await Product.products(for: [productID]).first else {
+                    self.errorMessage = "Unable to load subscription product."
+                    self.isProcessing = false
+                    return
+                }
+                // Start the purchase flow
+                let result = try await product.purchase()
+                switch result {
+                case .success(let verification):
+                    switch verification {
+                    case .verified(let transaction):
+                        // Grant trial access, update backend and local state
+                        await MainActor.run {
+                            self.isTrialActive = true
+                            self.trialDay = 1
+                            self.trialEndDate = Calendar.current.date(byAdding: .day, value: self.trialLengthDays, to: Date())
+                            self.subscriptionStatus = "trial"
+                            self.isProcessing = false
+                            self.purchaseSuccess = true
+                            // TODO: Save to backend (Supabase) and update user profile
+                        }
+                        // Finish the transaction
+                        await transaction.finish()
+                    case .unverified(_, let error):
+                        await MainActor.run {
+                            self.errorMessage = "Purchase verification failed: \(error.localizedDescription)"
+                            self.isProcessing = false
+                        }
+                    }
+                case .userCancelled:
+                    await MainActor.run {
+                        self.errorMessage = "Purchase cancelled."
+                        self.isProcessing = false
+                    }
+                case .pending:
+                    await MainActor.run {
+                        self.errorMessage = "Purchase is pending approval."
+                        self.isProcessing = false
+                    }
+                @unknown default:
+                    await MainActor.run {
+                        self.errorMessage = "Unknown purchase result."
+                        self.isProcessing = false
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    self.errorMessage = error.localizedDescription
+                    self.isProcessing = false
+                }
+            }
         }
     }
 
-    /// Restore previous purchases using StoreKit
+    /// Restore previous purchases using StoreKit 2
     func restorePurchase() {
         isProcessing = true
         errorMessage = nil
-        // TODO: Integrate with StoreKit restore API
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            // Simulate restore
-            self.subscriptionStatus = "yearly"
-            self.subscriptionStartDate = Date()
-            self.subscriptionEndDate = Calendar.current.date(byAdding: .year, value: 1, to: Date())
-            self.isProcessing = false
-            self.purchaseSuccess = true
-            // TODO: Save to backend (Supabase) and update user profile
+        Task {
+            do {
+                // Sync StoreKit transactions
+                try await AppStore.sync()
+                // Check for active subscription
+                let statuses = await Product.SubscriptionInfo.status(for: productID)
+                if let status = statuses.first, status.state == .subscribed {
+                    await MainActor.run {
+                        self.subscriptionStatus = "yearly"
+                        self.subscriptionStartDate = status.renewalInfo.originalPurchaseDate
+                        self.subscriptionEndDate = status.renewalInfo.expirationDate
+                        self.isProcessing = false
+                        self.purchaseSuccess = true
+                        // TODO: Save to backend (Supabase) and update user profile
+                    }
+                } else {
+                    await MainActor.run {
+                        self.errorMessage = "No active subscription found to restore."
+                        self.isProcessing = false
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    self.errorMessage = error.localizedDescription
+                    self.isProcessing = false
+                }
+            }
         }
     }
 

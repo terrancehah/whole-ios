@@ -345,6 +345,7 @@ struct WidgetIntroStepView: View {
         }
         .sheet(isPresented: $showInstructions) {
             WidgetInstallInstructionsSheet(onContinue: onContinue)
+                .presentationDetents([.large]) // Always show full screen
         }
     }
 }
@@ -384,7 +385,6 @@ struct WidgetInstallInstructionsSheet: View {
             .padding(.top, 8)
         }
         .padding()
-        .presentationDetents([.medium, .large])
     }
 }
 
@@ -393,6 +393,7 @@ struct WidgetInstallInstructionsSheet: View {
 struct SubscriptionIntroStepView: View {
     let onContinue: () -> Void
     @State private var trialReminder: Bool = true
+    @State private var showPaywall = false
 
     var body: some View {
         VStack(spacing: 28) {
@@ -412,10 +413,38 @@ struct SubscriptionIntroStepView: View {
             .padding(.horizontal)
 
             // Clear call-to-action to start the trial
-            Button("Start Free Trial", action: onContinue)
-                .buttonStyle(WarmPrimaryButtonStyle())
+            Button("Start Free Trial") {
+                // TODO: Replace with your paywall/subscription logic
+                showPaywall = true
+            }
+            .buttonStyle(WarmPrimaryButtonStyle())
+            .sheet(isPresented: $showPaywall) {
+                // TODO: Replace this placeholder with your actual paywall view
+                SubscriptionPaywallPlaceholder(onSubscribed: {
+                    showPaywall = false
+                    onContinue()
+                })
+            }
         }
         .padding(.horizontal)
+    }
+}
+
+// MARK: - Subscription Paywall Placeholder
+/// Replace this with your actual paywall or subscription purchase view
+struct SubscriptionPaywallPlaceholder: View {
+    let onSubscribed: () -> Void
+    var body: some View {
+        VStack(spacing: 24) {
+            Text("[Paywall]")
+                .headingFont(size: 24)
+            Text("This is a placeholder for your subscription payment interface.\nImplement your RevenueCat, StoreKit, or other paywall here.")
+                .bodyFont(size: 16)
+                .multilineTextAlignment(.center)
+            Button("Subscribe & Continue", action: onSubscribed)
+                .buttonStyle(WarmPrimaryButtonStyle())
+        }
+        .padding()
     }
 }
 
