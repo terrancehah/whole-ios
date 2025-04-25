@@ -8,7 +8,7 @@ import SwiftUI
 struct WarmPrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .bodyFont(size: 17, weight: .semibold)
+            .bodyFont()
             .foregroundColor(.white)
             .padding(.vertical, 14)
             .frame(maxWidth: .infinity)
@@ -24,7 +24,7 @@ struct WarmPrimaryButtonStyle: ButtonStyle {
 struct WarmSecondaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .bodyFont(size: 17, weight: .regular)
+            .bodyFont()
             .foregroundColor(.white)
             .padding(.vertical, 14)
             .frame(maxWidth: .infinity)

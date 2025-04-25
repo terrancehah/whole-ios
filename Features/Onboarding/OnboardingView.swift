@@ -30,7 +30,7 @@ struct OnboardingView: View {
                     if showSkip(for: viewModel.currentStep) {
                         Button(action: skipCurrentStep) {
                             Text("Skip")
-                                .bodyFont(size: 17, weight: .semibold)
+                                .bodyFont()
                                 .foregroundColor(Color(hex: "#ff9f68")) // Accent color
                         }
                         .padding(.trailing)
@@ -114,12 +114,16 @@ struct WelcomeStepView: View {
     var body: some View {
         VStack(spacing: 24) {
             Text("Welcome to Whole")
-                .font(Font.custom("Baskerville", size: 34).weight(.bold)) // Use Baskerville for headings
+                .headingFont()
             Text("Your daily dose of inspiration in English and Chinese.")
-                .font(Font.custom("SF Compact", size: 18)) // Use SF Compact for body text
+                .bodyFont()
                 .multilineTextAlignment(.center)
+                .padding(.horizontal)
             Button("Continue", action: onContinue)
                 .buttonStyle(WarmPrimaryButtonStyle())
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal)
+            // The above ensures the button matches the width and horizontal padding of other onboarding buttons
         }
     }
 }
@@ -135,7 +139,7 @@ struct CategoriesStepView: View {
     var body: some View {
         VStack(spacing: 28) {
             Text("Choose Your Preferred Categories")
-                .font(Font.custom("Baskerville", size: 24).weight(.bold))
+                .headingFont()
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(allCategories, id: \.self) { category in
                     CategoryGridItem(category: category, isSelected: selectedCategories.contains(category)) {
@@ -164,16 +168,17 @@ struct CategoryGridItem: View {
     var body: some View {
         Button(action: onTap) {
             Text(category.displayName)
-                .bodyFont(size: 16, weight: .medium)
+                .bodyFont()
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(isSelected ? Color(hex: "#ff9f68").opacity(0.15) : Color(.systemBackground))
+                .background(isSelected ? Color(hex: "#ff9f68") : Color.white)
+                .cornerRadius(12)
+                .foregroundColor(isSelected ? Color.white : Color.primary)
+                // Use a darker warm color (#b65f3b) for selected state, white otherwise. Invert text color for contrast.
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
                         .stroke(isSelected ? Color(hex: "#ff9f68") : Color.gray.opacity(0.3), lineWidth: isSelected ? 2 : 1)
                 )
-                .cornerRadius(12)
-                .foregroundColor(isSelected ? Color(hex: "#ff9f68") : Color.primary)
         }
         .animation(.easeInOut, value: isSelected)
     }
@@ -187,10 +192,10 @@ struct NameStepView: View {
     var body: some View {
         VStack(spacing: 32) {
             Text("What's your name?")
-                .headingFont(size: 24)
+                .headingFont()
                 .multilineTextAlignment(.center)
             TextField("Enter your name (optional)", text: $name)
-                .bodyFont(size: 16)
+                .bodyFont()
                 .padding(.vertical, 18) // Add more vertical padding for comfort
                 .padding(.horizontal, 14)
                 .background(Color(.systemBackground))
@@ -216,26 +221,33 @@ struct GoalsStepView: View {
     let columns = [GridItem(.adaptive(minimum: 120), spacing: 16)]
 
     var body: some View {
-        VStack(spacing: 28) {
-            Text("Select Your Goals")
-                .font(Font.custom("Baskerville", size: 24).weight(.bold))
-            LazyVGrid(columns: columns, spacing: 16) {
-                ForEach(allGoals, id: \.self) { goal in
-                    GoalGridItem(goal: goal, isSelected: selectedGoals.contains(goal)) {
-                        if selectedGoals.contains(goal) {
-                            selectedGoals.remove(goal)
-                        } else {
-                            selectedGoals.insert(goal)
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(spacing: 28) {
+                    Text("Select Your Goals")
+                        .headingFont()
+                    LazyVGrid(columns: columns, spacing: 16) {
+                        ForEach(allGoals, id: \.self) { goal in
+                            GoalGridItem(goal: goal, isSelected: selectedGoals.contains(goal)) {
+                                if selectedGoals.contains(goal) {
+                                    selectedGoals.remove(goal)
+                                } else {
+                                    selectedGoals.insert(goal)
+                                }
+                            }
                         }
                     }
+                    .padding(.vertical)
                 }
+                .padding(.horizontal)
+                .padding(.top, 28)
             }
-            .padding(.vertical)
             Button("Continue", action: onContinue)
                 .buttonStyle(WarmPrimaryButtonStyle())
                 .disabled(selectedGoals.isEmpty)
+                .padding(.horizontal)
+                .padding(.bottom, 24)
         }
-        .padding(.horizontal)
     }
 }
 
@@ -247,16 +259,17 @@ struct GoalGridItem: View {
     var body: some View {
         Button(action: onTap) {
             Text(goal)
-                .bodyFont(size: 16, weight: .medium)
+                .bodyFont()
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(isSelected ? Color(hex: "#ff9f68").opacity(0.15) : Color(.systemBackground))
+                .background(isSelected ? Color(hex: "#ff9f68") : Color.white)
+                .cornerRadius(12)
+                .foregroundColor(isSelected ? Color.white : Color.primary)
+                // Use a darker warm color (#b65f3b) for selected state, white otherwise. Invert text color for contrast.
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
                         .stroke(isSelected ? Color(hex: "#ff9f68") : Color.gray.opacity(0.3), lineWidth: isSelected ? 2 : 1)
                 )
-                .cornerRadius(12)
-                .foregroundColor(isSelected ? Color(hex: "#ff9f68") : Color.primary)
         }
         .animation(.easeInOut, value: isSelected)
     }
@@ -273,10 +286,10 @@ struct NotificationPreferencesStepView: View {
     var body: some View {
         VStack(spacing: 28) {
             Text("Daily Quote Notifications")
-                .font(Font.custom("Baskerville", size: 24).weight(.bold))
+                .headingFont()
             Toggle(isOn: $notificationsEnabled) {
                 Text("Enable daily notifications")
-                    .font(Font.custom("SF Compact", size: 16))
+                    .bodyFont()
             }
             .onChange(of: notificationsEnabled) { enabled in
                 if enabled {
@@ -285,10 +298,11 @@ struct NotificationPreferencesStepView: View {
             }
             // Show time picker only if notifications are enabled
             if notificationsEnabled {
-                HStack {
+                VStack(alignment: .leading, spacing: 8) {
                     Text("Time:")
-                        .font(Font.custom("SF Compact", size: 16))
-                    DatePicker("", selection: $selectedDate, displayedComponents: .hourAndMinute)
+                        .bodyFont()
+                    DatePicker("Select Time", selection: $selectedDate, displayedComponents: .hourAndMinute)
+                        .datePickerStyle(WheelDatePickerStyle())
                         .labelsHidden()
                         .onChange(of: selectedDate) { date in
                             notificationTime = Self.formatTime(date)
@@ -297,7 +311,7 @@ struct NotificationPreferencesStepView: View {
                 .padding(.horizontal)
             }
             Text("You can always change this in Settings. We respect your privacy and will never spam you.")
-                .font(Font.custom("SF Compact", size: 13))
+                .captionFont()
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
             Button("Continue", action: onContinue)
@@ -336,8 +350,9 @@ struct WidgetIntroStepView: View {
                 .shadow(radius: 8)
                 .padding(.bottom, 8)
             Text("Get daily quotes on your lock screen with the Whole widget.")
-                .bodyFont(size: 18)
+                .bodyFont()
                 .multilineTextAlignment(.center)
+                .padding(.horizontal)
             Button("Install Widget") {
                 showInstructions = true
             }
@@ -358,7 +373,7 @@ struct WidgetInstallInstructionsSheet: View {
     var body: some View {
         VStack(spacing: 24) {
             Text("How to Add the Widget")
-                .headingFont(size: 22)
+                .headingFont()
                 .multilineTextAlignment(.center)
             // Placeholder for instructional image (replace with real image/animation as needed)
             Image("widget-instructions-placeholder")
@@ -375,7 +390,7 @@ struct WidgetInstallInstructionsSheet: View {
                 Text("4. Select your preferred widget size and tap 'Add Widget'.")
                 Text("5. Place the widget where you like and tap 'Done'.")
             }
-            .bodyFont(size: 16)
+            .bodyFont()
             .padding(.horizontal)
             Button("Got it!") {
                 presentationMode.wrappedValue.dismiss()
@@ -399,16 +414,17 @@ struct SubscriptionIntroStepView: View {
         VStack(spacing: 28) {
             // Clearly present the free trial offer
             Text("Unlock Unlimited Quotes & Premium Features")
-                .headingFont(size: 24)
+                .headingFont()
                 .multilineTextAlignment(.center)
             Text("Start a 7-day free trial to access all features. You will not be charged until the trial ends.")
-                .bodyFont(size: 16)
+                .bodyFont()
                 .multilineTextAlignment(.center)
+                .padding(.horizontal)
 
             // Offer a reminder toggle for the trial end date
             Toggle(isOn: $trialReminder) {
                 Text("Remind me before trial ends")
-                    .bodyFont(size: 15)
+                    .bodyFont()
             }
             .padding(.horizontal)
 
@@ -437,10 +453,11 @@ struct SubscriptionPaywallPlaceholder: View {
     var body: some View {
         VStack(spacing: 24) {
             Text("[Paywall]")
-                .headingFont(size: 24)
+                .headingFont()
             Text("This is a placeholder for your subscription payment interface.\nImplement your RevenueCat, StoreKit, or other paywall here.")
-                .bodyFont(size: 16)
+                .bodyFont()
                 .multilineTextAlignment(.center)
+                .padding(.horizontal)
             Button("Subscribe & Continue", action: onSubscribed)
                 .buttonStyle(WarmPrimaryButtonStyle())
         }

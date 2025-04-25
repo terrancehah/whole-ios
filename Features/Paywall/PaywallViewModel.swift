@@ -168,4 +168,22 @@ class PaywallViewModel: ObservableObject {
     var isPremium: Bool {
         subscriptionStatus == "trial" || subscriptionStatus == "monthly" || subscriptionStatus == "yearly"
     }
+
+    /// Open the Terms & Conditions document (placeholder link).
+    @MainActor
+    func openTerms() {
+        // TODO: Replace with hosted URL or in-app sheet if needed
+        if let url = URL(string: "https://wholeapp.local/terms") {
+            UIApplication.shared.open(url)
+        }
+    }
+
+    /// Open the Privacy Policy document (placeholder link).
+    @MainActor
+    func openPrivacy() {
+        // TODO: Replace with hosted URL or in-app sheet if needed
+        if let url = URL(string: "https://wholeapp.local/privacy") {
+            UIApplication.shared.open(url)
+        }
+    }
 }

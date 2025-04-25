@@ -1,5 +1,6 @@
 // PaywallView.swift
 // UI for displaying subscription options, free trial, and purchase flow.
+// Updated 2025-04-24: Fully implements StoreKit 2 trial, restore, and premium benefit display per app docs.
 
 import SwiftUI
 
@@ -10,10 +11,11 @@ struct PaywallView: View {
     
     var body: some View {
         ZStack {
-            // System background for light/dark mode
+            // System background for light/dark mode (Serene Minimalism theme)
             ThemeManager.shared.selectedTheme.theme.background
                 .ignoresSafeArea()
             VStack(spacing: 32) {
+                // Close button
                 HStack {
                     Spacer()
                     Button(action: { presentationMode.wrappedValue.dismiss() }) {
@@ -26,17 +28,33 @@ struct PaywallView: View {
                 .padding(.top, 8)
                 .padding(.horizontal)
                 
+                // Title & subtitle
                 VStack(spacing: 8) {
-                    Text("How your free trial works")
-                        .font(.title2).fontWeight(.bold)
+                    Text("Unlock Premium")
+                        .font(.title).fontWeight(.bold)
                         .multilineTextAlignment(.center)
-                    Text("You won't be charged anything today")
+                    Text("Start your 7-day free trial. No charge today.")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
                 .padding(.top, 16)
                 
-                // Trial timeline (updated for 7-day trial)
+                // Premium benefits
+                VStack(alignment: .leading, spacing: 12) {
+                    Label("Unlimited quotes, no daily limit", systemImage: "infinity")
+                    Label("No watermark on shared images", systemImage: "photo")
+                    Label("Premium themes & fonts", systemImage: "paintpalette")
+                    Label("Create and save your own quotes", systemImage: "pencil.and.outline")
+                }
+                .font(.body)
+                .padding(.horizontal)
+                .padding(.vertical, 8)
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color.purple.opacity(0.08))
+                )
+                
+                // Trial timeline (7-day trial visual)
                 VStack(alignment: .leading, spacing: 0) {
                     RoundedRectangle(cornerRadius: 18)
                         .stroke(Color.purple.opacity(0.3), lineWidth: 1.5)
@@ -71,7 +89,7 @@ struct PaywallView: View {
                                     VStack(alignment: .leading) {
                                         Text("After day 7")
                                             .fontWeight(.semibold)
-                                        Text("Your free trial ends and you'll be charged, cancel anytime before")
+                                        Text("Your free trial ends and you'll be charged, cancel anytime before.")
                                             .font(.footnote)
                                             .foregroundColor(.secondary)
                                     }
@@ -119,15 +137,31 @@ struct PaywallView: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
                 
+                // Error/status feedback
+                if let error = viewModel.errorMessage {
+                    Text(error)
+                        .font(.footnote)
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                }
+                if viewModel.purchaseSuccess {
+                    Text("Subscription activated! Enjoy premium features.")
+                        .font(.footnote)
+                        .foregroundColor(.green)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                }
+                
                 // Links
                 HStack(spacing: 24) {
                     Button("Restore") { viewModel.restorePurchase() }
                         .font(.footnote)
                         .foregroundColor(.accentColor)
-                    Button("Terms & Conditions") { /* Open terms URL */ }
+                    Button("Terms & Conditions") { viewModel.openTerms() }
                         .font(.footnote)
                         .foregroundColor(.accentColor)
-                    Button("Privacy Policy") { /* Open privacy URL */ }
+                    Button("Privacy Policy") { viewModel.openPrivacy() }
                         .font(.footnote)
                         .foregroundColor(.accentColor)
                 }

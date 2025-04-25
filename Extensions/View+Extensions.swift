@@ -3,18 +3,25 @@
 
 import SwiftUI
 
+// Centralized app font sizes for headings, body, and captions
+struct AppFont {
+    static let heading: CGFloat = 32
+    static let body: CGFloat = 20
+    static let caption: CGFloat = 16
+}
+
 /// Semantic font modifiers for app-wide typography consistency.
 extension View {
     /// Applies the Baskerville font for headings (with fallback to system serif).
-    func headingFont(size: CGFloat = 24, weight: Font.Weight = .bold) -> some View {
-        self.font(Font.custom("Baskerville", size: size).weight(weight))
+    func headingFont(size: CGFloat = AppFont.heading) -> some View {
+        self.font(Font.custom("Baskerville", size: size))
     }
-    /// Applies the SF Compact font for body text (with fallback to system font).
-    func bodyFont(size: CGFloat = 16, weight: Font.Weight = .regular) -> some View {
-        self.font(Font.custom("SF Compact", size: size).weight(weight))
+    /// Applies the Baskerville font for body text (with fallback to system serif).
+    func bodyFont(size: CGFloat = AppFont.body) -> some View {
+        self.font(Font.custom("Baskerville", size: size))
     }
-    /// Applies the SF Compact font for captions or footnotes.
-    func captionFont(size: CGFloat = 13, weight: Font.Weight = .regular) -> some View {
-        self.font(Font.custom("SF Compact", size: size).weight(weight))
+    /// Applies the Baskerville font for captions or footnotes.
+    func captionFont(size: CGFloat = AppFont.caption) -> some View {
+        self.font(Font.custom("Baskerville", size: size))
     }
 }
