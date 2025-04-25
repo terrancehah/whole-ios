@@ -27,7 +27,7 @@ class PaywallViewModel: ObservableObject {
     let yearlyPriceString: String = "RM79.90 per year (RM 6.65/month)"
     let productID: String = "com.wholeapp.yearly"
 
-    private var cancellables = Set<AnyCancellable>()
+    var cancellables = Set<AnyCancellable>()
 
     // MARK: - StoreKit Integration (Production)
     /// Start the 7-day free trial and initiate purchase flow using StoreKit 2.

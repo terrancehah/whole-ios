@@ -408,7 +408,7 @@ struct WidgetInstallInstructionsSheet: View {
 struct SubscriptionIntroStepView: View {
     let onContinue: () -> Void
     @State private var trialReminder: Bool = true
-    @State private var showPaywall = false
+    @StateObject private var paywallViewModel = PaywallViewModel()
 
     var body: some View {
         VStack(spacing: 28) {
@@ -416,52 +416,79 @@ struct SubscriptionIntroStepView: View {
             Text("Unlock Unlimited Quotes & Premium Features")
                 .headingFont()
                 .multilineTextAlignment(.center)
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Experience the best of Whole with a free trial:")
+                    .bodyFont()
+                FeatureRow(text: "Unlimited inspirational quotes, every day")
+                FeatureRow(text: "Bilingual content in English & Chinese")
+                FeatureRow(text: "Personalized daily reminders")
+                FeatureRow(text: "Exclusive premium categories")
+                FeatureRow(text: "Priority support & early access to new features")
+            }
+            .padding(.horizontal)
             Text("Start a 7-day free trial to access all features. You will not be charged until the trial ends.")
                 .bodyFont()
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
-
-            // Offer a reminder toggle for the trial end date
             Toggle(isOn: $trialReminder) {
                 Text("Remind me before trial ends")
                     .bodyFont()
             }
             .padding(.horizontal)
-
-            // Clear call-to-action to start the trial
-            Button("Start Free Trial") {
-                // TODO: Replace with your paywall/subscription logic
-                showPaywall = true
+            if let error = paywallViewModel.errorMessage {
+                Text(error)
+                    .foregroundColor(.red)
+                    .bodyFont()
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+            }
+            if paywallViewModel.purchaseSuccess {
+                Text("Subscription activated! Enjoy premium features.")
+                    .foregroundColor(.green)
+                    .bodyFont()
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+            }
+            Button(paywallViewModel.isProcessing ? "Processing..." : (paywallViewModel.errorMessage == "Unable to load subscription product." ? "Continue" : "Start Free Trial")) {
+                if paywallViewModel.errorMessage == "Unable to load subscription product." {
+                    onContinue()
+                } else {
+                    subscribe()
+                }
             }
             .buttonStyle(WarmPrimaryButtonStyle())
-            .sheet(isPresented: $showPaywall) {
-                // TODO: Replace this placeholder with your actual paywall view
-                SubscriptionPaywallPlaceholder(onSubscribed: {
-                    showPaywall = false
-                    onContinue()
-                })
-            }
+            .disabled(paywallViewModel.isProcessing)
         }
         .padding(.horizontal)
     }
+    private func subscribe() {
+        paywallViewModel.startTrial()
+        // If purchase is successful, call onContinue
+        // Observe purchaseSuccess to trigger onContinue
+        if paywallViewModel.purchaseSuccess {
+            onContinue()
+        } else {
+            // Listen for changes to purchaseSuccess
+            paywallViewModel.$purchaseSuccess
+                .filter { $0 }
+                .first()
+                .sink { _ in onContinue() }
+                .store(in: &paywallViewModel.cancellables)
+        }
+    }
 }
 
-// MARK: - Subscription Paywall Placeholder
-/// Replace this with your actual paywall or subscription purchase view
-struct SubscriptionPaywallPlaceholder: View {
-    let onSubscribed: () -> Void
+/// Feature row for premium description
+struct FeatureRow: View {
+    let text: String
     var body: some View {
-        VStack(spacing: 24) {
-            Text("[Paywall]")
-                .headingFont()
-            Text("This is a placeholder for your subscription payment interface.\nImplement your RevenueCat, StoreKit, or other paywall here.")
+        HStack(alignment: .top, spacing: 8) {
+            Image(systemName: "checkmark.seal.fill")
+                .foregroundColor(Color(hex: "#ff9f68"))
+                .font(.system(size: 18))
+            Text(text)
                 .bodyFont()
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-            Button("Subscribe & Continue", action: onSubscribed)
-                .buttonStyle(WarmPrimaryButtonStyle())
         }
-        .padding()
     }
 }
 
