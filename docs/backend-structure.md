@@ -48,6 +48,8 @@ This document describes the current schema and access policies for the Supabase 
 - **RLS:**
   - ALL: Only the user (id = auth.uid)
   - INSERT: id must match auth.uid
+- Anonymous users are represented in the `users` table with a random email (e.g., anon_<uuid>@wholeapp.com) and no real email until upgrade.
+- All user-related tables (preferences, liked_quotes, etc.) use this UUID until the user upgrades to a real account.
 
 ### 3. `userpreferences`
 - **Purpose:** Stores user’s quote category preferences, notification time, widget settings, and notification enable/disable state.

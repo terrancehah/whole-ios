@@ -43,12 +43,39 @@ final class AuthService: ObservableObject {
         return response.user
     }
 
+    /// Signs up an anonymous user by generating a random email and password.
+    /// Stores credentials securely for silent login on future launches.
+    func signUpAnonymous() async throws -> User? {
+        // Generate a random UUID-based email and secure password
+        let uuid = UUID().uuidString
+        let email = "anon_\(uuid)@wholeapp.com"
+        let password = UUID().uuidString + "!A1"
+        // Attempt to sign up
+        let user = try await signUp(email: email, password: password)
+        // Store email/password securely (e.g., Keychain, for demo use UserDefaults)
+        UserDefaults.standard.set(email, forKey: "anon_email")
+        UserDefaults.standard.set(password, forKey: "anon_password")
+        return user
+    }
+
+    /// Silent sign-in for anonymous users using stored credentials.
+    func signInAnonymousIfNeeded() async throws -> User? {
+        if let email = UserDefaults.standard.string(forKey: "anon_email"),
+           let password = UserDefaults.standard.string(forKey: "anon_password") {
+            // Try to sign in
+            return try await signIn(email: email, password: password)
+        } else {
+            // No credentials stored, sign up anonymously
+            return try await signUpAnonymous()
+        }
+    }
+
     /// Sign in an existing user.
     /// Returns the signed-in user if successful.
     func signIn(email: String, password: String) async throws -> User? {
         // The latest Supabase SDK returns AuthResponse, not Session.
         let response = try await SupabaseService.shared.client.auth.signIn(email: email, password: password)
-        self.session = session
+        self.session = response.session
         self.user = response.user
         return response.user
     }

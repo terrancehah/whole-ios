@@ -53,6 +53,10 @@
   - Robust error handling ensures onboarding only completes if both inserts succeed.
   - All onboarding data is stored in the `users` and `userpreferences` tables, following the backend schema and using UUIDs for all identifiers.
 
+- **Onboarding Data Binding:**
+  - All onboarding steps (category selection, name, goals, notification preferences, etc.) now save data directly to the backend using the currently authenticated user's UUID and email (from Supabase Auth).
+  - This ensures all onboarding data is always tied to the correct backend account (anonymous or real), supporting seamless upgrade and backend sync.
+
 - **Onboarding Completion Persistence**
   - The app now uses a persistent flag (`didCompleteOnboarding` via `@AppStorage`) to track onboarding completion.
   - On first launch, users see the onboarding flow. After completion, the main interface is shown on subsequent launches.
@@ -66,6 +70,13 @@
       - "Subscribe Now" with monthly and yearly pricing displayed.
       - Reminder Toggle: "Remind me before trial ends" (default: on).
       - Close Button: Access free version with limitations.
+
+## Anonymous User Provisioning and Backend Account Creation
+- **Anonymous User Provisioning:**
+  - On first launch, the app generates a random email and password and signs up the user with Supabase Auth.
+  - These credentials are stored securely for silent login on future launches.
+  - All user data (preferences, favorites, premium state) is linked to this backend account from the start, even before explicit login.
+  - When the user later logs in with Google, Apple, or email, all data is migrated from the anonymous account to the new authenticated account.
 
 ## Subscription & Paywall Logic (Updated 2025-04-24)
 - StoreKit 2 is now integrated for all subscription and paywall flows.

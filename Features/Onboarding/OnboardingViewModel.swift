@@ -81,7 +81,12 @@ final class OnboardingViewModel: ObservableObject {
     /// 
     /// This function now uses insertUserProfile and insertUserPreferences for new users,
     /// replacing any save/update calls. This is the recommended approach for new users.
-    func savePreferencesAndProfile(userId: UUID, email: String) {
+    func savePreferencesAndProfile() {
+        // Always use the currently authenticated user's UUID and email from AuthService
+        guard let user = AuthService().user, let userId = UUID(uuidString: user.id), let email = user.email else {
+            self.errorMessage = "Unable to get authenticated user."
+            return
+        }
         isLoading = true
         errorMessage = nil
 

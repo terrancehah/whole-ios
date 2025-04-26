@@ -12,6 +12,8 @@
 - All other UI follows system light/dark mode for maximum consistency with iOS.
 - Theme selection UI in CustomizationView; theme state managed globally via ThemeManager.
 - Widget displays the quote most recently shown in the app, always keeping widget and app in sync.
+- **Anonymous Account Support:** On first launch, the app creates a backend account with a random email for every user. All features (including backend sync) work before explicit login. Data is migrated to the real account when the user signs up.
+- All onboarding data is always tied to the authenticated backend account (anonymous or real), ensuring seamless migration and robust backend sync.
 - [Planned] Sharing and paywall features.
 
 ---
@@ -24,6 +26,8 @@
 - Popups for like/limit reached.
 - Paywall CTA and theme switch on main UI.
 - Serene Minimalism default theme.
+- **Anonymous Account Support:** On first launch, the app creates a backend account with a random email for every user. All features (including backend sync) work before explicit login. Data is migrated to the real account when the user signs up.
+- All onboarding data is always tied to the authenticated backend account (anonymous or real), ensuring seamless migration and robust backend sync.
 
 ---
 
