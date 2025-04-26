@@ -77,66 +77,82 @@ final class OnboardingViewModel: ObservableObject {
         }
     }
 
-    /// Save user preferences and profile to backend
-    /// 
-    /// This function now uses insertUserProfile and insertUserPreferences for new users,
-    /// replacing any save/update calls. This is the recommended approach for new users.
+    /// Save user preferences and profile to backend, ensuring MainActor isolation
     func savePreferencesAndProfile() {
-        // Always use the currently authenticated user's UUID and email from AuthService
-        guard let user = AuthService().user, let userId = UUID(uuidString: user.id), let email = user.email else {
-            self.errorMessage = "Unable to get authenticated user."
-            return
-        }
-        isLoading = true
-        errorMessage = nil
-
-        // Construct user profile and preferences models
-        let userProfile = UserProfile(
-            id: userId,
-            email: email,
-            name: name.isEmpty ? nil : name,
-            gender: gender.isEmpty ? nil : gender,
-            goals: goals.isEmpty ? nil : Array(goals),
-            subscriptionStatus: "free",
-            trialEndDate: nil,
-            subscriptionStartDate: nil,
-            subscriptionEndDate: nil,
-            createdAt: nil,
-            updatedAt: nil
-        )
-
-        let userPreferences = UserPreferences(
-            userId: userId,
-            selectedCategories: Array(selectedCategories),
-            notificationTime: notificationTime,
-            notificationsEnabled: notificationsEnabled // Pass new field
-        )
-
-        // Insert user profile first, then preferences
-        // This approach ensures data consistency and avoids potential update conflicts
-        SupabaseService.shared.insertUserProfile(
-            profile: userProfile
-        ) { [weak self] profileResult in
-            DispatchQueue.main.async {
-                switch profileResult {
-                case .success:
-                    // If profile insert succeeds, insert preferences
-                    SupabaseService.shared.insertUserPreferences(
-                        preferences: userPreferences
-                    ) { [weak self] prefResult in
-                        DispatchQueue.main.async {
-                            self?.isLoading = false
-                            switch prefResult {
-                            case .success:
-                                self?.onboardingCompleted = true
-                            case .failure(let error):
-                                self?.errorMessage = error.localizedDescription
+        // Ensure the user is authenticated before saving preferences/profile.
+        Task { @MainActor in
+            // If there is no authenticated user, create a random account first.
+            if AuthService().user == nil {
+                do {
+                    // Attempt to sign up with a random email at @wholeapp.com
+                    let uuid = UUID().uuidString
+                    let email = "anon_\(uuid)@wholeapp.com"
+                    let password = UUID().uuidString + "!A1"
+                    // Sign up and update AuthService state
+                    _ = try await AuthService().signUp(email: email, password: password)
+                } catch {
+                    self.errorMessage = "Failed to create account: \(error.localizedDescription)"
+                    return
+                }
+            }
+            // Now fetch the authenticated user
+            guard let user = AuthService().user else {
+                self.errorMessage = "Unable to get authenticated user."
+                return
+            }
+            let uuid = user.id // user.id is already a UUID, no conversion needed
+            guard let userEmail = user.email else {
+                self.errorMessage = "Authenticated user has no email."
+                return
+            }
+            // Now back on main thread, safe to update UI
+            self.isLoading = true
+            self.errorMessage = nil
+            // Construct user profile and preferences models
+            let userProfile = UserProfile(
+                id: uuid, // Using UUID for user ID
+                email: userEmail,
+                name: self.name.isEmpty ? nil : self.name,
+                gender: self.gender.isEmpty ? nil : self.gender,
+                goals: self.goals.isEmpty ? nil : Array(self.goals),
+                subscriptionStatus: "free",
+                trialEndDate: nil,
+                subscriptionStartDate: nil,
+                subscriptionEndDate: nil,
+                createdAt: nil,
+                updatedAt: nil
+            )
+            let userPreferences = UserPreferences(
+                userId: uuid, // Using UUID for user ID
+                selectedCategories: Array(self.selectedCategories),
+                notificationTime: self.notificationTime,
+                notificationsEnabled: self.notificationsEnabled
+            )
+            // Insert user profile first, then preferences
+            SupabaseService.shared.insertUserProfile(
+                profile: userProfile
+            ) { [weak self] profileResult in
+                DispatchQueue.main.async {
+                    switch profileResult {
+                    case .success:
+                        // If profile insert succeeds, insert preferences
+                        SupabaseService.shared.insertUserPreferences(
+                            preferences: userPreferences
+                        ) { [weak self] prefResult in
+                            DispatchQueue.main.async {
+                                self?.isLoading = false
+                                switch prefResult {
+                                case .success:
+                                    self?.onboardingCompleted = true
+                                case .failure(let error):
+                                    self?.errorMessage = error.localizedDescription
+                                }
                             }
                         }
+                    case .failure(let error):
+                        self?.isLoading = false
+                        self?.errorMessage = error.localizedDescription
                     }
-                case .failure(let error):
-                    self?.isLoading = false
-                    self?.errorMessage = error.localizedDescription
                 }
             }
         }

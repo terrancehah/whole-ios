@@ -8,6 +8,10 @@
 
 - **Onboarding Screens**
   - Objective: Introduce the app and collect user preferences to personalize the experience.
+  - **Account Creation:**
+    - If the user does not have an account, onboarding will automatically generate a random email and password, and create a Supabase Auth account for the user before saving any preferences.
+    - The generated credentials are stored securely for silent login on future launches.
+    - All onboarding data is always tied to this backend account, supporting seamless upgrade and backend sync.
   - Screens:
     1. **Welcome Screen**
        - Brief intro to the app.
@@ -50,6 +54,7 @@
 
 - **Onboarding Data Saving**
   - User profile and preferences are saved to Supabase using `insertUserProfile` and `insertUserPreferences` for new users. All IDs are passed as `UUID`.
+  - If the user is not authenticated, onboarding will first create a Supabase Auth account using a randomly generated email and password.
   - Robust error handling ensures onboarding only completes if both inserts succeed.
   - All onboarding data is stored in the `users` and `userpreferences` tables, following the backend schema and using UUIDs for all identifiers.
 
@@ -73,7 +78,7 @@
 
 ## Anonymous User Provisioning and Backend Account Creation
 - **Anonymous User Provisioning:**
-  - On first launch, the app generates a random email and password and signs up the user with Supabase Auth.
+  - On first launch, the app generates a random email and password and signs up the user with Supabase Auth **as part of onboarding**.
   - These credentials are stored securely for silent login on future launches.
   - All user data (preferences, favorites, premium state) is linked to this backend account from the start, even before explicit login.
   - When the user later logs in with Google, Apple, or email, all data is migrated from the anonymous account to the new authenticated account.
