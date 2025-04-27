@@ -42,32 +42,18 @@ final class AuthService: ObservableObject {
         return response
     }
 
-    /// Signs up an anonymous user by generating a random email and password.
-    /// Stores credentials securely for silent login on future launches.
-    func signUpAnonymous() async throws -> User? {
-        // Generate a random UUID-based email and secure password
-        let uuid = UUID().uuidString
-        let email = "anon_\(uuid)@wholeapp.com"
-        let password = UUID().uuidString + "!A1"
-        // Attempt to sign up
-        let _ = try await signUp(email: email, password: password)
-        // Store email/password securely (e.g., Keychain, for demo use UserDefaults)
-        UserDefaults.standard.set(email, forKey: "anon_email")
-        UserDefaults.standard.set(password, forKey: "anon_password")
-        return self.user
-    }
-
-    /// Silent sign-in for anonymous users using stored credentials.
-    func signInAnonymousIfNeeded() async throws -> User? {
-        if let email = UserDefaults.standard.string(forKey: "anon_email"),
-           let password = UserDefaults.standard.string(forKey: "anon_password") {
-            // Try to sign in
-            let _ = try await signIn(email: email, password: password)
-            return self.user
-        } else {
-            // No credentials stored, sign up anonymously
-            return try await signUpAnonymous()
-        }
+    /// Signs in a Supabase anonymous user using the built-in mechanism.
+    /// Stores session and refresh tokens securely in Keychain for future silent login.
+    func signInSupabaseAnonymous() async throws -> User? {
+        // Call Supabase's built-in anonymous sign-in API
+        let session = try await SupabaseService.shared.client.auth.signInAnonymously()
+        // Store session and refresh tokens for persistent login (tokens are non-optional)
+        KeychainHelper.shared.save(session.accessToken, forKey: "supabase_access_token")
+        KeychainHelper.shared.save(session.refreshToken, forKey: "supabase_refresh_token")
+        // Update local session and user state
+        self.session = session
+        self.user = session.user
+        return session.user
     }
 
     /// Sign in an existing user.

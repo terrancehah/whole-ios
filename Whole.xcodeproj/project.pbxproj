@@ -77,6 +77,7 @@
 		FE9D680C2DAF6D0300EC2167 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = FE9D680B2DAF6D0300EC2167 /* PostgREST */; };
 		FE9D680E2DAF6D0300EC2167 /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = FE9D680D2DAF6D0300EC2167 /* Realtime */; };
 		FE9D68102DAF6D0300EC2167 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = FE9D680F2DAF6D0300EC2167 /* Storage */; };
+		FEAF5F542DBCEEC400F530BA /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEAF5F532DBCEEC400F530BA /* KeychainHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -169,6 +170,7 @@
 		FE69A3DD2DAF66F70096F621 /* WholeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WholeUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		FE69A3DF2DAF66F70096F621 /* QuoteWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteWidget.swift; sourceTree = "<group>"; };
 		FE69A3E02DAF66F70096F621 /* WidgetEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetEntry.swift; sourceTree = "<group>"; };
+		FEAF5F532DBCEEC400F530BA /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -446,6 +448,7 @@
 		FE69A3C32DAF66F70096F621 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				FEAF5F532DBCEEC400F530BA /* KeychainHelper.swift */,
 				FE69A3BE2DAF66F70096F621 /* AnalyticsService.swift */,
 				FE69A3BF2DAF66F70096F621 /* AuthService.swift */,
 				FE69A3C02DAF66F70096F621 /* NotificationService.swift */,
@@ -716,6 +719,7 @@
 				FE69A3ED2DAF66F70096F621 /* QuoteCardView.swift in Sources */,
 				FE69A3EF2DAF66F70096F621 /* OnboardingViewModel.swift in Sources */,
 				FE69A3F02DAF66F70096F621 /* QuoteImageGenerator.swift in Sources */,
+				FEAF5F542DBCEEC400F530BA /* KeychainHelper.swift in Sources */,
 				FE69A3F22DAF66F70096F621 /* ErrorHandler.swift in Sources */,
 				FE69A3F32DAF66F70096F621 /* SceneDelegate.swift in Sources */,
 				FE69A3F42DAF66F70096F621 /* ShareSheet.swift in Sources */,

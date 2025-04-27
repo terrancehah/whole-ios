@@ -45,6 +45,7 @@ final class OnboardingViewModel: ObservableObject {
     /// Add initializer with completion handler
     init(onCompletion: (() -> Void)? = nil) {
         self.onCompletion = onCompletion
+        ensureAnonymousUser()
     }
 
     /// Enum representing each onboarding step
@@ -64,7 +65,9 @@ final class OnboardingViewModel: ObservableObject {
         if let next = OnboardingStep(rawValue: currentStep.rawValue + 1) {
             currentStep = next
             if next == .completed {
-                // Call completion handler when onboarding is done
+                // Call savePreferencesAndProfile when onboarding is done to ensure user is inserted into the users table
+                savePreferencesAndProfile()
+                // Call completion handler if needed
                 onCompletion?()
             }
         }
@@ -79,19 +82,16 @@ final class OnboardingViewModel: ObservableObject {
 
     /// Save user preferences and profile to backend, ensuring MainActor isolation
     func savePreferencesAndProfile() {
-        // Ensure the user is authenticated before saving preferences/profile.
         Task { @MainActor in
-            // If there is no authenticated user, create a random account first.
+            // Ensure the user is authenticated before saving preferences/profile.
             if AuthService().user == nil {
                 do {
-                    // Attempt to sign up with a random email at @wholeapp.com
-                    let uuid = UUID().uuidString
-                    let email = "anon_\(uuid)@wholeapp.com"
-                    let password = UUID().uuidString + "!A1"
-                    // Sign up and update AuthService state
-                    _ = try await AuthService().signUp(email: email, password: password)
+                    // Create an anonymous account using Supabase's built-in mechanism
+                    let user = try await AuthService().signInSupabaseAnonymous()
+                    // Force update AuthService.user in case the SDK does not trigger the onAuthStateChange immediately
+                    AuthService().user = user
                 } catch {
-                    self.errorMessage = "Failed to create account: \(error.localizedDescription)"
+                    self.errorMessage = "Failed to create anonymous account: \(error.localizedDescription)"
                     return
                 }
             }
@@ -101,17 +101,13 @@ final class OnboardingViewModel: ObservableObject {
                 return
             }
             let uuid = user.id // user.id is already a UUID, no conversion needed
-            guard let userEmail = user.email else {
-                self.errorMessage = "Authenticated user has no email."
-                return
-            }
-            // Now back on main thread, safe to update UI
+            let userEmail = user.email // For anonymous users, this may be nil
             self.isLoading = true
             self.errorMessage = nil
             // Construct user profile and preferences models
             let userProfile = UserProfile(
                 id: uuid, // Using UUID for user ID
-                email: userEmail,
+                email: userEmail, // May be nil for anonymous users
                 name: self.name.isEmpty ? nil : self.name,
                 gender: self.gender.isEmpty ? nil : self.gender,
                 goals: self.goals.isEmpty ? nil : Array(self.goals),
@@ -153,6 +149,20 @@ final class OnboardingViewModel: ObservableObject {
                         self?.isLoading = false
                         self?.errorMessage = error.localizedDescription
                     }
+                }
+            }
+        }
+    }
+
+    /// Ensures an anonymous user is signed in at the start of onboarding.
+    func ensureAnonymousUser() {
+        Task { @MainActor in
+            if AuthService().user == nil {
+                do {
+                    let user = try await AuthService().signInSupabaseAnonymous()
+                    AuthService().user = user
+                } catch {
+                    self.errorMessage = "Failed to create anonymous account: \(error.localizedDescription)"
                 }
             }
         }

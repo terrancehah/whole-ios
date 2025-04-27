@@ -7,8 +7,8 @@ import Foundation
 struct UserProfile: Codable, Identifiable {
     /// Unique identifier for the user (UUID, matches auth.uid and Supabase)
     let id: UUID
-    /// User's email address.
-    let email: String
+    /// User's email address (optional, nil for anonymous users).
+    let email: String?
     /// User's display name (optional).
     let name: String?
     /// User's gender (optional).

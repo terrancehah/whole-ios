@@ -72,6 +72,7 @@ struct OnboardingView: View {
             }
         }
         .animation(.easeInOut, value: viewModel.currentStep)
+        // Removed ensureAnonymousUser() from .onAppear to prevent duplicate anonymous accounts
     }
 
     // Helper to determine if skip button should be shown

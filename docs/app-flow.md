@@ -9,8 +9,8 @@
 - **Onboarding Screens**
   - Objective: Introduce the app and collect user preferences to personalize the experience.
   - **Account Creation:**
-    - If the user does not have an account, onboarding will automatically generate a random email and password, and create a Supabase Auth account for the user before saving any preferences.
-    - The generated credentials are stored securely for silent login on future launches.
+    - If the user does not have an account, onboarding will automatically create a Supabase Auth account using Supabase's built-in anonymous sign-in mechanism at the end of onboarding.
+    - The session and refresh tokens are stored securely in the Keychain for seamless auto-login on future launches.
     - All onboarding data is always tied to this backend account, supporting seamless upgrade and backend sync.
   - Screens:
     1. **Welcome Screen**
@@ -54,18 +54,13 @@
 
 - **Onboarding Data Saving**
   - User profile and preferences are saved to Supabase using `insertUserProfile` and `insertUserPreferences` for new users. All IDs are passed as `UUID`.
-  - If the user is not authenticated, onboarding will first create a Supabase Auth account using a randomly generated email and password.
+  - If the user is not authenticated, onboarding will first create a Supabase Auth anonymous account using the built-in anonymous sign-in (no fake email/password is generated).
   - Robust error handling ensures onboarding only completes if both inserts succeed.
   - All onboarding data is stored in the `users` and `userpreferences` tables, following the backend schema and using UUIDs for all identifiers.
 
 - **Onboarding Data Binding:**
-  - All onboarding steps (category selection, name, goals, notification preferences, etc.) now save data directly to the backend using the currently authenticated user's UUID and email (from Supabase Auth).
+  - All onboarding steps (category selection, name, goals, notification preferences, etc.) now save data directly to the backend using the currently authenticated user's UUID (from Supabase Auth). For anonymous users, the email may be nil.
   - This ensures all onboarding data is always tied to the correct backend account (anonymous or real), supporting seamless upgrade and backend sync.
-
-- **Onboarding Completion Persistence**
-  - The app now uses a persistent flag (`didCompleteOnboarding` via `@AppStorage`) to track onboarding completion.
-  - On first launch, users see the onboarding flow. After completion, the main interface is shown on subsequent launches.
-  - The onboarding flow is managed by `OnboardingView` and `OnboardingViewModel`, with an `onCompletion` closure to update the persistent flag.
 
 - **Paywall Screen**
   - Purpose: Encourage subscription while offering a free trial or limited access.
@@ -78,8 +73,8 @@
 
 ## Anonymous User Provisioning and Backend Account Creation
 - **Anonymous User Provisioning:**
-  - On first launch, the app generates a random email and password and signs up the user with Supabase Auth **as part of onboarding**.
-  - These credentials are stored securely for silent login on future launches.
+  - On first launch, the app generates a Supabase Auth anonymous account **as part of onboarding**.
+  - The session and refresh tokens are stored securely in the Keychain for silent login on future launches.
   - All user data (preferences, favorites, premium state) is linked to this backend account from the start, even before explicit login.
   - When the user later logs in with Google, Apple, or email, all data is migrated from the anonymous account to the new authenticated account.
 
@@ -264,7 +259,7 @@ The onboarding flow guides new users through a welcome, widget introduction, cat
   - File: `Models/UserModel.swift`
   - Structure:
     - `id: UUID` (UUID)
-    - `email: String`
+    - `email: String?`
     - `name: String?`
     - `gender: String?`
     - `goals: [String]?`

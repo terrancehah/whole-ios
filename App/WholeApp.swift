@@ -56,13 +56,14 @@ struct RootAppView: View {
             }
         }
         .task {
-            // Ensure an authenticated (anonymous or real) user exists before UI
-            do {
-                _ = try await AuthService().signInAnonymousIfNeeded()
+            // Check if there is an existing authenticated session (anonymous or real)
+            // Anonymous sign-in is now handled during onboarding, not at launch
+            if AuthService().session != nil || AuthService().user != nil {
+                // User is already authenticated (either from restored session or previous login)
                 isAuthReady = true
-            } catch {
-                // Handle error (show alert or fallback UI)
-                // For now, just show ProgressView indefinitely
+            } else {
+                // No session yet: UI will handle onboarding and anonymous account creation when needed
+                isAuthReady = true
             }
         }
     }
