@@ -63,8 +63,10 @@ final class OnboardingViewModel: ObservableObject {
     /// Proceed to the next step in onboarding
     func nextStep() {
         if let next = OnboardingStep(rawValue: currentStep.rawValue + 1) {
+            print("[Onboarding] Advancing to step: \(next)") // Debug: step advancement
             currentStep = next
             if next == .completed {
+                print("[Onboarding] Reached .completed. Triggering savePreferencesAndProfile()") // Debug: completed step
                 // Call savePreferencesAndProfile when onboarding is done to ensure user is inserted into the users table
                 savePreferencesAndProfile()
                 // Call completion handler if needed
@@ -82,26 +84,35 @@ final class OnboardingViewModel: ObservableObject {
 
     /// Save user preferences and profile to backend, ensuring MainActor isolation
     func savePreferencesAndProfile() {
+        print("[Onboarding] Entered savePreferencesAndProfile()") // Debug: function entry
         Task { @MainActor in
             // Ensure the user is authenticated before saving preferences/profile.
-            if AuthService().user == nil {
+            if AuthService.shared.user == nil {
                 do {
+                    print("[Onboarding] No authenticated user. Attempting anonymous sign in...")
                     // Create an anonymous account using Supabase's built-in mechanism
-                    let user = try await AuthService().signInSupabaseAnonymous()
+                    let signedInUser = try await AuthService.shared.signInSupabaseAnonymous()
                     // Force update AuthService.user in case the SDK does not trigger the onAuthStateChange immediately
-                    AuthService().user = user
+                    AuthService.shared.user = signedInUser
+                    print("[Onboarding] Anonymous sign in successful. User: \(String(describing: signedInUser))")
                 } catch {
                     self.errorMessage = "Failed to create anonymous account: \(error.localizedDescription)"
+                    print("[Onboarding][ERROR] Anonymous sign in failed: \(error.localizedDescription)")
                     return
                 }
             }
             // Now fetch the authenticated user
-            guard let user = AuthService().user else {
+            guard let user = AuthService.shared.user else {
                 self.errorMessage = "Unable to get authenticated user."
+                print("[Onboarding][ERROR] Unable to get authenticated user after sign in.")
                 return
             }
             let uuid = user.id // user.id is already a UUID, no conversion needed
             let userEmail = user.email // For anonymous users, this may be nil
+            print("[Onboarding] Authenticated user: \(uuid), email: \(String(describing: userEmail))")
+            print("[Onboarding] Preparing to save user profile and preferences...")
+            print("[Onboarding] Selected categories: \(selectedCategories)")
+            print("[Onboarding] Name: \(name), Gender: \(gender), Goals: \(goals)")
             self.isLoading = true
             self.errorMessage = nil
             // Construct user profile and preferences models
@@ -124,6 +135,11 @@ final class OnboardingViewModel: ObservableObject {
                 notificationTime: self.notificationTime,
                 notificationsEnabled: self.notificationsEnabled
             )
+            // Debug prints to check types and values
+            print("[Onboarding][DEBUG] user.id type: \(type(of: user.id)), value: \(user.id)")
+            print("[Onboarding][DEBUG] userProfile.id type: \(type(of: userProfile.id)), value: \(userProfile.id)")
+            print("[Onboarding] UserProfile: \(userProfile)")
+            print("[Onboarding] UserPreferences: \(userPreferences)")
             // Insert user profile first, then preferences
             SupabaseService.shared.insertUserProfile(
                 profile: userProfile
@@ -131,6 +147,7 @@ final class OnboardingViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     switch profileResult {
                     case .success:
+                        print("[Onboarding] User profile insert SUCCESS.")
                         // If profile insert succeeds, insert preferences
                         SupabaseService.shared.insertUserPreferences(
                             preferences: userPreferences
@@ -139,13 +156,16 @@ final class OnboardingViewModel: ObservableObject {
                                 self?.isLoading = false
                                 switch prefResult {
                                 case .success:
+                                    print("[Onboarding] User preferences insert SUCCESS.")
                                     self?.onboardingCompleted = true
                                 case .failure(let error):
+                                    print("[Onboarding][ERROR] User preferences insert FAILED: \(error.localizedDescription)")
                                     self?.errorMessage = error.localizedDescription
                                 }
                             }
                         }
                     case .failure(let error):
+                        print("[Onboarding][ERROR] User profile insert FAILED: \(error.localizedDescription)")
                         self?.isLoading = false
                         self?.errorMessage = error.localizedDescription
                     }
@@ -157,10 +177,10 @@ final class OnboardingViewModel: ObservableObject {
     /// Ensures an anonymous user is signed in at the start of onboarding.
     func ensureAnonymousUser() {
         Task { @MainActor in
-            if AuthService().user == nil {
+            if AuthService.shared.user == nil {
                 do {
-                    let user = try await AuthService().signInSupabaseAnonymous()
-                    AuthService().user = user
+                    let signedInUser = try await AuthService.shared.signInSupabaseAnonymous()
+                    AuthService.shared.user = signedInUser
                 } catch {
                     self.errorMessage = "Failed to create anonymous account: \(error.localizedDescription)"
                 }

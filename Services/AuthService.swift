@@ -15,7 +15,9 @@ final class AuthService: ObservableObject {
     // Store the subscription as an optional Any, since the SDK does not require a specific type.
     private var authSubscription: Any?
     
-    init() {
+    static let shared = AuthService()
+    
+    private init() {
         // Listen for authentication state changes using the latest Supabase SDK API.
         Task {
             self.authSubscription = await SupabaseService.shared.client.auth.onAuthStateChange { [weak self] event, session in

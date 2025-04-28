@@ -78,7 +78,9 @@ struct OnboardingView: View {
     // Helper to determine if skip button should be shown
     private func showSkip(for step: OnboardingViewModel.OnboardingStep) -> Bool {
         switch step {
-        case .categories, .name, .goals, .subscriptionIntro, .widgetIntro:
+        case .categories:
+            return false // Do not show skip for categories, it is compulsory
+        case .name, .goals, .subscriptionIntro, .widgetIntro:
             return true
         default:
             return false
@@ -98,7 +100,8 @@ struct OnboardingView: View {
             viewModel.goals.removeAll()
             viewModel.nextStep()
         case .subscriptionIntro:
-            viewModel.nextStep() // Skips trial
+            // Ensure skipping subscription also advances the onboarding flow
+            viewModel.nextStep()
         case .widgetIntro:
             viewModel.nextStep()
         default:

@@ -177,6 +177,22 @@
   - The AuthService provides a method to send password reset emails via Supabase.
   - Usage: Call `resetPassword(email:completion:)` with the user's email address.
 
+## Authentication Service Singleton Pattern (2025-04-27)
+
+- The AuthService class now uses the singleton pattern via `static let shared = AuthService()`.
+- All authentication and user state is accessed via `AuthService.shared`.
+- The initializer is now private to enforce singleton usage.
+- All onboarding and authentication logic must reference `AuthService.shared` instead of creating new instances.
+
+### Example Usage
+```swift
+// Access the current user
+let user = AuthService.shared.user
+
+// Sign in anonymously
+let signedInUser = try await AuthService.shared.signInSupabaseAnonymous()
+```
+
 ## Widget Integration Progress (2025-04-18)
 - The widget now displays the quote most recently shown on the main interface.
 - When the user swipes to a new quote or launches the app, the currently displayed quote is saved to App Group UserDefaults for widget access.

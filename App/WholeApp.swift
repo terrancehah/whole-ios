@@ -58,7 +58,7 @@ struct RootAppView: View {
         .task {
             // Check if there is an existing authenticated session (anonymous or real)
             // Anonymous sign-in is now handled during onboarding, not at launch
-            if AuthService().session != nil || AuthService().user != nil {
+            if AuthService.shared.session != nil || AuthService.shared.user != nil {
                 // User is already authenticated (either from restored session or previous login)
                 isAuthReady = true
             } else {
