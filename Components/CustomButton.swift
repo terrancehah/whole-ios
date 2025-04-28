@@ -24,6 +24,7 @@ struct CustomButton: View {
                 // Transparent background to expand tappable/clickable area
                 RoundedRectangle(cornerRadius: 10)
                     .fill(isDisabled ? Color.gray : color)
+                    .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4) // Add shadow here
                 HStack(spacing: 8) {
                     if let systemImage = systemImage {
                         Image(systemName: systemImage)

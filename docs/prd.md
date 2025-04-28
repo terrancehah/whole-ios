@@ -55,6 +55,10 @@ Premium features are unlocked through a subscription, offering unlimited quote a
 - Paywall CTA after limit.
 - Theme switcher and settings on main UI.
 - Caching for offline planned.
+- Anonymous users are supported with NULL emails; no placeholder emails are used.
+- Quotes categories are stored as a Postgres text[] array for seamless integration with the app.
+- UI: QuoteListView fills the screen, all buttons have corner radius 12 and consistent shadows, Chinese text is lighter.
+- Error popups for backend issues are now suppressed unless relevant.
 
 ### 5.4 Paywall and Subscriptions
 - Offers a **7-day free trial** upon first launch

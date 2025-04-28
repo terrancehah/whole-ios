@@ -36,11 +36,11 @@ Whole supports multiple visual styles to suit different user preferences. For la
 - **Quote Card:** Rounded rectangle, minimal shadow, pure white with slight glass effect.
 - **Typography:**
   - English: Georgia or serif, #2D3748, 20px
-  - Chinese: PingFang SC or clean sans-serif, #4A5568, 18px
+  - Chinese: PingFang SC or clean sans-serif, #C9D1D9, 18px
   - Line spacing: 1.5x
 - **Buttons:**
-  - Primary: Use accent color from Serene Minimalism palette (#ff9f68) for background, white text, and rounded corners.
-  - Secondary: Use secondary color (#ff784f) for background, white or dark text depending on contrast, and rounded corners.
+  - Primary: Use accent color from Serene Minimalism palette (#ff9f68) for background, white text, and rounded corners (12).
+  - Secondary: Use secondary color (#ff784f) for background, white or dark text depending on contrast, and rounded corners (12).
   - Avoid pastel blue. All button colors must reference the Serene Minimalism palette.
   - Button states (pressed/disabled) use lighter/darker shades of the above.
 - **Navigation:**
@@ -67,7 +67,7 @@ Whole supports multiple visual styles to suit different user preferences. For la
 - **Quote Card:** Rounded rectangle (16px), soft shadow, pastel off-white with faint overlay
 - **Typography:**
   - English: Lora, 20px, #2D3748
-  - Chinese: Source Han Sans, 18px, #4A5568
+  - Chinese: Source Han Sans, 18px, #C9D1D9
   - Line spacing: 1.6x
 - **Buttons:** Heart icon pastel blue (#A3BFFA, filled #FBB6CE when liked), share icon pastel blue
 - **Navigation:** Pastel blue icons, active tab pastel purple (#B794F4)
@@ -131,6 +131,12 @@ Whole supports multiple visual styles to suit different user preferences. For la
 ## 15. SwiftUI Performance Best Practices
 - For large or complex SwiftUI views (such as quote carousels), extract subviews and break up complex expressions (e.g., ForEach with chained enumerated/prefix) into computed properties or helper views.
 - This approach is now used in `QuoteListView.swift` for the main TabView and overlays, resolving type-checking errors and improving code clarity.
+
+## 16. QuoteListView
+- All buttons use a corner radius of 12 and have consistent shadows for visual polish.
+- QuoteListView fills the entire screen for a modern, immersive experience.
+- Chinese quote text uses a lighter color from the palette for improved readability.
+- Duplicate buttons and error popups are removed for a cleaner UI.
 
 ---
 

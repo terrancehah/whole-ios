@@ -12,7 +12,7 @@ This document describes the current schema and access policies for the Supabase 
   - `id`: uuid, primary key, auto-generated
   - `english_text`: text, required
   - `chinese_text`: text, required
-  - `categories`: text[], required (e.g., ['Inspiration', 'Love'])
+  - `categories`: text[], required (e.g., {"Inspiration","Love"})
   - **Allowed categories:**
     - Inspiration
     - Love
@@ -32,7 +32,7 @@ This document describes the current schema and access policies for the Supabase 
 - **Purpose:** Stores user profile and subscription info.
 - **Columns:**
   - `id`: uuid, primary key (matches auth.uid)
-  - `email`: text, unique, required
+  - `email`: text, unique, nullable (can be NULL for anonymous users; unique constraint allows multiple NULLs)
   - `name`: text
   - `gender`: text
   - `goals`: text[]
@@ -48,7 +48,7 @@ This document describes the current schema and access policies for the Supabase 
 - **RLS:**
   - ALL: Only the user (id = auth.uid)
   - INSERT: id must match auth.uid
-- Anonymous users are represented in the `users` table with a random email (e.g., anon_<uuid>@wholeapp.com) and no real email until upgrade.
+- Anonymous users are represented in the `users` table with a NULL email until upgrade. No placeholder or random email is used.
 - All user-related tables (preferences, liked_quotes, etc.) use this UUID until the user upgrades to a real account.
 
 ### 3. `userpreferences`
@@ -188,7 +188,7 @@ The Swift model representing a user profile is defined as follows (see `Models/U
 ```swift
 struct UserProfile: Codable, Identifiable {
     let id: String
-    let email: String
+    let email: String?
     let name: String?
     let gender: String?
     let goals: [String]?

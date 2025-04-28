@@ -19,6 +19,9 @@ This document provides a step-by-step guide for developing the Whole app, from b
 - [`SupabaseService.swift`](../Services/SupabaseService.swift) manages all database operations, including fetching quotes, liking/unliking, and retrieving user profiles.
 - [`AuthService.swift`](../Services/AuthService.swift) provides robust user authentication, session management, and password reset, with published properties for reactive UI.
 - All flows are well-documented, robust, and ready for integration with the rest of the app.
+- Anonymous account email is now set to `NULL`, not a placeholder, for all anonymous users. This prevents duplicate key errors and matches the latest onboarding logic.
+- Quotes table `categories` column is now a Postgres `text[]` array, not a JSON string. All quoting, importing, and decoding logic aligns with this format.
+- CSV import for quotes uses Postgres array syntax for the categories column.
 **Outcome:** The app is fully connected to Supabase, with secure authentication and real-time data sync for users and quotes.
 
 ---
@@ -28,6 +31,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 - [`QuoteCardView.swift`](../Components/QuoteCardView.swift) is a semantic, reusable card for displaying bilingual quotes, categories, and actions, with clear separation of concerns and preview support.
 - [`CustomButton.swift`](../Components/CustomButton.swift) provides a flexible, consistent button used across all interactive UI.
 - Both components are well-commented, follow best practices, and support rapid UI development across the app.
+- UI: QuoteListView fills the screen, all buttons have a corner radius of 12 and consistent shadows, Chinese text uses a lighter color.
 **Outcome:** The app has polished, reusable UI building blocks that ensure a consistent, maintainable user experience.
 
 ---
@@ -38,6 +42,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 - Integrates Like and Share actions, with clear visual feedback and premium gating logic.
 - Enforces swipe limits for free users, and presents a paywall CTA and modal when limits are reached.
 - Supports theming and robust error handling for a polished user experience.
+- Error popups for backend issues are now suppressed unless relevant.
 **Outcome:** Users can browse, like, and share daily quotes, with premium logic and paywall gating fully integrated.
 
 ---

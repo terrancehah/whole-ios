@@ -77,6 +77,7 @@
   - The session and refresh tokens are stored securely in the Keychain for silent login on future launches.
   - All user data (preferences, favorites, premium state) is linked to this backend account from the start, even before explicit login.
   - When the user later logs in with Google, Apple, or email, all data is migrated from the anonymous account to the new authenticated account.
+- **Anonymous User Email Handling:** Anonymous users now have their email set to `NULL` in the database, not an empty string or placeholder. This prevents unique constraint issues and aligns with the Supabase schema.
 
 ## Subscription & Paywall Logic (Updated 2025-04-24)
 - StoreKit 2 is now integrated for all subscription and paywall flows.
@@ -96,6 +97,8 @@
     - Like: Saves quote to Favorites tab.
     - Share: Generates shareable image (watermarked for free users).
   - Free User Limit: 10 quotes/day with subscription prompt.
+  - **Quote Categories Storage:** The `categories` field in the `quotes` table is now a Postgres `text[]` array, not a JSON string. The Swift model expects `[String]` and the backend returns a true array, ensuring seamless decoding.
+  - **CSV Import:** When importing quotes, the `categories` column must use Postgres array syntax (e.g., `{"Inspiration","Love"}`) for compatibility with the `text[]` type.
 
 - **Navigation Elements**
   - Top Navigation Bar:
@@ -127,6 +130,8 @@
   - Default theme: Serene Minimalism with a warm palette (#ffeedf, #ffd1a4, #b65f3b, #ff9f68, #ff784f).
 - **Error Handling:**
   - Native-style retry button for load failures.
+  - **Error Handling:** Error popups for backend issues (such as liked_quotes table) are now suppressed unless relevant to the user.
+  - **Robust Error Handling:** Robust error handling ensures onboarding and data sync only complete if all backend operations succeed.
 
 ## 4. Settings Screen
 - **Quote Categories**
@@ -138,6 +143,10 @@
   - Theme selection (light/dark mode) with semantic theme colors and fonts for backgrounds, cards, buttons, and text.
   - Font style choices.
   - Premium features locked for free users.
+  - **UI Improvements:**
+    - `QuoteListView` now fills the entire screen for a modern look.
+    - All `CustomButton` instances have a corner radius of `12` and a consistent shadow for visual polish.
+    - Chinese quote text uses a lighter palette color for improved readability.
 
 - **Subscription Management**
   - View current status.

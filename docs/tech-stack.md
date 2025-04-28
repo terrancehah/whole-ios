@@ -15,6 +15,10 @@
   - Supabase is used for backend storage and future moderation flows.
 - SwiftUI performance best practices implemented: Large views (e.g., quote carousels) now use extracted subviews and computed properties to avoid compiler errors and improve maintainability.
 - Example: `QuoteListView` refactor (2025-04-22).
+- Supabase `users.email` is nullable, unique, and may be NULL for anonymous users.
+- Quotes `categories` is a Postgres text[] array, not a JSON string; CSV import uses array syntax.
+- UI: All buttons use a corner radius of 12 and have consistent shadows; QuoteListView fills the screen; Chinese text uses a lighter color.
+- Error popups for backend issues are now suppressed unless relevant.
 
 ## Backend
 - **Platform**: Supabase
