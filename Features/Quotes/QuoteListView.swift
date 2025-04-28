@@ -13,6 +13,7 @@ struct QuoteListView: View {
     @State private var showShareSheet: Bool = false
     @State private var shareImage: UIImage? = nil
     @State private var showPaywall: Bool = false
+    @State private var shake: Bool = false
 
     // Gating logic: Only premium users (trial or paid) can swipe unlimited
     // This logic checks the user's subscription status and trial end date to determine premium access
@@ -43,6 +44,7 @@ struct QuoteListView: View {
             ForEach(enumeratedQuotesToShow, id: \.element.id) { idx, quote in
                 QuoteShareCardView(quote: quote)
                     .tag(idx)
+                    .modifier(ShakeEffect(shakes: shake && idx == 0 ? 2 : 0)) // Animate shake for first card only
                     // Disable cards beyond the limit for free users
                     .disabled(!isPremiumUser && viewModel.reachedSwipeLimit && idx >= viewModel.swipeLimit)
             }
@@ -66,8 +68,17 @@ struct QuoteListView: View {
             // Save the initial quote for the widget when the view appears.
             if viewModel.quotes.indices.contains(selectedIndex) {
                 let currentQuote = viewModel.quotes[selectedIndex]
-                // Call the new saveQuoteForWidget method on the viewModel
                 viewModel.saveQuoteForWidget(currentQuote)
+            }
+            // Trigger shake animation for the first card
+            if selectedIndex == 0 {
+                withAnimation(Animation.default.delay(0.5)) {
+                    shake = true
+                }
+                // Reset shake after animation
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                    shake = false
+                }
             }
         }
         .animation(.easeInOut, value: selectedIndex)
@@ -78,7 +89,23 @@ struct QuoteListView: View {
         NavigationView {
             ZStack(alignment: .bottom) {
                 // Use extracted TabView for quotes
-                quoteTabView
+                if enumeratedQuotesToShow.isEmpty {
+                    VStack(spacing: 24) {
+                        Image(systemName: "quote.bubble")
+                            .font(.system(size: 48))
+                            .foregroundColor(ThemeManager.shared.selectedTheme.theme.cardBackground) // fallback, was accent
+                        Text("No quotes available")
+                            .headingFont(size: 20)
+                            .foregroundColor(ThemeManager.shared.selectedTheme.theme.englishColor)
+                        Text("Try again later or check your connection.")
+                            .bodyFont(size: 15)
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(ThemeManager.shared.selectedTheme.theme.chineseColor)
+                    }
+                    .padding()
+                } else {
+                    quoteTabView
+                }
 
                 // Paywall CTA button for free users only, appears when limit is hit
                 if viewModel.showPaywallCTA && !isPremiumUser {
@@ -110,18 +137,18 @@ struct QuoteListView: View {
             }
             .background(ThemeManager.shared.selectedTheme.theme.background.ignoresSafeArea())
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: viewModel.showThemeSwitcher) {
-                        Image(systemName: "paintbrush")
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: viewModel.showSettings) {
-                        Image(systemName: "gearshape")
-                    }
-                }
-            }
+            // .toolbar {
+            //     ToolbarItem(placement: .navigationBarLeading) {
+            //         Button(action: viewModel.showThemeSwitcher) {
+            //             Image(systemName: "paintbrush")
+            //         }
+            //     }
+            //     ToolbarItem(placement: .navigationBarTrailing) {
+            //         Button(action: viewModel.showSettings) {
+            //             Image(systemName: "gearshape")
+            //         }
+            //     }
+            // }
             // Like popup
             .overlay(
                 Group {
@@ -195,6 +222,20 @@ struct BlurView: UIViewRepresentable {
         UIVisualEffectView(effect: UIBlurEffect(style: style))
     }
     func updateUIView(_ uiView: UIVisualEffectView, context: Context) {}
+}
+
+// MARK: - ShakeEffect Modifier
+/// A view modifier that applies a horizontal shake animation.
+struct ShakeEffect: GeometryEffect {
+    var shakes: Int
+    var animatableData: CGFloat {
+        get { CGFloat(shakes) }
+        set { shakes = Int(newValue) }
+    }
+    func effectValue(size: CGSize) -> ProjectionTransform {
+        let translation = 8 * sin(animatableData * .pi * 2)
+        return ProjectionTransform(CGAffineTransform(translationX: translation, y: 0))
+    }
 }
 
 // MARK: - Preview

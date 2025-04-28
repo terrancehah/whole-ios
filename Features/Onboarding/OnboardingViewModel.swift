@@ -108,7 +108,7 @@ final class OnboardingViewModel: ObservableObject {
                 return
             }
             let uuid = user.id // user.id is already a UUID, no conversion needed
-            let userEmail = user.email // For anonymous users, this may be nil
+            let userEmail = (user.email?.isEmpty ?? true) ? nil : user.email
             print("[Onboarding] Authenticated user: \(uuid), email: \(String(describing: userEmail))")
             print("[Onboarding] Preparing to save user profile and preferences...")
             print("[Onboarding] Selected categories: \(selectedCategories)")
@@ -118,7 +118,7 @@ final class OnboardingViewModel: ObservableObject {
             // Construct user profile and preferences models
             let userProfile = UserProfile(
                 id: uuid, // Using UUID for user ID
-                email: userEmail, // May be nil for anonymous users
+                email: userEmail, // Now guaranteed to be nil if empty
                 name: self.name.isEmpty ? nil : self.name,
                 gender: self.gender.isEmpty ? nil : self.gender,
                 goals: self.goals.isEmpty ? nil : Array(self.goals),

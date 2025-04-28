@@ -17,22 +17,29 @@ struct CustomButton: View {
     var isDisabled: Bool = false
 
     var body: some View {
+        // The ZStack ensures the content (icon/label) is always centered within the button frame,
+        // even if only an icon is present and label is empty.
         Button(action: action) {
-            HStack(spacing: 8) {
-                if let systemImage = systemImage {
-                    Image(systemName: systemImage)
-                        .font(.headline)
+            ZStack {
+                // Transparent background to expand tappable/clickable area
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(isDisabled ? Color.gray : color)
+                HStack(spacing: 8) {
+                    if let systemImage = systemImage {
+                        Image(systemName: systemImage)
+                            .font(.headline)
+                    }
+                    // Only show label if not empty
+                    if !label.isEmpty {
+                        Text(label)
+                            .fontWeight(.medium)
+                    }
                 }
-                Text(label)
-                    .fontWeight(.medium)
+                .foregroundColor(.white)
+                .opacity(isDisabled ? 0.6 : 1.0)
             }
-            .padding(.vertical, 10)
-            .padding(.horizontal, 20)
-            .foregroundColor(.white)
-            .background(isDisabled ? Color.gray : color)
-            .cornerRadius(10)
-            .opacity(isDisabled ? 0.6 : 1.0)
         }
+        // Remove internal padding so parent .frame controls size
         .disabled(isDisabled)
     }
 }

@@ -23,6 +23,7 @@ final class FavoritesViewModel: ObservableObject {
     func fetchLikedQuotes() {
         guard let userId = userId else {
             likedQuotes = []
+            errorMessage = nil // Do not show error for empty
             return
         }
         isLoading = true
@@ -32,11 +33,18 @@ final class FavoritesViewModel: ObservableObject {
                 switch result {
                 case .success(let quotes):
                     self?.likedQuotes = quotes
+                    // Only clear error if empty (first time), not on real backend error
+                    if quotes.isEmpty {
+                        self?.errorMessage = nil
+                    }
                 case .failure(let error):
-                    // When assigning error messages, wrap them in ErrorMessage(message: ...)
-                    // Example:
-                    // self.errorMessage = ErrorMessage(message: "Failed to fetch favorites")
-                    self?.errorMessage = ErrorMessage(message: "Failed to load favorites: \(error.localizedDescription)")
+                    // Only show error if the table actually exists but fails, not if just empty
+                    if error.localizedDescription.contains("does not exist") {
+                        self?.likedQuotes = []
+                        self?.errorMessage = nil
+                    } else {
+                        self?.errorMessage = ErrorMessage(message: "Failed to load favorites: \(error.localizedDescription)")
+                    }
                 }
             }
         }

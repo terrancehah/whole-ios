@@ -19,31 +19,124 @@ struct RootAppView: View {
     @StateObject private var favoritesViewModel = FavoritesViewModel()
     @StateObject private var userProfileViewModel = UserProfileViewModel()
     @State private var isAuthReady: Bool = false
+    @State private var showFavoritesSheet: Bool = false
+    @State private var showSettingsSheet: Bool = false
+    @State private var showCustomizationSheet: Bool = false
+    @State private var showPaywallSheet: Bool = false
 
     var body: some View {
         Group {
             if isAuthReady {
                 if didCompleteOnboarding {
-                    TabView {
-                        // Quotes Tab (placeholder)
-                        Text("Quotes")
-                            .headingFont(size: 22) // Apply heading font to tab label
-                            .tabItem {
-                                Label("Quotes", systemImage: "quote.bubble")
-                                    .bodyFont(size: 12) // Tab label font
+                    ZStack {
+                        // Fullscreen background
+                        ThemeManager.shared.selectedTheme.theme.cardBackground.ignoresSafeArea()
+
+                        // Main quote carousel fills the space
+                        QuoteListView(
+                            viewModel: QuoteViewModel(user: userProfileViewModel.user),
+                            userProfile: userProfileViewModel
+                        )
+
+                        // Overlay all four action buttons in corners
+                        // Top right: Settings
+                        VStack {
+                            HStack {
+                                Spacer()
+                                CustomButton(
+                                    label: "",
+                                    systemImage: "gearshape",
+                                    action: { showSettingsSheet = true },
+                                    color: ThemeManager.shared.selectedTheme.theme.cardBackground
+                                )
+                                .frame(width: 48, height: 48)
+                                .cornerRadius(16)
                             }
-                        // Favorites Tab
-                        FavoritesView(viewModel: favoritesViewModel)
-                            .tabItem {
-                                Label("Favorites", systemImage: "heart.fill")
-                                    .bodyFont(size: 12)
+                            Spacer()
+                        }
+                        .padding(.top, 32)
+                        .padding(.trailing, 22)
+                        // Top left: Paywall/Subscription (if not premium)
+                        VStack {
+                            HStack {
+                                let now = Date()
+                                let isPremiumUser: Bool = {
+                                    let status = userProfileViewModel.user.subscriptionStatus
+                                    if status == "free" {
+                                        if let trialEnd = userProfileViewModel.user.trialEndDate {
+                                            return trialEnd > now
+                                        }
+                                        return false
+                                    }
+                                    return true
+                                }()
+                                if !isPremiumUser {
+                                    CustomButton(
+                                        label: "",
+                                        systemImage: "star.fill",
+                                        action: { showPaywallSheet = true },
+                                        color: ThemeManager.shared.selectedTheme.theme.cardBackground
+                                    )
+                                    .frame(width: 48, height: 48)
+                                    .cornerRadius(16)
+                                }
+                                Spacer()
                             }
+                            Spacer()
+                        }
+                        .padding(.top, 32)
+                        .padding(.leading, 22)
+                        // Bottom right: Customization
+                        VStack {
+                            Spacer()
+                            HStack {
+                                Spacer()
+                                CustomButton(
+                                    label: "",
+                                    systemImage: "paintbrush",
+                                    action: { showCustomizationSheet = true },
+                                    color: ThemeManager.shared.selectedTheme.theme.cardBackground
+                                )
+                                .frame(width: 48, height: 48)
+                                .cornerRadius(16)
+                            }
+                        }
+                        .padding(.bottom, 32)
+                        .padding(.trailing, 22)
+                        // Bottom left: Favorites
+                        VStack {
+                            Spacer()
+                            HStack {
+                                CustomButton(
+                                    label: "",
+                                    systemImage: "heart.fill",
+                                    action: {
+                                        favoritesViewModel.userId = userProfileViewModel.user.id
+                                        favoritesViewModel.fetchLikedQuotes()
+                                        showFavoritesSheet = true
+                                    },
+                                    color: ThemeManager.shared.selectedTheme.theme.cardBackground
+                                )
+                                .frame(width: 48, height: 48)
+                                .cornerRadius(16)
+                                Spacer()
+                            }
+                        }
+                        .padding(.bottom, 32)
+                        .padding(.leading, 22)
                     }
-                    .onAppear {
-                        // Set the userId and fetch favorites after login
-                        let userId = userProfileViewModel.user.id
-                        favoritesViewModel.userId = userId
-                        favoritesViewModel.fetchLikedQuotes()
+                    // All sheets for modal views
+                    .sheet(isPresented: $showFavoritesSheet) {
+                        FavoritesView(viewModel: favoritesViewModel)
+                    }
+                    .sheet(isPresented: $showSettingsSheet) {
+                        SettingsView(userId: userProfileViewModel.user.id)
+                    }
+                    .sheet(isPresented: $showCustomizationSheet) {
+                        CustomizationView(userProfile: userProfileViewModel)
+                    }
+                    .sheet(isPresented: $showPaywallSheet) {
+                        PaywallView(viewModel: PaywallViewModel())
                     }
                 } else {
                     // Show onboarding if not complete
@@ -57,12 +150,9 @@ struct RootAppView: View {
         }
         .task {
             // Check if there is an existing authenticated session (anonymous or real)
-            // Anonymous sign-in is now handled during onboarding, not at launch
             if AuthService.shared.session != nil || AuthService.shared.user != nil {
-                // User is already authenticated (either from restored session or previous login)
                 isAuthReady = true
             } else {
-                // No session yet: UI will handle onboarding and anonymous account creation when needed
                 isAuthReady = true
             }
         }
