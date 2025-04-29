@@ -53,7 +53,7 @@ extension AppTheme {
                 englishFont: .system(size: 20, weight: .regular, design: .serif),
                 englishColor: Color(hex: "#b65f3b"),
                 chineseFont: .system(size: 18, weight: .regular, design: .default),
-                chineseColor: Color(hex: "#ff784f"),
+                chineseColor: Color(hex: "#b65f3b"),
                 shadow: Color.black.opacity(0.09)
             )
         case .elegantMonochrome:

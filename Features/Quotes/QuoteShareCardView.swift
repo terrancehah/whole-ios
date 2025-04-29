@@ -7,6 +7,10 @@ struct QuoteShareCardView: View {
     var showWatermark: Bool = false
     // Observe the global theme manager for dynamic theming
     @ObservedObject private var themeManager = ThemeManager.shared
+    var viewModel: QuoteViewModel?
+    var selfShareImage: ((UIImage) -> Void)?
+    var showLikePopup: ((Bool) -> Void)?
+    
     var body: some View {
         // No card, no shadow, just text centered on the screen with same background as RootAppView
         VStack(spacing: 20) {
@@ -19,6 +23,36 @@ struct QuoteShareCardView: View {
                 .font(themeManager.selectedTheme.theme.chineseFont)
                 .foregroundColor(themeManager.selectedTheme.theme.chineseColor)
                 .multilineTextAlignment(.center)
+            // Share and Like buttons directly below the quote
+            HStack(spacing: 48) {
+                Button(action: {
+                    if let shareImage = viewModel?.generateShareImage(for: quote) {
+                        selfShareImage?(shareImage)
+                    }
+                }) {
+                    Image(systemName: "square.and.arrow.up")
+                        .font(.system(size: 28, weight: .regular))
+                        .foregroundColor(.primary)
+                        .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
+                }
+                Button(action: {
+                    if let viewModel = viewModel {
+                        if viewModel.isLiked(quote: quote) {
+                            viewModel.unlike(quote: quote)
+                        } else {
+                            viewModel.like(quote: quote)
+                            showLikePopup?(true)
+                        }
+                    }
+                }) {
+                    Image(systemName: (viewModel?.isLiked(quote: quote) ?? false) ? "heart.fill" : "heart")
+                        .font(.system(size: 28, weight: .regular))
+                        .foregroundColor(.primary)
+                        .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
+                        .padding(.top, 4)
+                }
+            }
+            .padding(.top, 24)
             if let createdBy = quote.createdBy {
                 Text("— " + createdBy.uuidString)
                     .font(.footnote)

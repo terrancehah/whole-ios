@@ -105,54 +105,9 @@ struct QuoteListView: View {
                     }
                     .padding()
                 } else {
-                    // Ensure the TabView fills the entire height and width of the screen
+                    // Only show the quoteTabView (quote + actions now handled inside QuoteShareCardView)
                     quoteTabView
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
-
-                // (Removed bottom bar star/settings buttons as requested)
-
-                // Bottom-center icon-only heart and share buttons (no shadow, no bar)
-                VStack {
-                    Spacer()
-                    HStack(spacing: 48) {
-                        // Share button
-                        Button(action: {
-                            // Check if selectedIndex is within bounds before accessing enumeratedQuotesToShow
-                            if selectedIndex < enumeratedQuotesToShow.count {
-                                let currentQuote = enumeratedQuotesToShow[selectedIndex].element
-                                if let shareImage = viewModel.generateShareImage(for: currentQuote) {
-                                    self.shareImage = shareImage
-                                    self.showShareSheet = true
-                                }
-                            }
-                        }) {
-                            Image(systemName: "square.and.arrow.up")
-                                .font(.system(size: 28, weight: .regular))
-                                .foregroundColor(.primary)
-                                .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
-                        }
-                        // Heart button
-                        Button(action: {
-                            // Check if selectedIndex is within bounds before accessing enumeratedQuotesToShow
-                            if selectedIndex < enumeratedQuotesToShow.count {
-                                let currentQuote = enumeratedQuotesToShow[selectedIndex].element
-                                if viewModel.isLiked(quote: currentQuote) {
-                                    viewModel.unlike(quote: currentQuote)
-                                } else {
-                                    viewModel.like(quote: currentQuote)
-                                    showLikePopup = true
-                                }
-                            }
-                        }) {
-                            // Only show filled heart if current quote is liked and selectedIndex is within bounds
-                            Image(systemName: (selectedIndex < enumeratedQuotesToShow.count && viewModel.isLiked(quote: enumeratedQuotesToShow[selectedIndex].element)) ? "heart.fill" : "heart")
-                                .font(.system(size: 28, weight: .regular))
-                                .foregroundColor(.primary)
-                                .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
-                        }
-                    }
-                    .padding(.bottom, 36)
                 }
 
                 // Paywall CTA button for free users only, appears when limit is hit
