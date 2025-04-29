@@ -43,7 +43,7 @@ struct QuoteShareCardView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(hex: "#ffeedf")) // Match RootAppView background
+        // No background color; let parent (RootAppView) show through
     }
 }
 

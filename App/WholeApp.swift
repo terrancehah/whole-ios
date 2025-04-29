@@ -53,7 +53,6 @@ struct RootAppView: View {
                                 .frame(width: 48, height: 48)
                                 .cornerRadius(16)
                                 .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
-                                Spacer()
                             }
                             Spacer()
                         }
