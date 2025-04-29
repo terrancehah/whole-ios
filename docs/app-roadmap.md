@@ -202,6 +202,9 @@ This document provides a step-by-step guide for developing the Whole app, from b
 - Refactored `QuoteListView` to extract the main TabView and break up complex expressions, resolving compiler errors and improving maintainability.
 - Ensured overlays/popups remain modular and commented for future extensibility.
 
+### 2025-04-29: Quote List UI Polish
+- Quote List: Removed horizontal scroll indicator, set background to #ffeedf, and standardized shadow on all floating buttons.
+
 ### Next Steps
 - Continue to monitor for any lingering type mismatches or legacy String IDs.
 - Ensure all documentation remains up-to-date with model and service changes.

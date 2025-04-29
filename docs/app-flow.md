@@ -361,3 +361,10 @@ The onboarding flow guides new users through a welcome, widget introduction, cat
 ### Recent Refactoring
 - All code, including previews, mocks, and tests, now uses `UUID` for all identifiers to ensure consistency and type safety across the app.
 - All SupabaseService methods and all usages have been updated to expect and use `UUID` instead of `String` for IDs.
+
+### [2025-04-29] Quote List UI/UX Improvements
+- Removed the horizontal scroll indicator from the quote swipe view for a cleaner interface.
+- Explicitly set the background color to #ffeedf for the quote list screen.
+- Ensured all floating corner buttons (star, settings, etc.) have a consistent shadow effect for better visibility and depth.
+
+See `QuoteListView.swift` for code details.

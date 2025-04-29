@@ -49,7 +49,8 @@ struct QuoteListView: View {
                     .disabled(!isPremiumUser && viewModel.reachedSwipeLimit && idx >= viewModel.swipeLimit)
             }
         }
-        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+        // Remove the horizontal scroll indicator (dots)
+        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         .onChange(of: selectedIndex) { newIndex in
             // Save the currently displayed quote for the widget whenever the user swipes to a new quote.
             if viewModel.quotes.indices.contains(newIndex) {
@@ -104,51 +105,65 @@ struct QuoteListView: View {
                     }
                     .padding()
                 } else {
+                    // Ensure the TabView fills the entire height and width of the screen
                     quoteTabView
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+
+                // (Removed bottom bar star/settings buttons as requested)
+
+                // Bottom-center icon-only heart and share buttons (no shadow, no bar)
+                VStack {
+                    Spacer()
+                    HStack(spacing: 48) {
+                        // Share button
+                        Button(action: {
+                            // Check if selectedIndex is within bounds before accessing enumeratedQuotesToShow
+                            if selectedIndex < enumeratedQuotesToShow.count {
+                                let currentQuote = enumeratedQuotesToShow[selectedIndex].element
+                                if let shareImage = viewModel.generateShareImage(for: currentQuote) {
+                                    self.shareImage = shareImage
+                                    self.showShareSheet = true
+                                }
+                            }
+                        }) {
+                            Image(systemName: "square.and.arrow.up")
+                                .font(.system(size: 28, weight: .regular))
+                                .foregroundColor(.primary)
+                                .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
+                        }
+                        // Heart button
+                        Button(action: {
+                            // Check if selectedIndex is within bounds before accessing enumeratedQuotesToShow
+                            if selectedIndex < enumeratedQuotesToShow.count {
+                                let currentQuote = enumeratedQuotesToShow[selectedIndex].element
+                                if viewModel.isLiked(quote: currentQuote) {
+                                    viewModel.unlike(quote: currentQuote)
+                                } else {
+                                    viewModel.like(quote: currentQuote)
+                                    showLikePopup = true
+                                }
+                            }
+                        }) {
+                            // Only show filled heart if current quote is liked and selectedIndex is within bounds
+                            Image(systemName: (selectedIndex < enumeratedQuotesToShow.count && viewModel.isLiked(quote: enumeratedQuotesToShow[selectedIndex].element)) ? "heart.fill" : "heart")
+                                .font(.system(size: 28, weight: .regular))
+                                .foregroundColor(.primary)
+                                .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
+                        }
+                    }
+                    .padding(.bottom, 36)
                 }
 
                 // Paywall CTA button for free users only, appears when limit is hit
                 if viewModel.showPaywallCTA && !isPremiumUser {
-                    Button(action: { showPaywall = true }) {
-                        Text("Unlock Unlimited Quotes")
-                            .headingFont(size: 18) // Use heading font for CTA
-                            .padding()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .padding(.bottom, 24)
-                }
-
-                // Retry button for errors
-                if let error = viewModel.errorMessage {
-                    VStack {
-                        Text(error)
-                            .bodyFont(size: 16).foregroundColor(.red)
-                        Button("Retry") {
-                            viewModel.retryFetchQuotes()
-                        }
-                        .bodyFont(size: 15)
-                        .padding(.top, 4)
-                    }
-                    .padding()
-                    .background(Color(.systemBackground).opacity(0.95))
-                    .cornerRadius(10)
-                    .shadow(radius: 6)
+                    // Replace paywall CTA button with CustomButton for default shadow
+                    CustomButton(label: "Unlock Unlimited Quotes", systemImage: nil, action: { showPaywall = true })
+                        .padding(.bottom, 24)
                 }
             }
-            .background(ThemeManager.shared.selectedTheme.theme.background.ignoresSafeArea())
+            // No background color here; let parent (RootAppView) show through
             .navigationBarTitleDisplayMode(.inline)
-            // .toolbar {
-            //     ToolbarItem(placement: .navigationBarLeading) {
-            //         Button(action: viewModel.showThemeSwitcher) {
-            //             Image(systemName: "paintbrush")
-            //         }
-            //     }
-            //     ToolbarItem(placement: .navigationBarTrailing) {
-            //         Button(action: viewModel.showSettings) {
-            //             Image(systemName: "gearshape")
-            //         }
-            //     }
-            // }
             // Like popup
             .overlay(
                 Group {
@@ -175,6 +190,7 @@ struct QuoteListView: View {
                     }
                 }, alignment: .bottom
             )
+            // Remove error popup: do not show error messages to the user
             // Share sheet (not used here, but left for future extensibility)
             .sheet(isPresented: $showShareSheet) {
                 if let shareImage = shareImage {

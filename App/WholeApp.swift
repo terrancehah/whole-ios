@@ -29,8 +29,8 @@ struct RootAppView: View {
             if isAuthReady {
                 if didCompleteOnboarding {
                     ZStack {
-                        // Fullscreen background
-                        ThemeManager.shared.selectedTheme.theme.cardBackground.ignoresSafeArea()
+                        // Set main background to #ffeedf as per frontend guidelines
+                        Color(hex: "#ffeedf").ignoresSafeArea()
 
                         // Main quote carousel fills the space
                         QuoteListView(
@@ -43,6 +43,7 @@ struct RootAppView: View {
                         VStack {
                             HStack {
                                 Spacer()
+                                // Add shadow to settings button for consistent design
                                 CustomButton(
                                     label: "",
                                     systemImage: "gearshape",
@@ -51,6 +52,8 @@ struct RootAppView: View {
                                 )
                                 .frame(width: 48, height: 48)
                                 .cornerRadius(16)
+                                .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
+                                Spacer()
                             }
                             Spacer()
                         }
@@ -71,6 +74,7 @@ struct RootAppView: View {
                                     return true
                                 }()
                                 if !isPremiumUser {
+                                    // Add shadow to paywall button for consistent design
                                     CustomButton(
                                         label: "",
                                         systemImage: "star.fill",
@@ -79,6 +83,7 @@ struct RootAppView: View {
                                     )
                                     .frame(width: 48, height: 48)
                                     .cornerRadius(16)
+                                    .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
                                 }
                                 Spacer()
                             }
@@ -91,6 +96,7 @@ struct RootAppView: View {
                             Spacer()
                             HStack {
                                 Spacer()
+                                // Add shadow to customization button for consistent design
                                 CustomButton(
                                     label: "",
                                     systemImage: "paintbrush",
@@ -99,6 +105,7 @@ struct RootAppView: View {
                                 )
                                 .frame(width: 48, height: 48)
                                 .cornerRadius(16)
+                                .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
                             }
                         }
                         .padding(.bottom, 32)
@@ -107,6 +114,7 @@ struct RootAppView: View {
                         VStack {
                             Spacer()
                             HStack {
+                                // Add shadow to favorites button for consistent design
                                 CustomButton(
                                     label: "",
                                     systemImage: "heart.fill",
@@ -119,6 +127,7 @@ struct RootAppView: View {
                                 )
                                 .frame(width: 48, height: 48)
                                 .cornerRadius(16)
+                                .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
                                 Spacer()
                             }
                         }

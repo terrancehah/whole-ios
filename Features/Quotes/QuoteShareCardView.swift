@@ -8,57 +8,42 @@ struct QuoteShareCardView: View {
     // Observe the global theme manager for dynamic theming
     @ObservedObject private var themeManager = ThemeManager.shared
     var body: some View {
-        ZStack {
-            // Use the current theme's card background and shadow
-            RoundedRectangle(cornerRadius: 32)
-                .fill(themeManager.selectedTheme.theme.cardBackground)
-                .shadow(color: themeManager.selectedTheme.theme.shadow, radius: 12)
-            VStack(spacing: 20) {
-                // English quote text styled per theme
-                Text(quote.englishText)
-                    .font(themeManager.selectedTheme.theme.englishFont)
-                    .foregroundColor(themeManager.selectedTheme.theme.englishColor)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 24)
-                // Chinese quote text styled per theme
-                Text(quote.chineseText)
-                    .font(themeManager.selectedTheme.theme.chineseFont)
-                    .foregroundColor(themeManager.selectedTheme.theme.chineseColor)
-                    .multilineTextAlignment(.center)
-                // Display createdBy as a uuidString for clarity
-                if let createdBy = quote.createdBy {
-                    Text("— " + createdBy.uuidString)
-                        .font(.footnote)
-                        .foregroundColor(.secondary)
-                        .padding(.top, 8)
-                }
+        // No card, no shadow, just text centered on the screen with same background as RootAppView
+        VStack(spacing: 20) {
+            Text(quote.englishText)
+                .font(themeManager.selectedTheme.theme.englishFont)
+                .foregroundColor(themeManager.selectedTheme.theme.englishColor)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 24)
+            Text(quote.chineseText)
+                .font(themeManager.selectedTheme.theme.chineseFont)
+                .foregroundColor(themeManager.selectedTheme.theme.chineseColor)
+                .multilineTextAlignment(.center)
+            if let createdBy = quote.createdBy {
+                Text("— " + createdBy.uuidString)
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                    .padding(.top, 8)
             }
-            .padding(32)
             // Watermark overlay for free users
             if showWatermark {
-                VStack {
-                    Spacer()
-                    HStack {
-                        Spacer()
-                        HStack(spacing: 6) {
-                            Image(systemName: "sparkles")
-                                .foregroundColor(.yellow)
-                            Text("Whole")
-                                .font(.caption)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.white)
-                                .shadow(radius: 3)
-                        }
-                        .padding(10)
-                        .background(Color.black.opacity(0.35))
-                        .cornerRadius(10)
-                        .padding([.bottom, .trailing], 16)
-                    }
+                HStack(spacing: 6) {
+                    Image(systemName: "sparkles")
+                        .foregroundColor(.yellow)
+                    Text("Whole")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                        .shadow(radius: 3)
                 }
+                .padding(10)
+                .background(Color.black.opacity(0.35))
+                .cornerRadius(10)
+                .padding(.top, 16)
             }
         }
-        .frame(width: 600, height: 800)
-        .background(themeManager.selectedTheme.theme.background)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(hex: "#ffeedf")) // Match RootAppView background
     }
 }
 

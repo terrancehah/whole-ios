@@ -132,7 +132,15 @@ Whole supports multiple visual styles to suit different user preferences. For la
 - For large or complex SwiftUI views (such as quote carousels), extract subviews and break up complex expressions (e.g., ForEach with chained enumerated/prefix) into computed properties or helper views.
 - This approach is now used in `QuoteListView.swift` for the main TabView and overlays, resolving type-checking errors and improving code clarity.
 
-## 16. QuoteListView
+## 16. Quote List UI Updates (2025-04-29)
+
+- The horizontal scroll indicator (dots) below the quotes has been removed for a cleaner look.
+- The background color of the quote list screen is now explicitly set to `#ffeedf` for full visual consistency, regardless of theme logic.
+- All floating corner buttons (e.g., star, settings) now have a shadow for depth, matching the style of other floating buttons.
+
+Refer to `QuoteListView.swift` for implementation details.
+
+## 17. QuoteListView
 - All buttons use a corner radius of 12 and have consistent shadows for visual polish.
 - QuoteListView fills the entire screen for a modern, immersive experience.
 - Chinese quote text uses a lighter color from the palette for improved readability.
