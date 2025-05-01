@@ -39,8 +39,12 @@ struct QuoteShareCardView: View {
                 Spacer()
                 HStack(spacing: 48) {
                     Button(action: {
+                        print("DEBUG: Attempting to generate share image for quote: \(quote)")
                         if let shareImage = viewModel?.generateShareImage(for: quote) {
+                            print("DEBUG: Image generated? Size: \(shareImage.size)")
                             selfShareImage?(shareImage)
+                        } else {
+                            print("ERROR: generateShareImage returned nil")
                         }
                     }) {
                         Image(systemName: "square.and.arrow.up")

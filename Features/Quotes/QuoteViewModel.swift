@@ -149,9 +149,10 @@ final class QuoteViewModel: ObservableObject {
 
     /// Generates a shareable image for the quote.
     func generateShareImage(for quote: Quote) -> UIImage? {
-        // Delegate image generation to the QuoteImageGenerator utility for maintainability and reuse.
-        // Pass isPremiumUser based on the user's subscription status.
-        return QuoteImageGenerator.generateShareImage(for: quote, isPremiumUser: !isFreeUser)
+        print("DEBUG: Calling QuoteImageGenerator with quote: \(quote)")
+        let image = QuoteImageGenerator.generateShareImage(for: quote, isPremiumUser: !isFreeUser)
+        print("DEBUG: QuoteImageGenerator returned image? \(image != nil)")
+        return image
     }
 
     /// Saves the currently displayed quote to App Group UserDefaults for widget access.

@@ -72,6 +72,7 @@
 		FE69A41B2DAF66F70096F621 /* backend-structure.md in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3922DAF66F70096F621 /* backend-structure.md */; };
 		FE69A41C2DAF66F70096F621 /* prd.md in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3942DAF66F70096F621 /* prd.md */; };
 		FE69A41D2DAF66F70096F621 /* frontend-guidelines.md in Resources */ = {isa = PBXBuildFile; fileRef = FE69A3932DAF66F70096F621 /* frontend-guidelines.md */; };
+		FE941C172DC3D0B100825E87 /* QuoteImageActivityItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE941C162DC3D0B100825E87 /* QuoteImageActivityItemSource.swift */; };
 		FE9D68082DAF6D0300EC2167 /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = FE9D68072DAF6D0300EC2167 /* Auth */; };
 		FE9D680A2DAF6D0300EC2167 /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = FE9D68092DAF6D0300EC2167 /* Functions */; };
 		FE9D680C2DAF6D0300EC2167 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = FE9D680B2DAF6D0300EC2167 /* PostgREST */; };
@@ -170,6 +171,7 @@
 		FE69A3DD2DAF66F70096F621 /* WholeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WholeUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		FE69A3DF2DAF66F70096F621 /* QuoteWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteWidget.swift; sourceTree = "<group>"; };
 		FE69A3E02DAF66F70096F621 /* WidgetEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetEntry.swift; sourceTree = "<group>"; };
+		FE941C162DC3D0B100825E87 /* QuoteImageActivityItemSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteImageActivityItemSource.swift; sourceTree = "<group>"; };
 		FEAF5F532DBCEEC400F530BA /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -379,6 +381,7 @@
 		FE69A3AD2DAF66F70096F621 /* Sharing */ = {
 			isa = PBXGroup;
 			children = (
+				FE941C162DC3D0B100825E87 /* QuoteImageActivityItemSource.swift */,
 				FE69A3AB2DAF66F70096F621 /* QuoteImageGenerator.swift */,
 				FE69A3AC2DAF66F70096F621 /* ShareSheet.swift */,
 			);
@@ -714,6 +717,7 @@
 				FE69A3E72DAF66F70096F621 /* UserQuoteModel.swift in Sources */,
 				FE69A3E92DAF66F70096F621 /* SettingsView.swift in Sources */,
 				FE69A3EA2DAF66F70096F621 /* Constants.swift in Sources */,
+				FE941C172DC3D0B100825E87 /* QuoteImageActivityItemSource.swift in Sources */,
 				FE69A3EB2DAF66F70096F621 /* SubscriptionService.swift in Sources */,
 				FE69A3EC2DAF66F70096F621 /* NotificationService.swift in Sources */,
 				FE69A3ED2DAF66F70096F621 /* QuoteCardView.swift in Sources */,

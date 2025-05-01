@@ -1,2 +1,3 @@
-// Info.plist
-// App configuration and metadata. Edit in Xcode as needed.
+{
+	"NSPhotoLibraryAddUsageDescription" = "We need access to your photo library to save shared quote images.";
+}

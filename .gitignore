@@ -1,2 +1,3 @@
 # Ignore sensitive config files
 Utilities/Config.swift
+.DS_Store

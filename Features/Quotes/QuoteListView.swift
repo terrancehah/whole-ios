@@ -2,6 +2,7 @@
 // Displays a horizontally swipeable list of quote cards with like/share, swipe limit, and theming.
 
 import SwiftUI
+import UIKit
 
 /// Main interface for browsing bilingual quotes with horizontal swipe, like/share, and daily limit logic.
 struct QuoteListView: View {
@@ -13,6 +14,7 @@ struct QuoteListView: View {
     @State private var showPaywall: Bool = false
     @State private var shake: Bool = false
     @State private var shareItem: ShareItem? = nil
+    @State private var previewImage: UIImage? = nil
 
     // Gating logic: Only premium users (trial or paid) can swipe unlimited
     // This logic checks the user's subscription status and trial end date to determine premium access
@@ -46,24 +48,9 @@ struct QuoteListView: View {
                     showWatermark: !isPremiumUser,
                     viewModel: viewModel,
                     selfShareImage: { image in
-                        print("Share button tapped")
-                        // Use a unique file name each time to avoid iOS caching issues
-                        let fileName = "shared-quote-\(UUID().uuidString).png"
-                        let tempDir = FileManager.default.temporaryDirectory
-                        let fileURL = tempDir.appendingPathComponent(fileName)
-                        print("File URL: \(fileURL)")
-                        let data = image.pngData()
-                        do {
-                            try data?.write(to: fileURL)
-                            print("File written successfully")
-                            // File is now ready, update state and show share sheet
-                            DispatchQueue.main.async {
-                                self.shareItem = ShareItem(image: image, fileURL: fileURL)
-                                print("Presenting share sheet with Identifiable")
-                            }
-                        } catch {
-                            print("Failed to write image file: \(error)")
-                        }
+                        // Save image to a temp file with .png extension
+                        self.previewImage = image // For visual debugging
+                        self.shareItem = ShareItem(image: image)
                     },
                     showLikePopup: { show in
                         self.showLikePopup = show
@@ -142,6 +129,33 @@ struct QuoteListView: View {
                     CustomButton(label: "Unlock Unlimited Quotes", systemImage: nil, action: { showPaywall = true })
                         .padding(.bottom, 24)
                 }
+                
+                // Display the generated image in the UI for debugging
+                if let previewImage = previewImage {
+                    VStack {
+                        Text("Preview of rendered share image:")
+                            .font(.caption)
+                        Image(uiImage: previewImage)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 200)
+                            .border(Color.red)
+                    }
+                }
+                
+                // For advanced debugging, add a test button to share a hardcoded image
+                Button("Share System Image (Debug)") {
+                    let testImage = UIImage(systemName: "star.fill")!.withTintColor(.systemYellow, renderingMode: .alwaysOriginal)
+                    self.previewImage = testImage
+                    // Save image to a temp file with .png extension
+                    let fileName = "shared-quote-\(UUID().uuidString).png"
+                    let tempDir = FileManager.default.temporaryDirectory
+                    let fileURL = tempDir.appendingPathComponent(fileName)
+                    if let data = testImage.pngData() {
+                        try? data.write(to: fileURL)
+                        self.shareItem = ShareItem(image: testImage)
+                    }
+                }
             }
             // Use centralized theme background color
             .background(ThemeManager.shared.selectedTheme.theme.background)
@@ -174,13 +188,7 @@ struct QuoteListView: View {
             )
             // Share sheet
             .sheet(item: $shareItem) { item in
-                ImageFileShareSheet(
-                    image: item.image,
-                    excludedActivityTypes: [
-                        .assignToContact, .addToReadingList, .openInIBooks, .markupAsPDF, .print
-                    ],
-                    fileURL: item.fileURL
-                )
+                ShareSheet(image: item.image)
             }
             // Paywall modal appears when triggered by gating logic
             .sheet(isPresented: $showPaywall) {
@@ -189,80 +197,69 @@ struct QuoteListView: View {
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }
-}
-
-// MARK: - PopupView for native-style feedback
-struct PopupView: View {
-    let message: String
-    var body: some View {
-        Text(message)
-            .captionFont(size: 15) // Use caption font for popups
-            .padding(.vertical, 12)
-            .padding(.horizontal, 32)
-            .background(BlurView(style: .systemMaterial))
-            .cornerRadius(16)
-            .shadow(radius: 10)
-            .padding(.bottom, 40)
-            .transition(.move(edge: .bottom).combined(with: .opacity))
+    
+    // MARK: - ShareItem for Identifiable conformance
+    struct ShareItem: Identifiable {
+        let id = UUID()
+        let image: UIImage
     }
-}
 
-// MARK: - ShareSheet Wrapper
-struct ShareSheet: UIViewControllerRepresentable {
-    let activityItems: [Any]
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+    // MARK: - UIKit Share Sheet Wrapper for SwiftUI
+    /// Minimal, native wrapper for sharing a UIImage using UIActivityViewController
+    struct ShareSheet: UIViewControllerRepresentable {
+        let image: UIImage
+        func makeUIViewController(context: Context) -> UIActivityViewController {
+            // Use a custom UIActivityItemSource to ensure the preview is always shown
+            let itemSource = QuoteImageActivityItemSource(image: image)
+            let activityVC = UIActivityViewController(activityItems: [itemSource], applicationActivities: nil)
+            return activityVC
+        }
+        func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
     }
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
-}
 
-// MARK: - BlurView for Popup background
-struct BlurView: UIViewRepresentable {
-    let style: UIBlurEffect.Style
-    func makeUIView(context: Context) -> UIVisualEffectView {
-        UIVisualEffectView(effect: UIBlurEffect(style: style))
+    // MARK: - PopupView for native-style feedback
+    struct PopupView: View {
+        let message: String
+        var body: some View {
+            Text(message)
+                .captionFont(size: 15) // Use caption font for popups
+                .padding(.vertical, 12)
+                .padding(.horizontal, 32)
+                .background(BlurView(style: .systemMaterial))
+                .cornerRadius(16)
+                .shadow(radius: 10)
+                .padding(.bottom, 40)
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+        }
     }
-    func updateUIView(_ uiView: UIVisualEffectView, context: Context) {}
-}
 
-// MARK: - ShakeEffect Modifier
-/// A view modifier that applies a horizontal shake animation.
-struct ShakeEffect: GeometryEffect {
-    var shakes: Int
-    var animatableData: CGFloat {
-        get { CGFloat(shakes) }
-        set { shakes = Int(newValue) }
+    // MARK: - BlurView for Popup background
+    struct BlurView: UIViewRepresentable {
+        let style: UIBlurEffect.Style
+        func makeUIView(context: Context) -> UIVisualEffectView {
+            UIVisualEffectView(effect: UIBlurEffect(style: style))
+        }
+        func updateUIView(_ uiView: UIVisualEffectView, context: Context) {}
     }
-    func effectValue(size: CGSize) -> ProjectionTransform {
-        let translation = 8 * sin(animatableData * .pi * 2)
-        return ProjectionTransform(CGAffineTransform(translationX: translation, y: 0))
+
+    // MARK: - ShakeEffect Modifier
+    /// A view modifier that applies a horizontal shake animation.
+    struct ShakeEffect: GeometryEffect {
+        var shakes: Int
+        var animatableData: CGFloat {
+            get { CGFloat(shakes) }
+            set { shakes = Int(newValue) }
+        }
+        func effectValue(size: CGSize) -> ProjectionTransform {
+            let translation = 8 * sin(animatableData * .pi * 2)
+            return ProjectionTransform(CGAffineTransform(translationX: translation, y: 0))
+        }
     }
-}
 
-// MARK: - ImageFileShareSheet
-struct ImageFileShareSheet: UIViewControllerRepresentable {
-    let image: UIImage
-    let excludedActivityTypes: [UIActivity.ActivityType]?
-    let fileURL: URL
-
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        let activityVC = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
-        activityVC.excludedActivityTypes = excludedActivityTypes
-        return activityVC
-    }
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
-}
-
-// MARK: - ShareItem
-struct ShareItem: Identifiable {
-    let id = UUID()
-    let image: UIImage
-    let fileURL: URL
-}
-
-// MARK: - Preview
-struct QuoteListView_Previews: PreviewProvider {
-    static var previews: some View {
-        QuoteListView(viewModel: QuoteViewModel.preview, userProfile: UserProfileViewModel.preview)
+    // MARK: - Preview
+    struct QuoteListView_Previews: PreviewProvider {
+        static var previews: some View {
+            QuoteListView(viewModel: QuoteViewModel.preview, userProfile: UserProfileViewModel.preview)
+        }
     }
 }

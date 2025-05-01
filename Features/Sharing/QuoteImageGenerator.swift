@@ -11,25 +11,40 @@ struct QuoteImageGenerator {
     ///   - isPremiumUser: Whether the user is premium (if false, watermark is added)
     /// - Returns: A UIImage of the rendered quote card, or nil if rendering fails.
     static func generateShareImage(for quote: Quote, isPremiumUser: Bool) -> UIImage? {
+        print("DEBUG: Entered generateShareImage. Quote: \(quote), isPremiumUser: \(isPremiumUser)")
         // Premium gating logic: if the user is not premium, show a watermark on the shared image
         // This is achieved by passing the inverse of isPremiumUser to QuoteShareCardView's showWatermark parameter
         // Use the canonical QuoteShareCardView for shareable rendering
         // If the user is not premium, showWatermark is true to add a watermark
         let controller = UIHostingController(rootView: QuoteShareCardView(quote: quote, showWatermark: !isPremiumUser))
-        let view = controller.view
+        guard let view = controller.view else {
+            print("ERROR: controller.view is nil")
+            return nil
+        }
         // Set the desired size for the rendered image
         let targetSize = CGSize(width: 600, height: 800)
-        view?.bounds = CGRect(origin: .zero, size: targetSize)
+        view.bounds = CGRect(origin: .zero, size: targetSize)
         // Use the theme's background color for share image background
-        view?.backgroundColor = AppColors.background.toUIColor()
-        // Force the layout pass so the view is fully rendered before drawing
-        view?.setNeedsLayout()
-        view?.layoutIfNeeded()
+        view.backgroundColor = AppColors.background.toUIColor()
+        // Attach to a temporary UIWindow to ensure full rendering
+        let window = UIWindow(frame: CGRect(origin: .zero, size: targetSize))
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
+        // Force the view to load and layout
+        _ = controller.view // Ensure the view is loaded
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+        // Let the runloop process layout and rendering
+        RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.05))
         // Render the view hierarchy to an image
         let renderer = UIGraphicsImageRenderer(size: targetSize)
-        return renderer.image { _ in
-            view?.drawHierarchy(in: view?.bounds ?? CGRect.zero, afterScreenUpdates: true)
+        let image = renderer.image { _ in
+            view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
         }
+        // Clean up the window
+        window.isHidden = true
+        print("DEBUG: Returning image with size \(image.size)")
+        return image
     }
 }
 
