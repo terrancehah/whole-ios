@@ -368,3 +368,14 @@ The onboarding flow guides new users through a welcome, widget introduction, cat
 - Ensured all floating corner buttons (star, settings, etc.) have a consistent shadow effect for better visibility and depth.
 
 See `QuoteListView.swift` for code details.
+
+---
+
+## Quote Sharing Flow (2025-04-30)
+- Quote sharing now uses a SwiftUI-to-UIKit pipeline to generate a PNG image of the quote card.
+- The image is saved to a temporary file and shared using the native iOS share sheet (UIActivityViewController).
+- Only image-related share options are shown; non-image activities are excluded for a clean UX.
+- The share sheet reliably appears every time after fixing state-reset logic in the UI.
+- The watermark is only present for non-premium users and only in the shared image, not in the main UI.
+- The preview at the top of the share sheet is system-controlled and cannot be made larger by the app.
+- The image generation pipeline forces layout and uses a white background to prevent blank images.

@@ -10,10 +10,9 @@ struct QuoteListView: View {
     @State private var selectedIndex: Int = 0
     @State private var showLikePopup: Bool = false
     @State private var showLimitPopup: Bool = false
-    @State private var showShareSheet: Bool = false
-    @State private var shareImage: UIImage? = nil
     @State private var showPaywall: Bool = false
     @State private var shake: Bool = false
+    @State private var shareItem: ShareItem? = nil
 
     // Gating logic: Only premium users (trial or paid) can swipe unlimited
     // This logic checks the user's subscription status and trial end date to determine premium access
@@ -42,7 +41,34 @@ struct QuoteListView: View {
     private var quoteTabView: some View {
         TabView(selection: $selectedIndex) {
             ForEach(enumeratedQuotesToShow, id: \.element.id) { idx, quote in
-                QuoteShareCardView(quote: quote)
+                QuoteShareCardView(
+                    quote: quote,
+                    showWatermark: !isPremiumUser,
+                    viewModel: viewModel,
+                    selfShareImage: { image in
+                        print("Share button tapped")
+                        // Use a unique file name each time to avoid iOS caching issues
+                        let fileName = "shared-quote-\(UUID().uuidString).png"
+                        let tempDir = FileManager.default.temporaryDirectory
+                        let fileURL = tempDir.appendingPathComponent(fileName)
+                        print("File URL: \(fileURL)")
+                        let data = image.pngData()
+                        do {
+                            try data?.write(to: fileURL)
+                            print("File written successfully")
+                            // File is now ready, update state and show share sheet
+                            DispatchQueue.main.async {
+                                self.shareItem = ShareItem(image: image, fileURL: fileURL)
+                                print("Presenting share sheet with Identifiable")
+                            }
+                        } catch {
+                            print("Failed to write image file: \(error)")
+                        }
+                    },
+                    showLikePopup: { show in
+                        self.showLikePopup = show
+                    }
+                )
                     .tag(idx)
                     .modifier(ShakeEffect(shakes: shake && idx == 0 ? 2 : 0)) // Animate shake for first card only
                     // Disable cards beyond the limit for free users
@@ -145,12 +171,15 @@ struct QuoteListView: View {
                     }
                 }, alignment: .bottom
             )
-            // Remove error popup: do not show error messages to the user
-            // Share sheet (not used here, but left for future extensibility)
-            .sheet(isPresented: $showShareSheet) {
-                if let shareImage = shareImage {
-                    ShareSheet(activityItems: [shareImage])
-                }
+            // Share sheet
+            .sheet(item: $shareItem) { item in
+                ImageFileShareSheet(
+                    image: item.image,
+                    excludedActivityTypes: [
+                        .assignToContact, .addToReadingList, .openInIBooks, .markupAsPDF, .print
+                    ],
+                    fileURL: item.fileURL
+                )
             }
             // Paywall modal appears when triggered by gating logic
             .sheet(isPresented: $showPaywall) {
@@ -207,6 +236,27 @@ struct ShakeEffect: GeometryEffect {
         let translation = 8 * sin(animatableData * .pi * 2)
         return ProjectionTransform(CGAffineTransform(translationX: translation, y: 0))
     }
+}
+
+// MARK: - ImageFileShareSheet
+struct ImageFileShareSheet: UIViewControllerRepresentable {
+    let image: UIImage
+    let excludedActivityTypes: [UIActivity.ActivityType]?
+    let fileURL: URL
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let activityVC = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
+        activityVC.excludedActivityTypes = excludedActivityTypes
+        return activityVC
+    }
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+}
+
+// MARK: - ShareItem
+struct ShareItem: Identifiable {
+    let id = UUID()
+    let image: UIImage
+    let fileURL: URL
 }
 
 // MARK: - Preview

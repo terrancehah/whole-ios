@@ -81,6 +81,15 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
+### [DONE] Quote Sharing (2025-04-30)
+- Users can share a generated PNG image of the quote card via the native iOS share sheet.
+- Only image-related activities are enabled for sharing.
+- Watermark logic is enforced for non-premium users (only in shared image).
+- Share sheet reliably presents after state-reset fix.
+- Known limitation: Share sheet preview size is system-controlled and cannot be made larger.
+
+---
+
 ## Step 7: Widget Development — 
 **Objective:** Deliver quotes directly to users’ lock screen/standby.
 - [`WidgetEntry.swift`](../Widget/WidgetEntry.swift): Defines `QuoteWidgetEntry` and `QuoteWidgetProvider` for the widget’s timeline, loads the daily quote and theme from App Group UserDefaults (`group.com.wholeapp.shared`), and provides fallback logic if no quote is set.

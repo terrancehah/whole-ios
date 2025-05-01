@@ -146,6 +146,27 @@ Refer to `QuoteListView.swift` for implementation details.
 - Chinese quote text uses a lighter color from the palette for improved readability.
 - Duplicate buttons and error popups are removed for a cleaner UI.
 
+## 18. Quote Sharing & Share Sheet (2025-04-30)
+- The quote sharing feature now generates a PNG image of the current quote card using a SwiftUI-to-UIKit pipeline.
+- The image is saved to a temporary file and shared via UIActivityViewController (native iOS share sheet).
+- The share sheet reliably presents every time the share button is tapped, after fixing state-reset logic.
+- Only image-related share options are shown (e.g., Save Image, Instagram, WhatsApp, WeChat, AirDrop, etc.). Non-image activities (Print, Assign to Contact, etc.) are excluded for a clean UX.
+- The share sheet preview at the top is limited by iOS system behavior and cannot be made larger by third-party apps.
+- The watermark only appears for non-premium users and only in the shared image, not in the main UI.
+- The image generation pipeline now forces layout and uses a white background to prevent blank images.
+
+---
+
+### UI/UX Notes
+- The heart button now uses `.padding(.top, 4)` for improved vertical alignment with the share button.
+- All logic for showing the share sheet and like popup is now handled through closures passed from the parent view.
+
+---
+
+### Migration Notes
+- If you add new actions to QuoteShareCardView, always pass the required closures from the parent view for proper state handling.
+- Do not instantiate QuoteShareCardView without these closures in production code.
+
 ---
 
 > **Note:** For implementation, start with Serene Minimalism. Use the other styles as reference for future expansion.

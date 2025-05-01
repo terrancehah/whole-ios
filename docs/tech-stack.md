@@ -19,6 +19,10 @@
 - Quotes `categories` is a Postgres text[] array, not a JSON string; CSV import uses array syntax.
 - UI: All buttons use a corner radius of 12 and have consistent shadows; QuoteListView fills the screen; Chinese text uses a lighter color.
 - Error popups for backend issues are now suppressed unless relevant.
+- **Image Generation and Sharing:**
+  - SwiftUI for UI components and quote card rendering.
+  - UIKit (UIHostingController, UIActivityViewController) for converting SwiftUI views to images and presenting the native iOS share sheet.
+  - Image generation pipeline includes forced layout and white background for reliable rendering.
 
 ## Backend
 - **Platform**: Supabase
@@ -34,7 +38,6 @@
 ## Other Frameworks
 - **Notifications**: UserNotifications (for daily quote notifications)
 - **In-App Purchases**: StoreKit 2 (async/await, robust error handling, Apple-native restore flow)
-- **Image Generation**: SwiftUI rendering (for creating shareable quote images)
 
 ---
 

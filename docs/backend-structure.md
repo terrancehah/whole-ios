@@ -117,6 +117,13 @@ This document describes the current schema and access policies for the Supabase 
 
 ---
 
+## Quote Sharing
+- Quote sharing is entirely client-side and does not interact with the backend.
+- Shared images are generated locally and not uploaded to the server.
+- No backend changes required for the new sharing flow.
+
+---
+
 ## Row Level Security (RLS) Summary
 | Table           | SELECT                    | INSERT                    | UPDATE/DELETE              |
 |-----------------|---------------------------|---------------------------|----------------------------|

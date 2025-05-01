@@ -20,8 +20,11 @@ struct QuoteImageGenerator {
         // Set the desired size for the rendered image
         let targetSize = CGSize(width: 600, height: 800)
         view?.bounds = CGRect(origin: .zero, size: targetSize)
-        // Use UIColor.clear for UIKit compatibility
-        view?.backgroundColor = UIColor.clear
+        // Use a solid white background for visibility in the share sheet
+        view?.backgroundColor = UIColor.white
+        // Force the layout pass so the view is fully rendered before drawing
+        view?.setNeedsLayout()
+        view?.layoutIfNeeded()
         // Render the view hierarchy to an image
         let renderer = UIGraphicsImageRenderer(size: targetSize)
         return renderer.image { _ in

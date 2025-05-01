@@ -72,8 +72,12 @@ Premium features are unlocked through a subscription, offering unlimited quote a
 ### 5.5 Notifications
 - Sends daily notifications with new quotes at a user-set time
 
-### 5.6 Quote Sharing
-- Generates shareable quote images (with watermarks for free users)
+### 5.6 Quote Sharing (2025-04-30)
+- Users can share a PNG image of the quote card via the iOS share sheet.
+- Only image-related options are shown.
+- Watermark logic is enforced for non-premium users (only in shared image).
+- Share sheet reliably appears after state-reset fix.
+- Preview size at the top of the share sheet is limited by iOS and cannot be made larger by the app.
 
 ### 5.7 User-Generated Quotes (Premium)
 - Premium users can create and submit bilingual quotes via a dedicated editor.

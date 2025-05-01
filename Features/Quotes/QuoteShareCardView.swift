@@ -12,68 +12,62 @@ struct QuoteShareCardView: View {
     var showLikePopup: ((Bool) -> Void)?
     
     var body: some View {
-        // No card, no shadow, just text centered on the screen with same background as RootAppView
-        VStack(spacing: 20) {
-            Text(quote.englishText)
-                .font(themeManager.selectedTheme.theme.englishFont)
-                .foregroundColor(themeManager.selectedTheme.theme.englishColor)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 24)
-            Text(quote.chineseText)
-                .font(themeManager.selectedTheme.theme.chineseFont)
-                .foregroundColor(themeManager.selectedTheme.theme.chineseColor)
-                .multilineTextAlignment(.center)
-            // Share and Like buttons directly below the quote
-            HStack(spacing: 48) {
-                Button(action: {
-                    if let shareImage = viewModel?.generateShareImage(for: quote) {
-                        selfShareImage?(shareImage)
-                    }
-                }) {
-                    Image(systemName: "square.and.arrow.up")
-                        .font(.system(size: 28, weight: .regular))
-                        .foregroundColor(.primary)
-                        .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
+        // Center the quote text vertically, and absolutely position the share/like buttons just below
+        ZStack {
+            // Centered quote text
+            VStack(spacing: 20) {
+                Text(quote.englishText)
+                    .font(themeManager.selectedTheme.theme.englishFont)
+                    .foregroundColor(themeManager.selectedTheme.theme.englishColor)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 24)
+                Text(quote.chineseText)
+                    .font(themeManager.selectedTheme.theme.chineseFont)
+                    .foregroundColor(themeManager.selectedTheme.theme.chineseColor)
+                    .multilineTextAlignment(.center)
+                if let createdBy = quote.createdBy {
+                    Text("— " + createdBy.uuidString)
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                        .padding(.top, 8)
                 }
-                Button(action: {
-                    if let viewModel = viewModel {
-                        if viewModel.isLiked(quote: quote) {
-                            viewModel.unlike(quote: quote)
-                        } else {
-                            viewModel.like(quote: quote)
-                            showLikePopup?(true)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+
+            // Share and Like buttons absolutely positioned just below the quote
+            VStack {
+                Spacer()
+                HStack(spacing: 48) {
+                    Button(action: {
+                        if let shareImage = viewModel?.generateShareImage(for: quote) {
+                            selfShareImage?(shareImage)
                         }
+                    }) {
+                        Image(systemName: "square.and.arrow.up")
+                            .font(.system(size: 28, weight: .regular))
+                            .foregroundColor(.primary)
+                            .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
                     }
-                }) {
-                    Image(systemName: (viewModel?.isLiked(quote: quote) ?? false) ? "heart.fill" : "heart")
-                        .font(.system(size: 28, weight: .regular))
-                        .foregroundColor(.primary)
-                        .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
-                        .padding(.top, 4)
+                    Button(action: {
+                        if let viewModel = viewModel {
+                            if viewModel.isLiked(quote: quote) {
+                                viewModel.unlike(quote: quote)
+                            } else {
+                                viewModel.like(quote: quote)
+                                showLikePopup?(true)
+                            }
+                        }
+                    }) {
+                        Image(systemName: (viewModel?.isLiked(quote: quote) ?? false) ? "heart.fill" : "heart")
+                            .font(.system(size: 28, weight: .regular))
+                            .foregroundColor(.primary)
+                            .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
+                            .padding(.top, 4)
+                    }
                 }
-            }
-            .padding(.top, 24)
-            if let createdBy = quote.createdBy {
-                Text("— " + createdBy.uuidString)
-                    .font(.footnote)
-                    .foregroundColor(.secondary)
-                    .padding(.top, 8)
-            }
-            // Watermark overlay for free users
-            if showWatermark {
-                HStack(spacing: 6) {
-                    Image(systemName: "sparkles")
-                        .foregroundColor(.yellow)
-                    Text("Whole")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white)
-                        .shadow(radius: 3)
-                }
-                .padding(10)
-                .background(Color.black.opacity(0.35))
-                .cornerRadius(10)
-                .padding(.top, 16)
+                .padding(.top, 24)
+                // Adjust this value to control distance from quote text
+                .padding(.bottom, 180) // Adjust as needed for your design
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

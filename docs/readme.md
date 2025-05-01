@@ -84,6 +84,12 @@
 
 ---
 
+## Features (2025-04-30)
+- Share quotes as images: Users can share a PNG image of the quote card via the native iOS share sheet. Only image-related options are shown. Watermark is present for non-premium users in the shared image only.
+- Share sheet reliably appears on every tap after UI state fix.
+
+---
+
 ## Data Model
 - All IDs (`userId`, `quoteId`, etc.) are UUIDs throughout the codebase and database schema.
 
