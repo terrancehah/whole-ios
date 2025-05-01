@@ -143,7 +143,8 @@ struct QuoteListView: View {
                         .padding(.bottom, 24)
                 }
             }
-            // No background color here; let parent (RootAppView) show through
+            // Use centralized theme background color
+            .background(ThemeManager.shared.selectedTheme.theme.background)
             .navigationBarTitleDisplayMode(.inline)
             // Like popup
             .overlay(

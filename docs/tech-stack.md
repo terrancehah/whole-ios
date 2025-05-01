@@ -23,6 +23,9 @@
   - SwiftUI for UI components and quote card rendering.
   - UIKit (UIHostingController, UIActivityViewController) for converting SwiftUI views to images and presenting the native iOS share sheet.
   - Image generation pipeline includes forced layout and white background for reliable rendering.
+- Identifiable-driven `.sheet(item:)` for robust sheet presentation.
+- Unique file naming (UUID) for image sharing.
+- Consistent background color handling for quote UI.
 
 ## Backend
 - **Platform**: Supabase

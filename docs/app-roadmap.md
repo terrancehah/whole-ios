@@ -90,6 +90,14 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
+### [DONE] Robust Quote Sharing & UI Polish (2025-05-01)
+- Share sheet is now reliably presented on first tap using Identifiable `.sheet(item:)`.
+- Unique file naming for each share prevents iOS caching issues.
+- Background color `#ffeedf` is now consistently applied to quote card and quote list.
+- Watermark logic and image-specific share options remain enforced.
+
+---
+
 ## Step 7: Widget Development — 
 **Objective:** Deliver quotes directly to users’ lock screen/standby.
 - [`WidgetEntry.swift`](../Widget/WidgetEntry.swift): Defines `QuoteWidgetEntry` and `QuoteWidgetProvider` for the widget’s timeline, loads the daily quote and theme from App Group UserDefaults (`group.com.wholeapp.shared`), and provides fallback logic if no quote is set.

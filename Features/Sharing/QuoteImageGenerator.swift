@@ -20,8 +20,8 @@ struct QuoteImageGenerator {
         // Set the desired size for the rendered image
         let targetSize = CGSize(width: 600, height: 800)
         view?.bounds = CGRect(origin: .zero, size: targetSize)
-        // Use a solid white background for visibility in the share sheet
-        view?.backgroundColor = UIColor.white
+        // Use the theme's background color for share image background
+        view?.backgroundColor = AppColors.background.toUIColor()
         // Force the layout pass so the view is fully rendered before drawing
         view?.setNeedsLayout()
         view?.layoutIfNeeded()

@@ -45,8 +45,8 @@ struct QuoteShareCardView: View {
                     }) {
                         Image(systemName: "square.and.arrow.up")
                             .font(.system(size: 28, weight: .regular))
-                            .foregroundColor(.primary)
-                            .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
+                            .foregroundColor(themeManager.selectedTheme.theme.englishColor)
+                            .shadow(color: AppColors.buttonShadow, radius: 8, x: 0, y: 4)
                     }
                     Button(action: {
                         if let viewModel = viewModel {
@@ -60,8 +60,8 @@ struct QuoteShareCardView: View {
                     }) {
                         Image(systemName: (viewModel?.isLiked(quote: quote) ?? false) ? "heart.fill" : "heart")
                             .font(.system(size: 28, weight: .regular))
-                            .foregroundColor(.primary)
-                            .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
+                            .foregroundColor(themeManager.selectedTheme.theme.englishColor)
+                            .shadow(color: AppColors.buttonShadow, radius: 8, x: 0, y: 4)
                             .padding(.top, 4)
                     }
                 }
@@ -71,7 +71,8 @@ struct QuoteShareCardView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        // No background color; let parent (RootAppView) show through
+        // Use theme background if needed (optional, or let parent show through)
+        // .background(ThemeManager.shared.selectedTheme.theme.background)
     }
 }
 

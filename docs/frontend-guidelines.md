@@ -170,3 +170,9 @@ Refer to `QuoteListView.swift` for implementation details.
 ---
 
 > **Note:** For implementation, start with Serene Minimalism. Use the other styles as reference for future expansion.
+
+## 19. Quote Sharing & UI Consistency (2025-05-01)
+- Share sheet now uses Identifiable `.sheet(item:)` for reliable first-tap presentation.
+- Unique file name (UUID) for each share to avoid iOS caching issues.
+- Background color `#ffeedf` is applied to both quote card and quote list for visual consistency.
+- Watermark logic and image-specific share options enforced as before.

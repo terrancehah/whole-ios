@@ -379,3 +379,10 @@ See `QuoteListView.swift` for code details.
 - The watermark is only present for non-premium users and only in the shared image, not in the main UI.
 - The preview at the top of the share sheet is system-controlled and cannot be made larger by the app.
 - The image generation pipeline forces layout and uses a white background to prevent blank images.
+
+## [2025-05-01] Quote Sharing & UI Consistency
+- Share sheet now uses Identifiable-driven `.sheet(item:)` for robust, always-on-first-tap presentation.
+- Each share action generates a unique PNG filename (UUID) to prevent iOS caching issues.
+- The share sheet only appears after the image file is fully written and ready.
+- Only image-related share options are shown; watermark logic enforced for non-premium users (watermark only in shared image).
+- Quote card and quote list backgrounds now consistently use `#ffeedf` for visual and UX consistency (in both UI and shared images).

@@ -45,36 +45,35 @@ extension AppTheme {
     var theme: Theme {
         switch self {
         case .sereneMinimalism:
-            // Updated to warm "leah valencia" palette
-            // background: solid #ffeedf, card: #ffd1a4, text: #b65f3b, accent: #ff9f68, secondary: #ff784f
+            // Updated to use centralized AppColors
             return Theme(
-                background: LinearGradient(gradient: Gradient(colors: [Color(hex: "#ffeedf"), Color(hex: "#ffeedf")]), startPoint: .top, endPoint: .bottom),
-                cardBackground: Color(hex: "#ffd1a4"),
+                background: LinearGradient(gradient: Gradient(colors: [AppColors.background, AppColors.background]), startPoint: .top, endPoint: .bottom),
+                cardBackground: AppColors.card,
                 englishFont: .system(size: 20, weight: .regular, design: .serif),
-                englishColor: Color(hex: "#b65f3b"),
+                englishColor: AppColors.primaryText,
                 chineseFont: .system(size: 18, weight: .regular, design: .default),
-                chineseColor: Color(hex: "#b65f3b"),
-                shadow: Color.black.opacity(0.09)
+                chineseColor: AppColors.primaryText,
+                shadow: AppColors.cardShadow
             )
         case .elegantMonochrome:
             return Theme(
                 background: LinearGradient(gradient: Gradient(colors: [Color.white]), startPoint: .top, endPoint: .bottom),
                 cardBackground: .white,
                 englishFont: .system(size: 22, weight: .bold, design: .default),
-                englishColor: .black,
+                englishColor: AppColors.monochromeText,
                 chineseFont: .system(size: 18, weight: .regular, design: .default),
-                chineseColor: .black,
-                shadow: Color.black.opacity(0.12)
+                chineseColor: AppColors.monochromeText,
+                shadow: AppColors.monoShadow
             )
         case .softPastelElegance:
             return Theme(
-                background: LinearGradient(gradient: Gradient(colors: [Color(hex: "#F7FAFC"), Color(hex: "#E2E8F0")]), startPoint: .top, endPoint: .bottom),
-                cardBackground: Color(hex: "#F7FAFC"),
+                background: LinearGradient(gradient: Gradient(colors: [AppColors.pastelAccent, AppColors.pastelAccent]), startPoint: .top, endPoint: .bottom),
+                cardBackground: AppColors.pastelAccent,
                 englishFont: .custom("Lora", size: 20),
-                englishColor: Color(hex: "#2D3748"),
+                englishColor: AppColors.pastelPrimaryText,
                 chineseFont: .custom("Source Han Sans", size: 18),
-                chineseColor: Color(hex: "#4A5568"),
-                shadow: Color.gray.opacity(0.10)
+                chineseColor: AppColors.pastelSecondaryText,
+                shadow: AppColors.pastelShadow
             )
         }
     }

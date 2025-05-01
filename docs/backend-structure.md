@@ -117,6 +117,12 @@ This document describes the current schema and access policies for the Supabase 
 
 ---
 
+## Quote Sharing (2025-05-01)
+- All sharing logic remains client-side; no backend changes required.
+- Watermark logic and image file naming handled in-app.
+
+---
+
 ## Quote Sharing
 - Quote sharing is entirely client-side and does not interact with the backend.
 - Shared images are generated locally and not uploaded to the server.

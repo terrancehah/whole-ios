@@ -15,6 +15,8 @@
 - **Anonymous Account Support:** On first launch, the app creates a backend account with a NULL email for every user. All features (including backend sync) work before explicit login. Data is migrated to the real account when the user signs up.
 - All onboarding data is always tied to the authenticated backend account (anonymous or real), ensuring seamless migration and robust backend sync.
 - [Planned] Sharing and paywall features.
+- Robust quote sharing: Share sheet always appears on first tap, with unique file naming and image-specific options. Watermark logic enforced for non-premium users.
+- Consistent UI: Background color `#ffeedf` for quote card and list, reflected in both UI and shared images.
 
 ---
 
@@ -87,6 +89,12 @@
 ## Features (2025-04-30)
 - Share quotes as images: Users can share a PNG image of the quote card via the native iOS share sheet. Only image-related options are shown. Watermark is present for non-premium users in the shared image only.
 - Share sheet reliably appears on every tap after UI state fix.
+
+---
+
+## Features (2025-05-01)
+- Robust quote sharing: Share sheet always appears on first tap, with unique file naming and image-specific options. Watermark logic enforced for non-premium users.
+- Consistent UI: Background color `#ffeedf` for quote card and list, reflected in both UI and shared images.
 
 ---
 
