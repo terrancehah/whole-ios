@@ -209,9 +209,8 @@ struct QuoteListView: View {
     struct ShareSheet: UIViewControllerRepresentable {
         let image: UIImage
         func makeUIViewController(context: Context) -> UIActivityViewController {
-            // Use a custom UIActivityItemSource to ensure the preview is always shown
-            let itemSource = QuoteImageActivityItemSource(image: image)
-            let activityVC = UIActivityViewController(activityItems: [itemSource], applicationActivities: nil)
+            // Share UIImage directly to restore all photo actions in the share sheet
+            let activityVC = UIActivityViewController(activityItems: [image], applicationActivities: nil)
             return activityVC
         }
         func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}

@@ -150,7 +150,9 @@ final class QuoteViewModel: ObservableObject {
     /// Generates a shareable image for the quote.
     func generateShareImage(for quote: Quote) -> UIImage? {
         print("DEBUG: Calling QuoteImageGenerator with quote: \(quote)")
-        let image = QuoteImageGenerator.generateShareImage(for: quote, isPremiumUser: !isFreeUser)
+        // Use the current theme background for image generation
+        let bgColor = ThemeManager.shared.selectedTheme.theme.background
+        let image = QuoteImageGenerator.generateShareImage(for: quote, isPremiumUser: !isFreeUser, backgroundColor: bgColor)
         print("DEBUG: QuoteImageGenerator returned image? \(image != nil)")
         return image
     }

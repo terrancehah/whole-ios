@@ -9,14 +9,16 @@ struct QuoteImageGenerator {
     /// - Parameters:
     ///   - quote: The Quote to render.
     ///   - isPremiumUser: Whether the user is premium (if false, watermark is added)
+    ///   - backgroundColor: The background color of the share image
     /// - Returns: A UIImage of the rendered quote card, or nil if rendering fails.
-    static func generateShareImage(for quote: Quote, isPremiumUser: Bool) -> UIImage? {
+    static func generateShareImage(for quote: Quote, isPremiumUser: Bool, backgroundColor: Color) -> UIImage? {
         print("DEBUG: Entered generateShareImage. Quote: \(quote), isPremiumUser: \(isPremiumUser)")
         // Premium gating logic: if the user is not premium, show a watermark on the shared image
         // This is achieved by passing the inverse of isPremiumUser to QuoteShareCardView's showWatermark parameter
         // Use the canonical QuoteShareCardView for shareable rendering
         // If the user is not premium, showWatermark is true to add a watermark
-        let controller = UIHostingController(rootView: QuoteShareCardView(quote: quote, showWatermark: !isPremiumUser))
+        // Pass the background color to the share card
+        let controller = UIHostingController(rootView: QuoteShareCardView(quote: quote, showWatermark: !isPremiumUser, showActions: false, backgroundColor: backgroundColor))
         guard let view = controller.view else {
             print("ERROR: controller.view is nil")
             return nil
@@ -24,8 +26,8 @@ struct QuoteImageGenerator {
         // Set the desired size for the rendered image
         let targetSize = CGSize(width: 600, height: 800)
         view.bounds = CGRect(origin: .zero, size: targetSize)
-        // Use the theme's background color for share image background
-        view.backgroundColor = AppColors.background.toUIColor()
+        // Use the provided background color for share image background
+        view.backgroundColor = backgroundColor.toUIColor()
         // Attach to a temporary UIWindow to ensure full rendering
         let window = UIWindow(frame: CGRect(origin: .zero, size: targetSize))
         window.rootViewController = controller
