@@ -30,7 +30,7 @@ final class ThemeManager: ObservableObject {
 
 /// Struct holding theme colors, fonts, and other style info.
 struct Theme {
-    let background: LinearGradient
+    let background: Color
     let cardBackground: Color
     let englishFont: Font
     let englishColor: Color
@@ -47,7 +47,7 @@ extension AppTheme {
         case .sereneMinimalism:
             // Updated to use centralized AppColors
             return Theme(
-                background: LinearGradient(gradient: Gradient(colors: [AppColors.background, AppColors.background]), startPoint: .top, endPoint: .bottom),
+                background: AppColors.background,
                 cardBackground: AppColors.card,
                 englishFont: .system(size: 20, weight: .regular, design: .serif),
                 englishColor: AppColors.primaryText,
@@ -57,7 +57,7 @@ extension AppTheme {
             )
         case .elegantMonochrome:
             return Theme(
-                background: LinearGradient(gradient: Gradient(colors: [Color.white]), startPoint: .top, endPoint: .bottom),
+                background: Color.white,
                 cardBackground: .white,
                 englishFont: .system(size: 22, weight: .bold, design: .default),
                 englishColor: AppColors.monochromeText,
@@ -67,7 +67,7 @@ extension AppTheme {
             )
         case .softPastelElegance:
             return Theme(
-                background: LinearGradient(gradient: Gradient(colors: [AppColors.pastelAccent, AppColors.pastelAccent]), startPoint: .top, endPoint: .bottom),
+                background: AppColors.pastelAccent,
                 cardBackground: AppColors.pastelAccent,
                 englishFont: .custom("Lora", size: 20),
                 englishColor: AppColors.pastelPrimaryText,
