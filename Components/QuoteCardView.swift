@@ -29,19 +29,15 @@ struct QuoteCardView: View {
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.leading)
 
-            // Categories (optional, shown as chips)
-            if !quote.categories.isEmpty {
-                HStack(spacing: 8) {
-                    ForEach(quote.categories, id: \ .self) { category in
-                        Text(category.displayName)
-                            .font(.caption)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 4)
-                            .background(Color.accentColor.opacity(0.15))
-                            .foregroundColor(.accentColor)
-                            .cornerRadius(8)
-                    }
-                }
+            // Categories (optional, shown as chip)
+            HStack(spacing: 8) {
+                Text(quote.category.displayName)
+                    .font(.caption)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(Color.accentColor.opacity(0.15))
+                    .foregroundColor(.accentColor)
+                    .cornerRadius(8)
             }
 
             // Action buttons
@@ -74,7 +70,7 @@ struct QuoteCardView_Previews: PreviewProvider {
                 id: UUID(),
                 englishText: "The best time to plant a tree was 20 years ago. The second best time is now.",
                 chineseText: "种一棵树最好的时间是二十年前，其次是现在。",
-                categories: [QuoteCategory.inspiration, QuoteCategory.life],
+                category: QuoteCategory.inspiration,
                 createdAt: nil,
                 createdBy: UUID()
             ),
@@ -89,7 +85,7 @@ struct QuoteCardView_Previews: PreviewProvider {
                 id: UUID(),
                 englishText: "Success is not final, failure is not fatal: It is the courage to continue that counts.",
                 chineseText: "成功不是终点，失败也不是终结，重要的是继续前进的勇气。",
-                categories: [QuoteCategory.motivation, QuoteCategory.wisdom],
+                category: QuoteCategory.motivation,
                 createdAt: nil,
                 createdBy: UUID()
             ),

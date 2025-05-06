@@ -35,6 +35,16 @@ struct QuoteShareCardView: View {
                         .foregroundColor(.secondary)
                         .padding(.top, 8)
                 }
+                // Category chip (single value)
+                HStack(spacing: 8) {
+                    Text(quote.category.displayName)
+                        .font(.caption)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(Color.accentColor.opacity(0.15))
+                        .foregroundColor(.accentColor)
+                        .cornerRadius(8)
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
 

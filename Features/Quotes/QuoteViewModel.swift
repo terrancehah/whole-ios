@@ -213,10 +213,10 @@ extension Quote {
     static func mockQuotes(limit: Int) -> [Quote] {
         (0..<limit).map { i in
             Quote(
-                id: UUID(), // Use UUID for id to match model
+                id: UUID(),
                 englishText: "Sample Quote \(i+1)",
                 chineseText: "示例语录 \(i+1)",
-                categories: [QuoteCategory.inspiration, QuoteCategory.life],
+                category: QuoteCategory.inspiration,
                 createdAt: Date(),
                 createdBy: nil
             )

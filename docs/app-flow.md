@@ -97,8 +97,8 @@
     - Like: Saves quote to Favorites tab.
     - Share: Generates shareable image (watermarked for free users).
   - Free User Limit: 10 quotes/day with subscription prompt.
-  - **Quote Categories Storage:** The `categories` field in the `quotes` table is now a Postgres `text[]` array, not a JSON string. The Swift model expects `[String]` and the backend returns a true array, ensuring seamless decoding.
-  - **CSV Import:** When importing quotes, the `categories` column must use Postgres array syntax (e.g., `{"Inspiration","Love"}`) for compatibility with the `text[]` type.
+  - **Quote Categories Storage:** The `category` field in the `quotes` table is now a Postgres `text` column, not a `text[]` array. The Swift model expects a single `String` and the backend returns a single value, ensuring seamless decoding.
+  - **CSV Import:** When importing quotes, the `category` column must use a single string value (e.g., `"Inspiration"`) for compatibility with the new type.
 
 - **Navigation Elements**
   - Top Navigation Bar:
@@ -273,9 +273,9 @@ The onboarding flow guides new users through a welcome, widget introduction, cat
     - `id: UUID` (UUID)
     - `englishText: String`
     - `chineseText: String`
-    - `categories: [String]`
+    - `category: QuoteCategory` (single category, not array)
     - `createdAt: Date?`
-    - `createdBy: String?`
+    - `createdBy: UUID?`
 - **Maps to Supabase table:** `quotes`
 - **Coding keys** ensure correct mapping between Swift and Supabase/JSON fields.
 

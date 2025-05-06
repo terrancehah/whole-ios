@@ -49,8 +49,8 @@ struct Quote: Codable, Identifiable {
     let englishText: String
     /// The Chinese translation of the quote.
     let chineseText: String
-    /// Categories/tags associated with the quote.
-    let categories: [QuoteCategory]
+    /// Category/tag associated with the quote (was array, now single value)
+    let category: QuoteCategory
     /// Timestamp when the quote was created.
     let createdAt: Date?
     /// The UUID of the user who created the quote (optional, for user-generated content).
@@ -61,19 +61,19 @@ struct Quote: Codable, Identifiable {
         case id
         case englishText = "english_text"
         case chineseText = "chinese_text"
-        case categories
+        case category
         case createdAt = "created_at"
         case createdBy = "created_by"
     }
 
-    // Update decoding/encoding to handle UUID
+    // Update decoding/encoding to handle UUID and single category
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
         englishText = try container.decode(String.self, forKey: .englishText)
         chineseText = try container.decode(String.self, forKey: .chineseText)
-        let categoryStrings = try container.decode([String].self, forKey: .categories)
-        categories = categoryStrings.map { QuoteCategory(fromRaw: $0) }
+        let categoryString = try container.decode(String.self, forKey: .category)
+        category = QuoteCategory(fromRaw: categoryString)
         createdAt = try? container.decodeIfPresent(Date.self, forKey: .createdAt)
         createdBy = try? container.decodeIfPresent(UUID.self, forKey: .createdBy)
     }
@@ -83,7 +83,7 @@ struct Quote: Codable, Identifiable {
         try container.encode(id, forKey: .id)
         try container.encode(englishText, forKey: .englishText)
         try container.encode(chineseText, forKey: .chineseText)
-        try container.encode(categories.map { $0.rawValue }, forKey: .categories)
+        try container.encode(category.rawValue, forKey: .category)
         try container.encodeIfPresent(createdAt, forKey: .createdAt)
         try container.encodeIfPresent(createdBy, forKey: .createdBy)
     }
@@ -96,14 +96,14 @@ extension Quote {
         id: UUID,
         englishText: String,
         chineseText: String,
-        categories: [QuoteCategory],
+        category: QuoteCategory,
         createdAt: Date? = nil,
         createdBy: UUID? = nil
     ) {
         self.id = id
         self.englishText = englishText
         self.chineseText = chineseText
-        self.categories = categories
+        self.category = category
         self.createdAt = createdAt
         self.createdBy = createdBy
     }
