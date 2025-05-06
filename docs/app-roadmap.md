@@ -98,6 +98,16 @@ This document provides a step-by-step guide for developing the Whole app, from b
 
 ---
 
+### [DONE] UI/UX & Sharing Pipeline Improvements (2025-05-06)
+- All quote sharing now uses the current theme's solid color background (no gradients), ensuring visual consistency between app and shared image.
+- Debug/test preview UI has been removed from production.
+- Share/like buttons are never included in the shared image.
+- Share sheet shares UIImage directly, restoring all photo actions ("Save Image" etc.).
+- SwiftUI overlays and sheets are now always applied to concrete views, improving stability.
+- Theme system refactored: all backgrounds are solid Color for a unified rendering pipeline.
+
+---
+
 ## Step 7: Widget Development — 
 **Objective:** Deliver quotes directly to users’ lock screen/standby.
 - [`WidgetEntry.swift`](../Widget/WidgetEntry.swift): Defines `QuoteWidgetEntry` and `QuoteWidgetProvider` for the widget’s timeline, loads the daily quote and theme from App Group UserDefaults (`group.com.wholeapp.shared`), and provides fallback logic if no quote is set.

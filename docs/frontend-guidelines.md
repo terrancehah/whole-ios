@@ -155,6 +155,20 @@ Refer to `QuoteListView.swift` for implementation details.
 - The watermark only appears for non-premium users and only in the shared image, not in the main UI.
 - The image generation pipeline now forces layout and uses a white background to prevent blank images.
 
+## 19. Quote Sharing & Theme Guidelines (2025-05-06)
+- Always use the current theme's solid Color for backgrounds; gradients are not supported in the share pipeline.
+- When generating share images, pass the theme background explicitly to ensure consistency.
+- Never include UI elements (share/like buttons) in the shared image.
+- Remove any debug preview or test share UI from production code.
+- All overlays, sheets, and backgrounds must be applied to concrete views, outside of conditionals, to follow SwiftUI best practices.
+- Use semantic class and variable names, and provide clear comments for maintainability.
+
+## 20. Quote Sharing & UI Consistency (2025-05-01)
+- Share sheet now uses Identifiable `.sheet(item:)` for reliable first-tap presentation.
+- Unique file name (UUID) for each share to avoid iOS caching issues.
+- Background color `#ffeedf` is applied to both quote card and quote list for visual consistency.
+- Watermark logic and image-specific share options enforced as before.
+
 ---
 
 ### UI/UX Notes
@@ -170,9 +184,3 @@ Refer to `QuoteListView.swift` for implementation details.
 ---
 
 > **Note:** For implementation, start with Serene Minimalism. Use the other styles as reference for future expansion.
-
-## 19. Quote Sharing & UI Consistency (2025-05-01)
-- Share sheet now uses Identifiable `.sheet(item:)` for reliable first-tap presentation.
-- Unique file name (UUID) for each share to avoid iOS caching issues.
-- Background color `#ffeedf` is applied to both quote card and quote list for visual consistency.
-- Watermark logic and image-specific share options enforced as before.

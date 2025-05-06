@@ -2,6 +2,8 @@
 
 _Last updated: 2025-04-24_
 
+// No changes required for terms and conditions as of 2025-05-06: all recent updates are UI/UX and do not affect user agreements or legal terms.
+
 Welcome to Whole. By using this app, you agree to the following terms:
 
 1. **Use of Service**: Whole provides daily bilingual quotes and premium features via subscription. You may not misuse the app or attempt to disrupt its services.

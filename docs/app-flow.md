@@ -371,18 +371,21 @@ See `QuoteListView.swift` for code details.
 
 ---
 
-## Quote Sharing Flow (2025-04-30)
-- Quote sharing now uses a SwiftUI-to-UIKit pipeline to generate a PNG image of the quote card.
-- The image is saved to a temporary file and shared using the native iOS share sheet (UIActivityViewController).
-- Only image-related share options are shown; non-image activities are excluded for a clean UX.
-- The share sheet reliably appears every time after fixing state-reset logic in the UI.
+## Quote Sharing Flow (2025-05-06)
+- Quote sharing uses a SwiftUI-to-UIKit pipeline to generate a PNG image of the quote card.
+- The shared image uses the current theme's solid background color (no gradients), ensuring visual consistency.
+- Share/like UI elements are never included in the shared image.
+- The share sheet shares a UIImage directly, restoring all photo actions (e.g., "Save Image").
 - The watermark is only present for non-premium users and only in the shared image, not in the main UI.
 - The preview at the top of the share sheet is system-controlled and cannot be made larger by the app.
-- The image generation pipeline forces layout and uses a white background to prevent blank images.
+- Debug previews and test share buttons have been removed from production code.
+- All overlays, sheets, and backgrounds are now applied to concrete views, not inside conditionals, following SwiftUI best practices.
+- The image generation pipeline forces layout and uses the correct theme background color to prevent blank or mismatched images.
 
-## [2025-05-01] Quote Sharing & UI Consistency
-- Share sheet now uses Identifiable-driven `.sheet(item:)` for robust, always-on-first-tap presentation.
+## [2025-05-06] Quote Sharing & UI Consistency
+- Share sheet uses Identifiable-driven `.sheet(item:)` for robust, always-on-first-tap presentation.
 - Each share action generates a unique PNG filename (UUID) to prevent iOS caching issues.
 - The share sheet only appears after the image file is fully written and ready.
 - Only image-related share options are shown; watermark logic enforced for non-premium users (watermark only in shared image).
-- Quote card and quote list backgrounds now consistently use `#ffeedf` for visual and UX consistency (in both UI and shared images).
+- All backgrounds in the app are now solid colors (no gradients), ensuring a consistent rendering pipeline for both UI and sharing.
+- Debug UI for image preview and test sharing has been removed for a clean user experience.

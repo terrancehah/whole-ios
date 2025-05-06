@@ -14,7 +14,6 @@ struct QuoteListView: View {
     @State private var showPaywall: Bool = false
     @State private var shake: Bool = false
     @State private var shareItem: ShareItem? = nil
-    @State private var previewImage: UIImage? = nil
 
     // Gating logic: Only premium users (trial or paid) can swipe unlimited
     // This logic checks the user's subscription status and trial end date to determine premium access
@@ -48,8 +47,6 @@ struct QuoteListView: View {
                     showWatermark: !isPremiumUser,
                     viewModel: viewModel,
                     selfShareImage: { image in
-                        // Save image to a temp file with .png extension
-                        self.previewImage = image // For visual debugging
                         self.shareItem = ShareItem(image: image)
                     },
                     showLikePopup: { show in
@@ -122,44 +119,13 @@ struct QuoteListView: View {
                     quoteTabView
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-
                 // Paywall CTA button for free users only, appears when limit is hit
                 if viewModel.showPaywallCTA && !isPremiumUser {
                     // Replace paywall CTA button with CustomButton for default shadow
                     CustomButton(label: "Unlock Unlimited Quotes", systemImage: nil, action: { showPaywall = true })
                         .padding(.bottom, 24)
                 }
-                
-                // Display the generated image in the UI for debugging
-                if let previewImage = previewImage {
-                    VStack {
-                        Text("Preview of rendered share image:")
-                            .font(.caption)
-                        Image(uiImage: previewImage)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 200)
-                            .border(Color.red)
-                    }
-                }
-                
-                // For advanced debugging, add a test button to share a hardcoded image
-                Button("Share System Image (Debug)") {
-                    let testImage = UIImage(systemName: "star.fill")!.withTintColor(.systemYellow, renderingMode: .alwaysOriginal)
-                    self.previewImage = testImage
-                    // Save image to a temp file with .png extension
-                    let fileName = "shared-quote-\(UUID().uuidString).png"
-                    let tempDir = FileManager.default.temporaryDirectory
-                    let fileURL = tempDir.appendingPathComponent(fileName)
-                    if let data = testImage.pngData() {
-                        try? data.write(to: fileURL)
-                        self.shareItem = ShareItem(image: testImage)
-                    }
-                }
             }
-            // Use centralized theme background color
-            .background(ThemeManager.shared.selectedTheme.theme.background)
-            .navigationBarTitleDisplayMode(.inline)
             // Like popup
             .overlay(
                 Group {
@@ -194,6 +160,9 @@ struct QuoteListView: View {
             .sheet(isPresented: $showPaywall) {
                 PaywallView(viewModel: PaywallViewModel())
             }
+            // Use centralized theme background color
+            .background(ThemeManager.shared.selectedTheme.theme.background)
+            .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }

@@ -84,6 +84,13 @@
 - UI: QuoteListView fills the screen, all buttons use a corner radius of 12 and have consistent shadows, Chinese text uses a lighter palette color.
 - Error popups for backend issues are now suppressed unless relevant.
 
+### 2025-05-06: Sharing & UI Consistency Update
+- Quote sharing now uses a solid color background matching the current theme (no gradients).
+- Shared images never include UI controls; watermark logic is enforced for non-premium users.
+- Share sheet shares UIImage directly, restoring all photo actions.
+- Debug/test preview UI has been removed from production.
+- All overlays, sheets, and backgrounds follow SwiftUI best practices.
+
 ---
 
 ## Features (2025-04-30)

@@ -108,6 +108,13 @@ Premium features are unlocked through a subscription, offering unlimited quote a
 - Refactored `QuoteListView` to extract the TabView and overlays into computed properties for improved SwiftUI compile times and maintainability.
 - All UI logic remains robust and clearly commented for future expansion.
 
+### 5.12 [2025-05-06] UI/UX & Sharing Consistency
+- Quote sharing uses the current theme's solid color background (no gradients).
+- Shared images never include UI controls; watermark logic enforced for non-premium users.
+- Debug/test preview UI removed from production.
+- Share sheet shares UIImage directly, restoring all photo actions.
+- All overlays, sheets, and backgrounds follow SwiftUI best practices for maintainability and stability.
+
 ---
 
 ## 6. Technical Requirements
