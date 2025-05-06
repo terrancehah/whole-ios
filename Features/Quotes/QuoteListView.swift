@@ -165,6 +165,10 @@ struct QuoteListView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(StackNavigationViewStyle())
+        .onAppear {
+            // Fetch quotes using the selected categories from user preferences
+            viewModel.fetchQuotes(selectedCategories: userProfile.userPreferences.selectedCategories)
+        }
     }
     
     // MARK: - ShareItem for Identifiable conformance

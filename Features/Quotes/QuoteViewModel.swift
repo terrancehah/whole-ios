@@ -45,20 +45,22 @@ final class QuoteViewModel: ObservableObject {
     init(user: UserProfile? = nil, subscription: Subscription? = nil) {
         self.user = user
         self.subscription = subscription
-        fetchQuotes()
+        fetchQuotes(selectedCategories: [])
         fetchLikedQuotes()
     }
 
     // MARK: - Data Fetching
-    /// Fetches quotes from Supabase or local cache.
-    func fetchQuotes() {
-        // Call the SupabaseService to fetch quotes from the backend.
-        SupabaseService.shared.fetchQuotes { [weak self] result in
+    /// Fetches quotes from Supabase filtered by the given categories.
+    /// This method ensures only relevant quotes are loaded for the current user.
+    /// - Parameter selectedCategories: The user's selected categories for filtering quotes.
+    func fetchQuotes(selectedCategories: [QuoteCategory]) {
+        // Fetch quotes from SupabaseService using the selected categories
+        SupabaseService.shared.fetchQuotes(categories: selectedCategories) { [weak self] result in
             // Ensure UI updates happen on the main thread.
             DispatchQueue.main.async {
                 switch result {
                 case .success(let quotes):
-                    // Assign the fetched quotes to the published property.
+                    // Assign the filtered quotes to the published property.
                     self?.quotes = quotes
                 case .failure(let error):
                     // Set the error message for UI display.
@@ -94,7 +96,7 @@ final class QuoteViewModel: ObservableObject {
     /// Retry fetching quotes after an error.
     func retryFetchQuotes() {
         errorMessage = nil
-        fetchQuotes()
+        fetchQuotes(selectedCategories: [])
     }
 
     // MARK: - Actions

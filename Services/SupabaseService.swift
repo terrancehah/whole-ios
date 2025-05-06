@@ -44,6 +44,35 @@ final class SupabaseService {
         }
     }
     
+    /// Fetches a list of quotes from the Supabase 'quotes' table, filtered by categories.
+    /// - Parameters:
+    ///   - categories: The list of categories to filter quotes by (must be non-empty).
+    ///   - completion: Completion handler with Result<[Quote], Error>
+    func fetchQuotes(categories: [QuoteCategory], completion: @escaping (Result<[Quote], Error>) -> Void) {
+        // Ensure that categories array is not empty for the query
+        guard !categories.isEmpty else {
+            completion(.success([]))
+            return
+        }
+        Task {
+            do {
+                // Convert categories to their raw values for the database query
+                let categoryValues = categories.map { $0.rawValue }
+                // Fetch quotes from Supabase filtered by the selected categories
+                let quotes: [Quote] = try await client
+                    .database
+                    .from("quotes")
+                    .select()
+                    .in("category", value: categoryValues)
+                    .execute()
+                    .value
+                completion(.success(quotes))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+    
     // MARK: - Liked Quotes Operations
     
     /// Fetches the IDs of quotes liked by a specific user from the 'liked_quotes' table.

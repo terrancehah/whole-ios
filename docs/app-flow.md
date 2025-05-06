@@ -1,4 +1,34 @@
-# App Flow for Whole
+## Quotes Filtering by User Preferences (2025-05-07 Update)
+
+- Quotes are now always filtered server-side by the user's selected categories, which are compulsory during onboarding.
+- The filtering is performed by passing `selectedCategories` from `UserPreferences` to the backend query.
+- The `QuoteViewModel.fetchQuotes(selectedCategories:)` method must be called with the user's current selected categories. This is typically done on view appearance:
+  ```swift
+  viewModel.fetchQuotes(selectedCategories: userProfile.userPreferences.selectedCategories)
+  ```
+- The UI will only show an empty state if there are no quotes matching the user's selected categories.
+- The `selectedCategories` property is part of `UserPreferences`, not `UserProfile`.
+- The onboarding flow ensures that every user has at least one selected category. There is no scenario where this array is empty after onboarding.
+- Categories cannot be changed after onboarding (as of this update).
+
+### Technical Implementation
+- `SupabaseService.fetchQuotes(categories:)` performs the server-side filter using `.in("category", ...)`.
+- `QuoteViewModel` no longer tries to read categories from `UserProfile`, but expects them to be passed in as a parameter.
+- `QuoteListView` is responsible for providing the correct categories to the view model on `.onAppear`.
+
+### Example Usage
+```swift
+// In QuoteListView.swift
+dispatchQueue.main.async {
+    viewModel.fetchQuotes(selectedCategories: userProfile.userPreferences.selectedCategories)
+}
+```
+
+---
+
+**This reflects the latest architecture and code logic as of 2025-05-07.**
+
+## App Flow for Whole
 
 ## 1. Launch and Onboarding
 - **Launch Screen**

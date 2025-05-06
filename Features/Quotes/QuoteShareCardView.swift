@@ -1,4 +1,5 @@
 import SwiftUI
+// Ensure QuoteCategory is in scope for preview and usage
 
 /// A dedicated view for rendering a quote as a shareable image.
 struct QuoteShareCardView: View {
@@ -99,13 +100,13 @@ struct QuoteShareCardView: View {
 #if DEBUG
 struct QuoteShareCardView_Previews: PreviewProvider {
     static var previews: some View {
-        // Use QuoteCategory enum for categories
+        // Use QuoteCategory enum for category (single value, not array)
         // Use UUID() for id and createdBy to resolve type mismatch errors
         QuoteShareCardView(quote: Quote(
             id: UUID(),
             englishText: "The best way to get started is to quit talking and begin doing.",
             chineseText: "开始的最好方法就是停止说话并开始行动。",
-            categories: [.motivation],
+            category: QuoteCategory.motivation, // Pass a single category
             createdAt: Date(),
             createdBy: UUID()
         ), showWatermark: true)
