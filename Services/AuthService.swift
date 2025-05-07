@@ -18,14 +18,63 @@ final class AuthService: ObservableObject {
     static let shared = AuthService()
     
     private init() {
-        // Listen for authentication state changes using the latest Supabase SDK API.
-        Task {
-            self.authSubscription = await SupabaseService.shared.client.auth.onAuthStateChange { [weak self] event, session in
-                // Ensure updates to published properties are performed on the main actor.
-                Task { @MainActor in
-                    self?.session = session
-                    self?.user = session?.user
+        print("[DEBUG] AuthService init: Starting initialization.")
+        var sessionRestoredFromKeychain = false
+        // Prioritize Keychain for session restoration
+        if let accessToken = KeychainHelper.shared.retrieve(forKey: "supabase_access_token"),
+           let refreshToken = KeychainHelper.shared.retrieve(forKey: "supabase_refresh_token") {
+            print("[DEBUG] AuthService init: Found tokens in Keychain. Attempting to set session.")
+            Task {
+                do {
+                    // Set the session in the Supabase client using the retrieved tokens
+                    try await SupabaseService.shared.client.auth.setSession(accessToken: accessToken, refreshToken: refreshToken)
+                    // After setting, Supabase client's currentUser/currentSession should be updated.
+                    // The onAuthStateChange listener will also fire.
+                    self.session = SupabaseService.shared.client.auth.currentSession
+                    self.user = SupabaseService.shared.client.auth.currentUser
+                    if let user = self.user {
+                        print("[DEBUG] AuthService init: Session successfully set from Keychain for user ID: \(user.id.uuidString)")
+                        sessionRestoredFromKeychain = true
+                    } else {
+                        print("[WARNING] AuthService init: setSession from Keychain completed, but user is still nil.")
+                    }
+                } catch {
+                    print("[ERROR] AuthService init: Failed to set session from Keychain tokens: \(error.localizedDescription). Clearing invalid tokens.")
+                    KeychainHelper.shared.delete(forKey: "supabase_access_token")
+                    KeychainHelper.shared.delete(forKey: "supabase_refresh_token")
                 }
+                // Proceed to setup onAuthStateChange listener AFTER keychain attempt
+                await setupAuthStateChangeListener(keychainSuccess: sessionRestoredFromKeychain)
+            }
+        } else {
+            print("[DEBUG] AuthService init: No tokens found in Keychain. Will rely on Supabase default or new login.")
+            // If no keychain tokens, immediately setup listener which will also check Supabase default store
+            Task { await setupAuthStateChangeListener(keychainSuccess: false) }
+        }
+    }
+
+    // Extracted method to reduce nesting and clarify flow
+    private func setupAuthStateChangeListener(keychainSuccess: Bool) async {
+        if !keychainSuccess {
+            // If keychain restore didn't happen or failed, try to load from Supabase default store as a fallback / initial check
+            // This was the previous logic before keychain prioritization.
+            let initialSession = SupabaseService.shared.client.auth.currentSession
+            let initialUser = SupabaseService.shared.client.auth.currentUser
+            self.session = initialSession
+            self.user = initialUser
+            if initialSession != nil {
+                print("[DEBUG] AuthService setupAuthStateChangeListener: Synchronously found session via Supabase default for user ID: \(initialSession!.user.id.uuidString)")
+            } else {
+                print("[DEBUG] AuthService setupAuthStateChangeListener: No session found via Supabase default store.")
+            }
+        }
+
+        // Listen for authentication state changes
+        self.authSubscription = await SupabaseService.shared.client.auth.onAuthStateChange { [weak self] event, session in
+            Task { @MainActor in // Ensure updates are on main actor
+                print("[DEBUG] AuthService onAuthStateChange: Event - \(event), Session User ID - \(session?.user.id.uuidString ?? "NIL")")
+                self?.session = session
+                self?.user = session?.user
             }
         }
     }

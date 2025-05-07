@@ -154,13 +154,24 @@ struct QuoteListView: View {
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .onAppear {
-            // Fetch quotes using the selected categories from user preferences
-            viewModel.fetchQuotes(selectedCategories: userProfile.userPreferences.selectedCategories)
+            print("[DEBUG] QuoteListView appeared. isPreferencesLoaded: \(userProfile.isPreferencesLoaded), selectedCategories: \(userProfile.userPreferences.selectedCategories)")
+            if userProfile.isPreferencesLoaded && !userProfile.userPreferences.selectedCategories.isEmpty {
+                print("[DEBUG] Triggering fetchQuotes from .onAppear")
+                viewModel.fetchQuotes(selectedCategories: userProfile.userPreferences.selectedCategories)
+            }
         }
-        .onChange(of: userProfile.userPreferences.selectedCategories) { newCategories in
-            // Fetch quotes only when categories are loaded and non-empty
-            if !newCategories.isEmpty {
-                viewModel.fetchQuotes(selectedCategories: newCategories)
+        .onChange(of: userProfile.isPreferencesLoaded) { isLoaded in
+            print("[DEBUG] isPreferencesLoaded changed: \(isLoaded). selectedCategories: \(userProfile.userPreferences.selectedCategories)")
+            if isLoaded && !userProfile.userPreferences.selectedCategories.isEmpty {
+                print("[DEBUG] Triggering fetchQuotes from .onChange isPreferencesLoaded")
+                viewModel.fetchQuotes(selectedCategories: userProfile.userPreferences.selectedCategories)
+            }
+        }
+        .onChange(of: userProfile.userPreferences.selectedCategories) { categories in
+            print("[DEBUG] selectedCategories changed: \(categories). isPreferencesLoaded: \(userProfile.isPreferencesLoaded)")
+            if userProfile.isPreferencesLoaded && !categories.isEmpty {
+                print("[DEBUG] Triggering fetchQuotes from .onChange selectedCategories")
+                viewModel.fetchQuotes(selectedCategories: categories)
             }
         }
     }

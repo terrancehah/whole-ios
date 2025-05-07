@@ -156,12 +156,41 @@ struct RootAppView: View {
                 ProgressView("Preparing app...")
             }
         }
+        .onChange(of: isAuthReady) { ready in
+            if ready {
+                let userId = userProfileViewModel.user.id
+                print("[DEBUG] RootAppView: isAuthReady is true. Fetching preferences for userId: \(userId)")
+                userProfileViewModel.fetchUserPreferences(userId: userId)
+            } else {
+                print("[DEBUG] RootAppView: isAuthReady is false. Not fetching preferences.")
+            }
+        }
         .task {
+            print("[DEBUG] RootAppView .task: Entered. Checking initial auth state.")
+            print("[DEBUG] RootAppView .task: AuthService.shared.session?.user.id = \(AuthService.shared.session?.user.id.uuidString ?? "NIL")")
+            print("[DEBUG] RootAppView .task: AuthService.shared.user?.id = \(AuthService.shared.user?.id.uuidString ?? "NIL")")
+
             // Check if there is an existing authenticated session (anonymous or real)
             if AuthService.shared.session != nil || AuthService.shared.user != nil {
+                print("[DEBUG] RootAppView .task: Existing session/user found. Setting isAuthReady = true.")
                 isAuthReady = true
             } else {
-                isAuthReady = true
+                print("[DEBUG] RootAppView .task: No existing session/user. Attempting anonymous sign-in with signInSupabaseAnonymous().")
+                // Call the correct async throws method
+                do {
+                    let newUser = try await AuthService.shared.signInSupabaseAnonymous()
+                    // Since AuthService is @MainActor, updates to its @Published vars (session, user)
+                    // will automatically publish on the main thread. UserProfileViewModel should observe these.
+                    if let user = newUser {
+                        print("[DEBUG] RootAppView .task: Anonymous sign-in successful. New User ID: \(user.id.uuidString)")
+                    } else {
+                        print("[DEBUG] RootAppView .task: Anonymous sign-in returned nil user, but session might be set in AuthService.")
+                    }
+                    isAuthReady = true // Auth flow completed (either successfully or with a new anonymous session)
+                } catch {
+                    print("[ERROR] RootAppView .task: signInSupabaseAnonymous() failed: \(error.localizedDescription)")
+                    isAuthReady = false // Or handle error state appropriately in UI
+                }
             }
         }
     }

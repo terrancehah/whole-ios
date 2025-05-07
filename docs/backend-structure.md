@@ -12,7 +12,8 @@ This document describes the current schema and access policies for the Supabase 
   - `id`: uuid, primary key, auto-generated
   - `english_text`: text, required
   - `chinese_text`: text, required
-  - `categories`: text[], required (e.g., {"Inspiration","Love"})
+  - `category`: text, required (e.g., "Inspiration", "Love")
+    - **Note:** Only one category per quote. This matches the schema visualizer as of 2025-05-07.
   - **Allowed categories:**
     - Inspiration
     - Love
@@ -24,6 +25,10 @@ This document describes the current schema and access policies for the Supabase 
     - Compassion
     - Friends & Family
     - Optimism
+  - `created_at`: timestamp
+  - `created_by`: uuid
+
+> Updated based on schema visualizer on 2025-05-07. 'categories' (text[]) replaced with 'category' (text).
 - **RLS:**
   - SELECT: Any authenticated user
   - ALL (INSERT/UPDATE/DELETE): Only admins (service_role, supabase_admin)

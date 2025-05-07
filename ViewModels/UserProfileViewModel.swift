@@ -10,6 +10,8 @@ final class UserProfileViewModel: ObservableObject {
     @Published var user: UserProfile
     /// Published user preferences for notification and category settings.
     @Published var userPreferences: UserPreferences = UserPreferences(userId: UUID(), selectedCategories: [], notificationTime: "08:00", notificationsEnabled: false)
+    /// True if user preferences have been loaded from backend. Used to gate quote fetching in main interface.
+    @Published var isPreferencesLoaded: Bool = false
     /// Published property to track loading state.
     @Published var isLoading: Bool = false
     /// Published property for error messages.
@@ -52,8 +54,10 @@ final class UserProfileViewModel: ObservableObject {
                 switch result {
                 case .success(let preferences):
                     self?.userPreferences = preferences
+                    self?.isPreferencesLoaded = true // Mark preferences as loaded
                 case .failure(let error):
                     self?.errorMessage = error.localizedDescription
+                    self?.isPreferencesLoaded = true // Still mark as loaded to avoid indefinite loading
                 }
             }
         }

@@ -58,12 +58,13 @@ final class SupabaseService {
             do {
                 // Convert categories to their raw values for the database query
                 let categoryValues = categories.map { $0.rawValue }
-                // Fetch quotes from Supabase filtered by the selected categories
+                // The 'quotes' table uses a single 'category' (text) column, not an array. Use .eq for filtering by one category at a time.
+                // If multiple categories are selected, use .in for multiple values (for Postgres text column).
                 let quotes: [Quote] = try await client
                     .database
                     .from("quotes")
                     .select()
-                    .in("category", value: categoryValues)
+                    .eq("category", value: categoryValues.first!)
                     .execute()
                     .value
                 completion(.success(quotes))
@@ -75,17 +76,17 @@ final class SupabaseService {
     
     // MARK: - Liked Quotes Operations
     
-    /// Fetches the IDs of quotes liked by a specific user from the 'liked_quotes' table.
+    /// Fetches the IDs of quotes liked by a specific user from the 'likedquotes' table.
     /// - Parameters:
     ///   - userId: The ID of the current user.
     ///   - completion: Completion handler with Result<[UUID], Error>
     func fetchLikedQuoteIDs(forUser userId: UUID, completion: @escaping (Result<[UUID], Error>) -> Void) {
         Task {
             do {
-                // Query liked_quotes for all quoteIds liked by this user
+                // Query likedquotes for all quoteIds liked by this user
                 let response: [LikedQuote] = try await client
                     .database
-                    .from("liked_quotes")
+                    .from("likedquotes")
                     .select()
                     .eq("userId", value: userId.uuidString)
                     .execute()
@@ -99,7 +100,7 @@ final class SupabaseService {
         }
     }
 
-    /// Likes a quote for a user by inserting into the 'liked_quotes' table.
+    /// Likes a quote for a user by inserting into the 'likedquotes' table.
     /// - Parameters:
     ///   - quoteId: The ID of the quote to like.
     ///   - userId: The ID of the current user.
@@ -110,7 +111,7 @@ final class SupabaseService {
                 let insertData = ["userId": userId.uuidString, "quoteId": quoteId.uuidString]
                 _ = try await client
                     .database
-                    .from("liked_quotes")
+                    .from("likedquotes")
                     .insert([insertData])
                     .execute()
                 completion(.success(()))
@@ -120,7 +121,7 @@ final class SupabaseService {
         }
     }
     
-    /// Unlikes a quote for a user by deleting from the 'liked_quotes' table.
+    /// Unlikes a quote for a user by deleting from the 'likedquotes' table.
     /// - Parameters:
     ///   - quoteId: The ID of the quote to unlike.
     ///   - userId: The ID of the current user.
@@ -131,7 +132,7 @@ final class SupabaseService {
                 // Delete the like where both userId and quoteId match
                 _ = try await client
                     .database
-                    .from("liked_quotes")
+                    .from("likedquotes")
                     .delete()
                     .eq("userId", value: userId.uuidString)
                     .eq("quoteId", value: quoteId.uuidString)
@@ -143,17 +144,17 @@ final class SupabaseService {
         }
     }
     
-    /// Fetches the full liked quote records for a specific user from the 'liked_quotes' table.
+    /// Fetches the full liked quote records for a specific user from the 'likedquotes' table.
     /// - Parameters:
     ///   - userId: The ID of the current user.
     ///   - completion: Completion handler with Result<[LikedQuote], Error>
     func fetchFullLikedQuotes(forUser userId: UUID, completion: @escaping (Result<[LikedQuote], Error>) -> Void) {
         Task {
             do {
-                // Query liked_quotes for all records liked by this user
+                // Query likedquotes for all records liked by this user
                 let response: [LikedQuote] = try await client
                     .database
-                    .from("liked_quotes")
+                    .from("likedquotes")
                     .select()
                     .eq("userId", value: userId.uuidString)
                     .execute()

@@ -35,6 +35,28 @@ dispatchQueue.main.async {
   - Details:
     - Displays the app logo or branding for a few seconds before transitioning to onboarding.
 
+### Initial Authentication & Session Handling
+- Upon app launch, before displaying content that depends on user identity (like onboarding or the main app view), an initial authentication check occurs in `RootAppView`'s `.task` modifier:
+  1.  **Session Check**: The app inspects `AuthService` (which wraps the Supabase client) to determine if an existing user session is available. This includes previously established anonymous sessions that Supabase client persists locally.
+      - `AuthService.shared.session` and `AuthService.shared.user` are consulted.
+      - `AuthService` itself subscribes to Supabase's `onAuthStateChange` to keep its `session` and `user` properties synchronized with the authentication state.
+  2.  **Existing Session Found**:
+      - If a valid session is found, the app proceeds using this established user identity.
+      - `RootAppView.isAuthReady` is set to `true`.
+  3.  **No Existing Session Found**:
+      - The app attempts to sign in a new anonymous user by calling `AuthService.shared.signInSupabaseAnonymous()`.
+      - If successful, Supabase creates a new anonymous user session. This new user's ID becomes available via `AuthService.shared.user.id` (once `AuthService` updates its properties).
+      - `RootAppView.isAuthReady` is set to `true`.
+      - If `signInSupabaseAnonymous()` fails, an error is logged, and `isAuthReady` may be set to `false` or an appropriate error state handled in the UI.
+  4.  **User Preferences Fetching**:
+      - Once `RootAppView.isAuthReady` transitions to `true`, the app triggers fetching of user preferences:
+        ```swift
+        // In RootAppView, triggered by .onChange(of: isAuthReady)
+        userProfileViewModel.fetchUserPreferences(userId: userProfileViewModel.user.id)
+        ```
+      - This ensures preferences are loaded for the correct user ID, whether it's from a restored session or a newly created anonymous one.
+      - The `userProfileViewModel.user` property is expected to be synchronized with `AuthService.shared.user` to reflect the currently authenticated user.
+
 - **Onboarding Screens**
   - Objective: Introduce the app and collect user preferences to personalize the experience.
   - **Account Creation:**
