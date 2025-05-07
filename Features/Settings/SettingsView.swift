@@ -13,32 +13,87 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             List {
-                // Customization section
-                NavigationLink(destination: CustomizationView(userProfile: userProfileViewModel)) {
-                    Label("Customization", systemImage: "paintbrush")
+                Section(header: Text("Appearance").font(.headline)) {
+                    NavigationLink(destination: CustomizationView(userProfile: userProfileViewModel)) {
+                        Label("Customization", systemImage: "paintbrush")
+                    }
+                    NavigationLink(destination: WidgetSettingsView(userProfile: userProfileViewModel)) {
+                        Label("Widget", systemImage: "rectangle.stack.fill")
+                    }
                 }
-                // Subscription section
-                NavigationLink(destination: SubscriptionView(userProfile: userProfileViewModel)) {
-                    Label("Subscription", systemImage: "star.fill")
+                Section(header: Text("Account").font(.headline)) {
+                    NavigationLink(destination: PreferencesSettingsView(userProfile: userProfileViewModel)) {
+                        Label("Preferences", systemImage: "slider.horizontal.3")
+                    }
+                    NavigationLink(destination: ProfileView(userProfile: userProfileViewModel)) {
+                        Label("Profile", systemImage: "person.crop.circle")
+                    }
+                    NavigationLink(destination: SubscriptionView(userProfile: userProfileViewModel)) {
+                        Label("Subscription", systemImage: "star.fill")
+                    }
                 }
-                // Profile section
-                NavigationLink(destination: ProfileView(userProfile: userProfileViewModel)) {
-                    Label("Profile", systemImage: "person.crop.circle")
-                }
-                // Widget section
-                NavigationLink(destination: WidgetSettingsView(userProfile: userProfileViewModel)) {
-                    Label("Widget", systemImage: "rectangle.stack.fill")
-                }
-                // Notifications section
-                NavigationLink(destination: NotificationSettingsView(userProfile: userProfileViewModel)) {
-                    Label("Notifications", systemImage: "bell.fill")
+                Section(header: Text("Notifications").font(.headline)) {
+                    NavigationLink(destination: NotificationSettingsView(userProfile: userProfileViewModel)) {
+                        Label("Notifications", systemImage: "bell.fill")
+                    }
                 }
             }
-            .navigationTitle("Settings")
-            .background(ThemeManager.shared.selectedTheme.theme.background)
+            .listStyle(InsetGroupedListStyle())
+            .navigationTitle(Text("Settings").font(.largeTitle).bold())
+            .background(ThemeManager.shared.selectedTheme.theme.background.ignoresSafeArea())
             .onAppear {
                 // Sync the user profile on appear
                 userProfileViewModel.refresh(userId: userId)
+            }
+        }
+    }
+}
+
+// Preferences settings view for updating selected categories
+struct PreferencesSettingsView: View {
+    @ObservedObject var userProfile: UserProfileViewModel
+    @State private var tempSelectedCategories: Set<QuoteCategory> = []
+    @State private var isSaving = false
+    @State private var saveError: String?
+
+    var body: some View {
+        VStack(spacing: 0) {
+            CategorySelectionView(
+                selectedCategories: $tempSelectedCategories,
+                allCategories: QuoteCategory.allCases.filter { $0 != .unknown },
+                onSave: savePreferences
+            )
+            if isSaving {
+                ProgressView("Saving...")
+                    .padding(.top)
+            }
+            if let saveError = saveError {
+                Text(saveError)
+                    .foregroundColor(.red)
+                    .padding(.top)
+            }
+            Spacer()
+        }
+        .navigationTitle("Preferences")
+        .background(ThemeManager.shared.selectedTheme.theme.background.ignoresSafeArea())
+        .onAppear {
+            // Convert array to set for local editing
+                tempSelectedCategories = Set(userProfile.userPreferences.selectedCategories)
+        }
+    }
+
+    /// Save the updated preferences to the backend and update the view model.
+    private func savePreferences() {
+        isSaving = true
+        saveError = nil
+        userProfile.updateSelectedCategories(tempSelectedCategories) { result in
+            isSaving = false
+            switch result {
+            case .success:
+                // Optionally show a success indicator
+                break
+            case .failure(let error):
+                saveError = "Failed to save preferences: \(error.localizedDescription)"
             }
         }
     }

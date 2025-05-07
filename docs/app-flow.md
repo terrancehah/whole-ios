@@ -6,15 +6,14 @@
   ```swift
   viewModel.fetchQuotes(selectedCategories: userProfile.userPreferences.selectedCategories)
   ```
-- The UI will only show an empty state if there are no quotes matching the user's selected categories.
-- The `selectedCategories` property is part of `UserPreferences`, not `UserProfile`.
-- The onboarding flow ensures that every user has at least one selected category. There is no scenario where this array is empty after onboarding.
-- Categories cannot be changed after onboarding (as of this update).
+- Quotes are now fetched on both `.onAppear` and `.onChange` for user preferences.
+- Errors are surfaced in the UI for debugging.
+- The no-quotes prompt has been removed for a cleaner UI.
 
 ### Technical Implementation
 - `SupabaseService.fetchQuotes(categories:)` performs the server-side filter using `.in("category", ...)`.
 - `QuoteViewModel` no longer tries to read categories from `UserProfile`, but expects them to be passed in as a parameter.
-- `QuoteListView` is responsible for providing the correct categories to the view model on `.onAppear`.
+- `QuoteListView` is responsible for providing the correct categories to the view model on `.onAppear` and `.onChange` of `userProfile.userPreferences.selectedCategories`.
 
 ### Example Usage
 ```swift

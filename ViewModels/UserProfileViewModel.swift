@@ -42,6 +42,56 @@ final class UserProfileViewModel: ObservableObject {
     /// Refresh the user profile (call after purchase/restore or on app launch).
     func refresh(userId: UUID) {
         fetchUserProfile(userId: userId)
+        fetchUserPreferences(userId: userId)
+    }
+
+    /// Fetch the user's preferences from Supabase and update the local model
+    func fetchUserPreferences(userId: UUID) {
+        SupabaseService.shared.fetchUserPreferences(userId: userId) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let preferences):
+                    self?.userPreferences = preferences
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+
+    // MARK: - Category Preferences
+    /**
+     Updates the user's selected categories both locally and on the backend (Supabase).
+     - Parameters:
+        - categories: The new set of selected categories.
+        - completion: Completion handler with a Result indicating success or failure.
+     */
+    func updateSelectedCategories(_ categories: Set<QuoteCategory>, completion: @escaping (Result<Void, Error>) -> Void) {
+        // Convert Set to Array for storage
+        let updatedCategories = Array(categories)
+        // Update the local userPreferences model
+        self.userPreferences = UserPreferences(
+            userId: userPreferences.userId,
+            selectedCategories: updatedCategories,
+            notificationTime: userPreferences.notificationTime,
+            notificationsEnabled: userPreferences.notificationsEnabled
+        )
+        // Sync the updated preferences to Supabase
+        // Call the new SupabaseService method that updates selected_categories
+        SupabaseService.shared.updateUserPreferences(
+            userId: userPreferences.userId,
+            selectedCategories: updatedCategories
+        ) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    completion(.success(()))
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                    completion(.failure(error))
+                }
+            }
+        }
     }
 
     // MARK: - Notification Preferences

@@ -99,26 +99,14 @@ struct QuoteListView: View {
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottom) {
-                // Use extracted TabView for quotes
-                if enumeratedQuotesToShow.isEmpty {
-                    VStack(spacing: 24) {
-                        Image(systemName: "quote.bubble")
-                            .font(.system(size: 48))
-                            .foregroundColor(ThemeManager.shared.selectedTheme.theme.cardBackground) // fallback, was accent
-                        Text("No quotes available")
-                            .headingFont(size: 20)
-                            .foregroundColor(ThemeManager.shared.selectedTheme.theme.englishColor)
-                        Text("Try again later or check your connection.")
-                            .bodyFont(size: 15)
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(ThemeManager.shared.selectedTheme.theme.chineseColor)
-                    }
-                    .padding()
-                } else {
-                    // Only show the quoteTabView (quote + actions now handled inside QuoteShareCardView)
-                    quoteTabView
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .padding()
                 }
+                // Use extracted TabView for quotes
+                quoteTabView
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 // Paywall CTA button for free users only, appears when limit is hit
                 if viewModel.showPaywallCTA && !isPremiumUser {
                     // Replace paywall CTA button with CustomButton for default shadow
@@ -168,6 +156,12 @@ struct QuoteListView: View {
         .onAppear {
             // Fetch quotes using the selected categories from user preferences
             viewModel.fetchQuotes(selectedCategories: userProfile.userPreferences.selectedCategories)
+        }
+        .onChange(of: userProfile.userPreferences.selectedCategories) { newCategories in
+            // Fetch quotes only when categories are loaded and non-empty
+            if !newCategories.isEmpty {
+                viewModel.fetchQuotes(selectedCategories: newCategories)
+            }
         }
     }
     

@@ -45,7 +45,7 @@ final class QuoteViewModel: ObservableObject {
     init(user: UserProfile? = nil, subscription: Subscription? = nil) {
         self.user = user
         self.subscription = subscription
-        fetchQuotes(selectedCategories: [])
+        // Removed the empty fetchQuotes call. Fetching should only be triggered with valid categories.
         fetchLikedQuotes()
     }
 
@@ -54,15 +54,18 @@ final class QuoteViewModel: ObservableObject {
     /// This method ensures only relevant quotes are loaded for the current user.
     /// - Parameter selectedCategories: The user's selected categories for filtering quotes.
     func fetchQuotes(selectedCategories: [QuoteCategory]) {
+    print("[DEBUG] Fetching quotes for categories: \(selectedCategories)")
         // Fetch quotes from SupabaseService using the selected categories
         SupabaseService.shared.fetchQuotes(categories: selectedCategories) { [weak self] result in
             // Ensure UI updates happen on the main thread.
             DispatchQueue.main.async {
                 switch result {
                 case .success(let quotes):
+                    print("[DEBUG] Quotes fetched: \(quotes.count)")
                     // Assign the filtered quotes to the published property.
                     self?.quotes = quotes
                 case .failure(let error):
+                    print("[ERROR] Failed to fetch quotes: \(error)")
                     // Set the error message for UI display.
                     self?.errorMessage = "Failed to load quotes: \(error.localizedDescription)"
                 }

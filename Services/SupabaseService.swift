@@ -229,9 +229,39 @@ final class SupabaseService {
             }
         }
     }
-    
-    // MARK: - User Preferences Updates
-    
+    // MARK: - Fetch User Preferences
+    /// Fetch user preferences for a given userId from Supabase
+    /// - Parameters:
+    ///   - userId: The UUID of the user
+    ///   - completion: Completion handler with Result<UserPreferences, Error>
+    /// Fetch user preferences for a given userId from Supabase (async/await pattern)
+    /// - Parameters:
+    ///   - userId: The UUID of the user
+    ///   - completion: Completion handler with Result<UserPreferences, Error>
+    func fetchUserPreferences(userId: UUID, completion: @escaping (Result<UserPreferences, Error>) -> Void) {
+        Task {
+            do {
+                // Query the userpreferences table for the user's preferences
+                let response: [UserPreferences] = try await client
+                    .database
+                    .from("userpreferences")
+                    .select()
+                    .eq("user_id", value: userId.uuidString)
+                    .limit(1)
+                    .execute()
+                    .value
+                if let prefs = response.first {
+                    completion(.success(prefs))
+                } else {
+                    completion(.failure(NSError(domain: "SupabaseService", code: 404, userInfo: [NSLocalizedDescriptionKey: "No user preferences found."])))
+                }
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    // MARK: - Update User Preferences
     /// Updates the notificationsEnabled field for the user in the userpreferences table.
     /// - Parameters:
     ///   - userId: The ID of the user.
@@ -240,8 +270,32 @@ final class SupabaseService {
     func updateUserPreferences(userId: UUID, notificationsEnabled: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
-                // Use [String: Bool] for update dictionary to avoid existential Encodable issue
                 let updateData: [String: Bool] = ["notifications_enabled": notificationsEnabled]
+                _ = try await client
+                    .database
+                    .from("userpreferences")
+                    .update(updateData)
+                    .eq("user_id", value: userId.uuidString)
+                    .execute()
+                completion(.success(()))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Updates the selectedCategories field for the user in the userpreferences table.
+    /// - Parameters:
+    ///   - userId: The ID of the user.
+    ///   - selectedCategories: The new array of selected categories.
+    ///   - completion: Completion handler with Result<Void, Error>
+    func updateUserPreferences(userId: UUID, selectedCategories: [QuoteCategory], completion: @escaping (Result<Void, Error>) -> Void) {
+        Task {
+            do {
+                // Convert categories to their raw values for storage (assuming QuoteCategory: RawRepresentable)
+                let categoryStrings = selectedCategories.map { $0.rawValue }
+                // Use [String: [String]] so the dictionary is Encodable for Supabase
+                let updateData: [String: [String]] = ["selected_categories": categoryStrings]
                 _ = try await client
                     .database
                     .from("userpreferences")
@@ -278,6 +332,3 @@ final class SupabaseService {
         }
     }
 }
-
-// MARK: - LikedQuote Model for decoding liked_quotes table
-// Removed duplicate LikedQuote struct. Use the canonical model from Models/LikedQuoteModel.swift instead.
