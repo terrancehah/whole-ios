@@ -1,4 +1,4 @@
-## Quotes Filtering by User Preferences (2025-05-07 Update)
+## Quotes Filtering by User Preferences (2025-05-08 Update)
 
 - Quotes are now always filtered server-side by the user's selected categories, which are compulsory during onboarding.
 - The filtering is performed by passing `selectedCategories` from `UserPreferences` to the backend query.
@@ -23,9 +23,20 @@ dispatchQueue.main.async {
 }
 ```
 
+### QuoteViewModel Lifecycle and User Context (2025-05-08 Update)
+
+To ensure a stable and consistent display of quotes and user-specific data (like liked quotes), the `QuoteViewModel`'s lifecycle and user context are managed as follows:
+
+- **Lifecycle Management**: `QuoteViewModel` is instantiated as a `@StateObject` within `RootAppView`. This ensures that a single, persistent instance of `QuoteViewModel` is maintained for the primary quote display throughout the relevant part of the app's lifecycle, preventing issues caused by premature deallocation or multiple conflicting instances.
+- **Dependency Injection**: This `@StateObject`-managed instance of `QuoteViewModel` is then passed down as a dependency to `QuoteListView`.
+- **User Context Synchronization**:
+    - When `RootAppView` confirms that the user authentication state is ready (via `isAuthReady`) and `UserProfileViewModel` has synced the current user's profile, `RootAppView` updates the `user` property of the shared `QuoteViewModel` instance.
+    - `QuoteViewModel` has a `didSet` observer on its `user` property. When this property is updated with a new user, this observer automatically triggers a call to `fetchLikedQuotes()` to load the liked quotes specific to that user.
+- **Quote Fetching**: The responsibility for initiating the primary quote fetch (based on categories) still resides with `QuoteListView` (e.g., in `.onAppear` or when categories change), which calls `fetchQuotes(selectedCategories:)` on its `QuoteViewModel` instance.
+
 ---
 
-**This reflects the latest architecture and code logic as of 2025-05-07.**
+**This reflects the latest architecture and code logic as of 2025-05-08.**
 
 ## App Flow for Whole
 

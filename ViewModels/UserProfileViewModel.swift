@@ -22,6 +22,48 @@ final class UserProfileViewModel: ObservableObject {
     /// Initialize with a sample user profile.
     init(user: UserProfile = UserProfile.sample) {
         self.user = user
+        // Initialize userPreferences based on the initial user's ID
+        self.userPreferences = UserPreferences(userId: user.id, selectedCategories: [], notificationTime: "08:00", notificationsEnabled: false)
+    }
+
+    /// Synchronizes the ViewModel's user state with AuthService.shared.user.
+    /// This should be called when the authentication state might have changed.
+    @MainActor
+    func syncWithAuthServiceUser() {
+        if let authUser = AuthService.shared.user {
+            // Check if the current ViewModel's user ID is different from the authenticated user's ID.
+            // This indicates a change in user or an initial sync from a default state.
+            if self.user.id != authUser.id {
+                print("[DEBUG] UserProfileViewModel syncWithAuthServiceUser: Auth user ID \(authUser.id) differs from current VM user ID \(self.user.id). Updating VM user.")
+                // Create a new UserProfile with core details from the authenticated user.
+                // Other details (name, goals, subscription) will be populated by fetchUserProfile.
+                self.user = UserProfile(
+                    id: authUser.id,
+                    email: authUser.email,
+                    name: nil, // Will be fetched by fetchUserProfile
+                    gender: nil, // Will be fetched
+                    goals: nil, // Will be fetched
+                    subscriptionStatus: "free", // Default, will be fetched
+                    trialEndDate: nil, // Will be fetched
+                    subscriptionStartDate: nil, // Will be fetched
+                    subscriptionEndDate: nil, // Will be fetched
+                    createdAt: nil, // Will be fetched
+                    updatedAt: nil // Will be fetched
+                )
+                // Reset preferences for the new user; these will also be fetched.
+                self.userPreferences = UserPreferences(userId: authUser.id, selectedCategories: [], notificationTime: "08:00", notificationsEnabled: false)
+                self.isPreferencesLoaded = false // Mark preferences as not loaded for the new user
+            } else {
+                print("[DEBUG] UserProfileViewModel syncWithAuthServiceUser: Auth user ID \(authUser.id) matches current VM user ID. No sync needed for basic user identity.")
+            }
+        } else {
+            // No authenticated user in AuthService. Reset ViewModel to a default/sample state.
+            print("[DEBUG] UserProfileViewModel syncWithAuthServiceUser: No authenticated user in AuthService. Resetting VM to sample profile.")
+            let sampleUser = UserProfile.sample // Use a consistent sample user
+            self.user = sampleUser
+            self.userPreferences = UserPreferences(userId: sampleUser.id, selectedCategories: [], notificationTime: "08:00", notificationsEnabled: false)
+            self.isPreferencesLoaded = false
+        }
     }
 
     /// Fetch the current user's profile from Supabase using SupabaseService.

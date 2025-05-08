@@ -40,8 +40,12 @@ struct QuoteListView: View {
 
     // Extracted TabView for quotes to reduce complexity in main body and help the compiler
     private var quoteTabView: some View {
-        TabView(selection: $selectedIndex) {
+        let _ = print("[DEBUG] QuoteListView: quoteTabView - enumeratedQuotesToShow.count = \(enumeratedQuotesToShow.count)")
+        return TabView(selection: $selectedIndex) {
             ForEach(enumeratedQuotesToShow, id: \.element.id) { idx, quote in
+                // --- Print statement remains for debugging ---
+                let _ = print("[DEBUG] QuoteListView: quoteTabView - ForEach: idx = \(idx), quoteID = \(quote.id)")
+                // --- ORIGINAL CODE RESTORED ---
                 QuoteShareCardView(
                     quote: quote,
                     showWatermark: !isPremiumUser,
@@ -97,6 +101,9 @@ struct QuoteListView: View {
     }
 
     var body: some View {
+        let _ = print("[DEBUG] QuoteListView Body (VM ID: \(viewModel.instanceID.uuidString)): isLoading = \(viewModel.isLoading), errorMessage = \(viewModel.errorMessage ?? "nil"), quotes.count = \(viewModel.quotes.count)")
+        let _ = print("[DEBUG] QuoteListView Body (VM ID: \(viewModel.instanceID.uuidString)): userProfile.isSubStatus = \(userProfile.user.subscriptionStatus), isPremiumUser = \(isPremiumUser), swipeLimit = \(viewModel.swipeLimit), enumeratedQuotesToShow.count = \(enumeratedQuotesToShow.count)")
+
         NavigationView {
             ZStack(alignment: .bottom) {
                 if let errorMessage = viewModel.errorMessage {

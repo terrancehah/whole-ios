@@ -88,7 +88,7 @@ final class SupabaseService {
                     .database
                     .from("likedquotes")
                     .select()
-                    .eq("userId", value: userId.uuidString)
+                    .eq("user_id", value: userId.uuidString)
                     .execute()
                     .value
                 // Map to quoteId array

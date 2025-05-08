@@ -14,12 +14,23 @@ final class QuoteViewModel: ObservableObject {
     @Published var likedQuoteIDs: Set<UUID> = [] // Changed from Set<String> to Set<UUID> for type safety
     /// Error message for UI display.
     @Published var errorMessage: String? = nil
+    /// Indicates if quotes are currently being fetched.
+    @Published var isLoading: Bool = false
     /// Whether to show the paywall CTA.
     @Published var showPaywallCTA: Bool = false
 
     // MARK: - User & Subscription
     /// The current user profile.
-    var user: UserProfile?
+    var user: UserProfile? {
+        didSet {
+            // When the user changes, fetch their liked quotes.
+            // Compare oldValue?.id with user?.id to avoid redundant fetches if the same user is set.
+            if oldValue?.id != user?.id {
+                print("[DEBUG] QuoteViewModel: User changed (old: \(oldValue.map { $0.id.uuidString } ?? "nil"), new: \(user.map { $0.id.uuidString } ?? "nil")). Fetching liked quotes.")
+                fetchLikedQuotes()
+            }
+        }
+    }
     /// The user's subscription status (free, trial, monthly, yearly).
     var subscription: Subscription?
     /// Whether the user is on a free plan (no trial, no active sub).
@@ -42,9 +53,12 @@ final class QuoteViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Initialization
+    let instanceID = UUID() // Unique ID for each instance
+
     init(user: UserProfile? = nil, subscription: Subscription? = nil) {
         self.user = user
         self.subscription = subscription
+        print("[DEBUG] QuoteViewModel INIT - Instance ID: \(instanceID)") // Print ID on init
         // Removed the empty fetchQuotes call. Fetching should only be triggered with valid categories.
         fetchLikedQuotes()
     }
@@ -55,17 +69,24 @@ final class QuoteViewModel: ObservableObject {
     /// - Parameter selectedCategories: The user's selected categories for filtering quotes.
     func fetchQuotes(selectedCategories: [QuoteCategory]) {
     print("[DEBUG] Fetching quotes for categories: \(selectedCategories)")
+        // Ensure UI updates happen on the main thread for isLoading as well.
+        DispatchQueue.main.async {
+            self.isLoading = true
+            self.errorMessage = nil // Clear previous errors
+        }
+
         // Fetch quotes from SupabaseService using the selected categories
         SupabaseService.shared.fetchQuotes(categories: selectedCategories) { [weak self] result in
             // Ensure UI updates happen on the main thread.
             DispatchQueue.main.async {
+                self?.isLoading = false // Set loading to false regardless of outcome
                 switch result {
                 case .success(let quotes):
-                    print("[DEBUG] Quotes fetched: \(quotes.count)")
+                    print("[DEBUG] Quotes fetched: \(quotes.count) for VM Instance ID: \(self?.instanceID.uuidString ?? "nil")") // Print ID before update
                     // Assign the filtered quotes to the published property.
                     self?.quotes = quotes
                 case .failure(let error):
-                    print("[ERROR] Failed to fetch quotes: \(error)")
+                    print("[ERROR] Failed to fetch quotes: \(error) for VM Instance ID: \(self?.instanceID.uuidString ?? "nil")") // Print ID on error too
                     // Set the error message for UI display.
                     self?.errorMessage = "Failed to load quotes: \(error.localizedDescription)"
                 }

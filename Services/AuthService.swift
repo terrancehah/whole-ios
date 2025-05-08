@@ -11,25 +11,26 @@ final class AuthService: ObservableObject {
     @Published var session: Session?
     /// Published property to track the current user.
     @Published var user: User?
+    /// Published property to signal that initial auth checks are complete.
+    @Published var isInitialized: Bool = false
 
     // Store the subscription as an optional Any, since the SDK does not require a specific type.
     private var authSubscription: Any?
+    private var hasProcessedFirstAuthChangeEvent: Bool = false // New flag
     
     static let shared = AuthService()
     
     private init() {
         print("[DEBUG] AuthService init: Starting initialization.")
-        var sessionRestoredFromKeychain = false
-        // Prioritize Keychain for session restoration
-        if let accessToken = KeychainHelper.shared.retrieve(forKey: "supabase_access_token"),
-           let refreshToken = KeychainHelper.shared.retrieve(forKey: "supabase_refresh_token") {
-            print("[DEBUG] AuthService init: Found tokens in Keychain. Attempting to set session.")
-            Task {
+        Task {
+            var sessionRestoredFromKeychain = false
+            // Prioritize Keychain for session restoration
+            if let accessToken = KeychainHelper.shared.get("supabase_access_token"),
+               let refreshToken = KeychainHelper.shared.get("supabase_refresh_token") {
+                print("[DEBUG] AuthService init: Found tokens in Keychain. Attempting to set session.")
                 do {
                     // Set the session in the Supabase client using the retrieved tokens
                     try await SupabaseService.shared.client.auth.setSession(accessToken: accessToken, refreshToken: refreshToken)
-                    // After setting, Supabase client's currentUser/currentSession should be updated.
-                    // The onAuthStateChange listener will also fire.
                     self.session = SupabaseService.shared.client.auth.currentSession
                     self.user = SupabaseService.shared.client.auth.currentUser
                     if let user = self.user {
@@ -40,16 +41,16 @@ final class AuthService: ObservableObject {
                     }
                 } catch {
                     print("[ERROR] AuthService init: Failed to set session from Keychain tokens: \(error.localizedDescription). Clearing invalid tokens.")
-                    KeychainHelper.shared.delete(forKey: "supabase_access_token")
-                    KeychainHelper.shared.delete(forKey: "supabase_refresh_token")
+                    KeychainHelper.shared.delete("supabase_access_token")
+                    KeychainHelper.shared.delete("supabase_refresh_token")
                 }
-                // Proceed to setup onAuthStateChange listener AFTER keychain attempt
-                await setupAuthStateChangeListener(keychainSuccess: sessionRestoredFromKeychain)
+            } else {
+                print("[DEBUG] AuthService init: No tokens found in Keychain. Will rely on Supabase default or new login.")
             }
-        } else {
-            print("[DEBUG] AuthService init: No tokens found in Keychain. Will rely on Supabase default or new login.")
-            // If no keychain tokens, immediately setup listener which will also check Supabase default store
-            Task { await setupAuthStateChangeListener(keychainSuccess: false) }
+            // Setup listener and finalize initialization
+            await setupAuthStateChangeListener(keychainSuccess: sessionRestoredFromKeychain)
+            // self.isInitialized = true // MOVED: Do not set here anymore
+            // print("[DEBUG] AuthService init: Initialization complete. isInitialized = true.") // MOVED
         }
     }
 
@@ -72,9 +73,16 @@ final class AuthService: ObservableObject {
         // Listen for authentication state changes
         self.authSubscription = await SupabaseService.shared.client.auth.onAuthStateChange { [weak self] event, session in
             Task { @MainActor in // Ensure updates are on main actor
+                guard let self = self else { return }
                 print("[DEBUG] AuthService onAuthStateChange: Event - \(event), Session User ID - \(session?.user.id.uuidString ?? "NIL")")
-                self?.session = session
-                self?.user = session?.user
+                self.session = session
+                self.user = session?.user
+
+                if !self.hasProcessedFirstAuthChangeEvent {
+                    self.hasProcessedFirstAuthChangeEvent = true
+                    self.isInitialized = true
+                    print("[DEBUG] AuthService: First auth change event processed. isInitialized = true.")
+                }
             }
         }
     }
