@@ -64,7 +64,8 @@ final class SupabaseService {
                     .database
                     .from("quotes")
                     .select()
-                    .eq("category", value: categoryValues.first!)
+                    // Use .in filter for multiple categories
+                    .in("category", value: categoryValues)
                     .execute()
                     .value
                 completion(.success(quotes))
@@ -95,6 +96,8 @@ final class SupabaseService {
                 let quoteIDs = response.map { $0.quoteId }
                 completion(.success(quoteIDs))
             } catch {
+                // Print the full error for more detailed diagnostics
+                print("[ERROR] SupabaseService.fetchLikedQuoteIDs failed for user \(userId): \(error)")
                 completion(.failure(error))
             }
         }
