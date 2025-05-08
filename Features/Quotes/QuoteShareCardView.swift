@@ -25,26 +25,20 @@ struct QuoteShareCardView: View {
                     .font(themeManager.selectedTheme.theme.englishFont)
                     .foregroundColor(themeManager.selectedTheme.theme.englishColor)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, 24)
+                    .padding(.horizontal, 32)
+                    .fixedSize(horizontal: false, vertical: true) // Allow vertical expansion
                 Text(quote.chineseText)
                     .font(themeManager.selectedTheme.theme.chineseFont)
                     .foregroundColor(themeManager.selectedTheme.theme.chineseColor)
                     .multilineTextAlignment(.center)
+                    .padding(.horizontal, 32)
+                    .fixedSize(horizontal: false, vertical: true) // Allow vertical expansion
                 if let createdBy = quote.createdBy {
                     Text("— " + createdBy.uuidString)
                         .font(.footnote)
                         .foregroundColor(.secondary)
                         .padding(.top, 8)
-                }
-                // Category chip (single value)
-                HStack(spacing: 8) {
-                    Text(quote.category.displayName)
-                        .font(.caption)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 4)
-                        .background(Color.accentColor.opacity(0.15))
-                        .foregroundColor(.accentColor)
-                        .cornerRadius(8)
+                        .padding(.horizontal, 32)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
@@ -65,7 +59,7 @@ struct QuoteShareCardView: View {
                         }) {
                             Image(systemName: "square.and.arrow.up")
                                 .font(.system(size: 28, weight: .regular))
-                                .foregroundColor(themeManager.selectedTheme.theme.englishColor)
+                                .foregroundColor(.black)
                                 .shadow(color: AppColors.buttonShadow, radius: 8, x: 0, y: 4)
                         }
                         Button(action: {
@@ -80,13 +74,14 @@ struct QuoteShareCardView: View {
                         }) {
                             Image(systemName: (viewModel?.isLiked(quote: quote) ?? false) ? "heart.fill" : "heart")
                                 .font(.system(size: 28, weight: .regular))
-                                .foregroundColor(themeManager.selectedTheme.theme.englishColor)
+                                .foregroundColor(.black)
                                 .shadow(color: AppColors.buttonShadow, radius: 8, x: 0, y: 4)
                                 .padding(.top, 4)
                         }
                     }
                     .padding(.top, 24)
                     .padding(.bottom, 180) // Adjust as needed for your design
+                    .background(Color(red: 229/255, green: 218/255, blue: 206/255))
                 }
             }
         }
