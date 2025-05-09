@@ -43,7 +43,9 @@ struct SettingsView: View {
             .background(ThemeManager.shared.selectedTheme.theme.background.ignoresSafeArea())
             .onAppear {
                 // Sync the user profile on appear
-                userProfileViewModel.refresh(userId: userId)
+                Task {
+                    await userProfileViewModel.refresh(userId: userId)
+                }
             }
         }
     }
