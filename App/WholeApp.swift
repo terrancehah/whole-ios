@@ -15,213 +15,223 @@ struct WholeApp: App {
 
 /// RootAppView ensures an authenticated (anonymous or real) user exists before showing onboarding or main UI.
 struct RootAppView: View {
-    // Renamed to avoid confusion with previous logic during refactoring.
-    @AppStorage("didCompleteOnboarding") private var didCompleteOnboardingLocal: Bool = false
+    @AppStorage("didCompleteOnboarding") private var didCompleteOnboarding: Bool = false
     @StateObject private var favoritesViewModel = FavoritesViewModel()
     @StateObject private var userProfileViewModel = UserProfileViewModel()
     @StateObject private var quoteViewModel = QuoteViewModel()
-
-    // State variables for sheets in the main app view, remain unchanged.
+    @State private var isAuthReady: Bool = false
     @State private var showFavoritesSheet: Bool = false
     @State private var showSettingsSheet: Bool = false
     @State private var showCustomizationSheet: Bool = false
     @State private var showPaywallSheet: Bool = false
 
-    // New state enum for managing view presentation.
-    enum ViewState {
-        case loading // Initial state, waiting for auth and data.
-        case showOnboarding // Show onboarding flow.
-        case showApp // Show main application UI.
-    }
-    // Current view state, defaults to loading.
-    @State private var currentViewState: ViewState = .loading
-
     var body: some View {
-        // Switch based on the current view state.
-        switch currentViewState {
-        case .loading:
-            // Show a progress view while loading initial data.
-            SwiftUI.ProgressView("Preparing your experience...")
-        case .showOnboarding:
-            // Show the onboarding view.
-            OnboardingView(viewModel: OnboardingViewModel(onCompletion: {
-                // This closure is called when OnboardingViewModel signals completion.
-                // A user should now exist (either new or logged in).
-                Task {
-                    print("[DEBUG] RootAppView: Onboarding completed via OnboardingViewModel. Re-evaluating view to show.")
-                    // Set the local flag indicating onboarding was attempted/completed.
-                    self.didCompleteOnboardingLocal = true 
-                    // Re-run the determination logic to transition to the main app or handle errors.
-                    await self.determineViewToShow()
-                }
-            }))
-        case .showApp:
-            // Main application UI, previously inside 'if didCompleteOnboarding' block.
-            ZStack {
-                Color(hex: "#ffeedf").ignoresSafeArea() // Main background color.
+        Group {
+            if isAuthReady {
+                if didCompleteOnboarding {
+                    ZStack {
+                        // Set main background to #ffeedf as per frontend guidelines
+                        Color(hex: "#ffeedf").ignoresSafeArea()
 
-                QuoteListView(
-                    viewModel: quoteViewModel,
-                    userProfile: userProfileViewModel
-                )
-
-                let now = Date()
-                let isPremiumUser: Bool = {
-                    let status = userProfileViewModel.user.subscriptionStatus
-                    if status == "free" {
-                        if let trialEnd = userProfileViewModel.user.trialEndDate {
-                            return trialEnd > now
-                        }
-                        return false
-                    }
-                    return true
-                }()
-
-                // Unified Bottom Bar - structure remains the same.
-                HStack(alignment: .center, spacing: 0) {
-                    if !isPremiumUser {
-                        CustomButton(
-                            label: "",
-                            systemImage: "star.fill",
-                            action: { showPaywallSheet = true },
-                            color: ThemeManager.shared.selectedTheme.theme.cardBackground
+                        // Main quote carousel fills the space
+                        QuoteListView(
+                            viewModel: quoteViewModel,
+                            userProfile: userProfileViewModel
                         )
-                        .frame(width: 48, height: 48)
-                        .cornerRadius(16)
-                        .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
-                        .foregroundColor(.black)
-                    } else {
-                        Spacer().frame(width: 48)
+
+                        // Overlay all four action buttons in corners
+                        // Top right: Settings
+                        VStack {
+                            HStack {
+                                Spacer()
+                                // Add shadow to settings button for consistent design
+                                CustomButton(
+                                    label: "",
+                                    systemImage: "gearshape",
+                                    action: { showSettingsSheet = true },
+                                    color: ThemeManager.shared.selectedTheme.theme.cardBackground
+                                )
+                                .frame(width: 48, height: 48)
+                                .cornerRadius(16)
+                                .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
+                            }
+                            Spacer()
+                        }
+                        .padding(.top, 32)
+                        .padding(.trailing, 22)
+                        // Top left: Paywall/Subscription (if not premium)
+                        VStack {
+                            HStack {
+                                let now = Date()
+                                let isPremiumUser: Bool = {
+                                    let status = userProfileViewModel.user.subscriptionStatus
+                                    if status == "free" {
+                                        if let trialEnd = userProfileViewModel.user.trialEndDate {
+                                            return trialEnd > now
+                                        }
+                                        return false
+                                    }
+                                    return true
+                                }()
+                                if !isPremiumUser {
+                                    // Add shadow to paywall button for consistent design
+                                    CustomButton(
+                                        label: "",
+                                        systemImage: "star.fill",
+                                        action: { showPaywallSheet = true },
+                                        color: ThemeManager.shared.selectedTheme.theme.cardBackground
+                                    )
+                                    .frame(width: 48, height: 48)
+                                    .cornerRadius(16)
+                                    .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
+                                }
+                                Spacer()
+                            }
+                            Spacer()
+                        }
+                        .padding(.top, 32)
+                        .padding(.leading, 22)
+                        // Bottom right: Customization
+                        VStack {
+                            Spacer()
+                            HStack {
+                                Spacer()
+                                // Add shadow to customization button for consistent design
+                                CustomButton(
+                                    label: "",
+                                    systemImage: "paintbrush",
+                                    action: { showCustomizationSheet = true },
+                                    color: ThemeManager.shared.selectedTheme.theme.cardBackground
+                                )
+                                .frame(width: 48, height: 48)
+                                .cornerRadius(16)
+                                .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
+                            }
+                        }
+                        .padding(.bottom, 32)
+                        .padding(.trailing, 22)
+                        // Bottom left: Favorites
+                        VStack {
+                            Spacer()
+                            HStack {
+                                // Add shadow to favorites button for consistent design
+                                CustomButton(
+                                    label: "",
+                                    systemImage: "heart.fill",
+                                    action: {
+                                        favoritesViewModel.userId = userProfileViewModel.user.id
+                                        favoritesViewModel.fetchLikedQuotes()
+                                        showFavoritesSheet = true
+                                    },
+                                    color: ThemeManager.shared.selectedTheme.theme.cardBackground
+                                )
+                                .frame(width: 48, height: 48)
+                                .cornerRadius(16)
+                                .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
+                                Spacer()
+                            }
+                        }
+                        .padding(.bottom, 32)
+                        .padding(.leading, 22)
                     }
-                    Spacer()
-                    CustomButton(
-                        label: "",
-                        systemImage: "gearshape",
-                        action: { showSettingsSheet = true },
-                        color: ThemeManager.shared.selectedTheme.theme.cardBackground
-                    )
-                    .frame(width: 48, height: 48)
-                    .cornerRadius(16)
-                    .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
-                    .foregroundColor(.black)
-                    Spacer()
-                    CustomButton(
-                        label: "",
-                        systemImage: "heart",
-                        action: { showFavoritesSheet = true },
-                        color: ThemeManager.shared.selectedTheme.theme.cardBackground
-                    )
-                    .frame(width: 48, height: 48)
-                    .cornerRadius(16)
-                    .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
-                    .foregroundColor(.black)
-                    Spacer()
-                    CustomButton(
-                        label: "",
-                        systemImage: "wand.and.stars",
-                        action: { showCustomizationSheet = true },
-                        color: ThemeManager.shared.selectedTheme.theme.cardBackground
-                    )
-                    .frame(width: 48, height: 48)
-                    .cornerRadius(16)
-                    .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
-                    .foregroundColor(.black)
+                    // All sheets for modal views
+                    .sheet(isPresented: $showFavoritesSheet) {
+                        FavoritesView(viewModel: favoritesViewModel)
+                    }
+                    .sheet(isPresented: $showSettingsSheet) {
+                        SettingsView(userId: userProfileViewModel.user.id)
+                    }
+                    .sheet(isPresented: $showCustomizationSheet) {
+                        CustomizationView(userProfile: userProfileViewModel)
+                    }
+                    .sheet(isPresented: $showPaywallSheet) {
+                        PaywallView(viewModel: PaywallViewModel())
+                    }
+                } else {
+                    // Show onboarding if not complete
+                    OnboardingView(viewModel: OnboardingViewModel(onCompletion: {
+                        didCompleteOnboarding = true
+                    }))
                 }
-                .padding(.horizontal, 22)
-                .padding(.vertical, 12)
-                .background(AppColors.background) // Use AppColors.background for tab consistency
-                .cornerRadius(24)
-                .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: -5)
-                .padding(.bottom, SafeAreaInsetsKey.defaultValue.bottom == 0 ? 12 : 0)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            } else {
+                ProgressView("Preparing app...")
             }
-            // Sheet presentations remain the same.
-            .sheet(isPresented: $showFavoritesSheet) {
-                FavoritesView(viewModel: favoritesViewModel)
+        }
+        .onChange(of: isAuthReady) { ready in
+            if ready {
+                print("[DEBUG] RootAppView: isAuthReady is true. Syncing UserProfileViewModel with AuthService.")
+                userProfileViewModel.syncWithAuthServiceUser() // Sync first
+
+                // After sync, UserProfileViewModel.user.id should reflect the authenticated user (if any)
+                let currentUserId = userProfileViewModel.user.id
+
+                if let authUser = AuthService.shared.user {
+                    // Ensure the synced user ID matches the actual auth user ID before fetching.
+                    // This handles the case where sync might reset to a sample user if authUser was nil.
+                    if currentUserId == authUser.id {
+                        print("[DEBUG] RootAppView: Fetching profile and preferences for synced user ID: \(authUser.id)")
+                        userProfileViewModel.fetchUserProfile(userId: authUser.id)
+                        userProfileViewModel.fetchUserPreferences(userId: authUser.id)
+                    } else {
+                        // This case implies syncWithAuthServiceUser reset to a sample user because authUser became nil
+                        // between the .task block and this .onChange, or some other inconsistency.
+                        print("[WARNING] RootAppView: Post-sync UserProfileViewModel ID \(currentUserId) does not match AuthService user ID \(authUser.id). This may occur if auth state changed rapidly. Not fetching.")
+                    }
+                    quoteViewModel.user = userProfileViewModel.user // Keep QuoteViewModel's user in sync
+                } else if didCompleteOnboarding {
+                    // This means isAuthReady is true, didCompleteOnboarding is true, but no AuthService.shared.user.
+                    // This is an inconsistent state post-onboarding, as onboarding should ensure a user exists.
+                    print("[ERROR] RootAppView: isAuthReady is true, didCompleteOnboarding is true, but no AuthService.shared.user found. This is an inconsistent state. Forcing re-onboarding.")
+                    didCompleteOnboarding = false // Reset to force re-onboarding
+                } else {
+                    // isAuthReady is true, no auth user, and onboarding not yet completed.
+                    // This is the expected state for a fresh app launch leading to onboarding.
+                    // OnboardingView will handle user creation via OnboardingViewModel.
+                    print("[DEBUG] RootAppView: isAuthReady is true, no auth user yet. Onboarding will proceed.")
+                }
+            } else {
+                print("[DEBUG] RootAppView: isAuthReady is false. Resetting UserProfileViewModel and not fetching preferences.")
+                userProfileViewModel.syncWithAuthServiceUser() // Ensure VM is reset if auth becomes not ready
             }
-            .sheet(isPresented: $showSettingsSheet) {
-                SettingsView(userId: userProfileViewModel.user.id)
-                    .environmentObject(userProfileViewModel)
-            }
-            .sheet(isPresented: $showCustomizationSheet) {
-                CustomizationView(userProfile: userProfileViewModel)
-            }
-            .sheet(isPresented: $showPaywallSheet) {
-                PaywallView(viewModel: PaywallViewModel())
+        }
+        .onChange(of: didCompleteOnboarding) { completed in
+            // This ensures that after onboarding, if auth is ready, we fetch the fresh user data.
+            if completed && isAuthReady {
+                print("[DEBUG] RootAppView: didCompleteOnboarding is true. Re-syncing UserProfileViewModel and fetching data.")
+                // Essentially re-run the core logic from .onChange(of: isAuthReady)
+                userProfileViewModel.syncWithAuthServiceUser()
+                if let authUser = AuthService.shared.user {
+                    if userProfileViewModel.user.id == authUser.id { // Check if sync was successful
+                        print("[DEBUG] RootAppView (post-onboarding): Fetching profile and preferences for user ID: \(authUser.id)")
+                        userProfileViewModel.fetchUserProfile(userId: authUser.id)
+                        userProfileViewModel.fetchUserPreferences(userId: authUser.id)
+                    } else {
+                        print("[WARNING] RootAppView (post-onboarding): UserProfileViewModel ID \(userProfileViewModel.user.id) mismatch with AuthService ID \(authUser.id) after sync.")
+                    }
+                    quoteViewModel.user = userProfileViewModel.user
+                } else {
+                    // This should ideally not happen if onboarding just completed successfully, as it creates a user.
+                    print("[ERROR] RootAppView (post-onboarding): didCompleteOnboarding is true, but no AuthService.shared.user found. This is highly inconsistent.")
+                }
             }
         }
         .task {
-            await determineViewToShow()
-        }
-    }
-
-    // This function orchestrates the decision of which view to show.
-    @MainActor
-    private func determineViewToShow() async {
-        print("[DEBUG] RootAppView determineViewToShow: Starting decision process. Current state: \(currentViewState)")
-
-        // Step 1: Wait for AuthService to initialize.
-        // This loop ensures we don't proceed until AuthService has established an auth state.
-        for await initialized in AuthService.shared.$isInitialized.values {
-            if initialized {
-                print("[DEBUG] RootAppView determineViewToShow: AuthService is initialized.")
-                break // Exit the loop once AuthService is ready.
+            print("[DEBUG] RootAppView .task: Entered. Waiting for AuthService to initialize.")
+            // Wait for AuthService to complete its initialization
+            for await initialized in AuthService.shared.$isInitialized.values {
+                if initialized {
+                    print("[DEBUG] RootAppView .task: AuthService is initialized.")
+                    // Now check the user state from AuthService
+                    if AuthService.shared.user != nil {
+                        print("[DEBUG] RootAppView .task: User session found in AuthService. User ID: \(AuthService.shared.user!.id.uuidString)")
+                    } else {
+                        print("[DEBUG] RootAppView .task: No user session found in AuthService after initialization.")
+                        // If no user, onboarding will handle creation. No need to create one here.
+                    }
+                    isAuthReady = true // Signal that RootAppView can proceed to check didCompleteOnboarding
+                    break // Exit the loop once isInitialized is true
+                }
             }
         }
-
-        // Step 2: Sync UserProfileViewModel with the current auth state from AuthService.
-        // This ensures our local user profile view model accurately reflects the authenticated user (if any).
-        userProfileViewModel.syncWithAuthServiceUser()
-        print("[DEBUG] RootAppView determineViewToShow: UserProfileViewModel synced. VM User ID: \(userProfileViewModel.user.id), Auth User: \(AuthService.shared.user?.id.uuidString ?? "nil")).")
-
-        // Step 3: Check if there's an authenticated user.
-        if let authUser = AuthService.shared.user {
-            print("[DEBUG] RootAppView determineViewToShow: Authenticated user found (ID: \(authUser.id)). Fetching profile and preferences.")
-            // An authenticated user exists. This could be a returning user or one just created/logged in via onboarding.
-            
-            // Fetch the user's profile and preferences from the backend.
-            // These calls are now asynchronous and awaitable.
-            await userProfileViewModel.fetchUserProfile(userId: authUser.id)
-            await userProfileViewModel.fetchUserPreferences(userId: authUser.id)
-
-            // Step 4: Decide based on fetched preferences.
-            // Check if preferences are loaded and if essential setup (like selecting categories) is done.
-            if userProfileViewModel.isPreferencesLoaded && !userProfileViewModel.userPreferences.selectedCategories.isEmpty {
-                print("[DEBUG] RootAppView determineViewToShow: User preferences loaded AND categories selected. Transitioning to .showApp.")
-                // User has completed essential setup. Show the main application.
-                self.quoteViewModel.user = self.userProfileViewModel.user // Ensure QuoteViewModel has the latest user data.
-                self.currentViewState = .showApp
-                self.didCompleteOnboardingLocal = true // Also update the local flag as a confirmation.
-            } else {
-                print("[DEBUG] RootAppView determineViewToShow: User preferences not fully loaded or categories not selected (isPreferencesLoaded: \(userProfileViewModel.isPreferencesLoaded), categoriesEmpty: \(userProfileViewModel.userPreferences.selectedCategories.isEmpty)). Transitioning to .showOnboarding.")
-                // Preferences are not loaded, or essential setup (like category selection) is incomplete.
-                // This user needs to go through onboarding (or a part of it) to complete setup.
-                self.currentViewState = .showOnboarding
-            }
-        } else {
-            // Step 5: No authenticated user.
-            print("[DEBUG] RootAppView determineViewToShow: No authenticated user found. Transitioning to .showOnboarding.")
-            // This typically occurs on a fresh app install before any sign-in or anonymous user creation.
-            // Direct to onboarding to create/log in the user.
-            self.currentViewState = .showOnboarding
-        }
-        print("[DEBUG] RootAppView determineViewToShow: Decision process complete. Final view state: \(currentViewState).")
-    }
-}
-
-// Helper for SafeAreaInsets - structure remains the same.
-struct SafeAreaInsetsKey: EnvironmentKey {
-    static var defaultValue: EdgeInsets {
-        (UIApplication.shared.connectedScenes
-            .filter { $0.activationState == .foregroundActive }
-            .first(where: { $0 is UIWindowScene })
-            .flatMap({ $0 as? UIWindowScene })?.windows
-            .first(where: { $0.isKeyWindow })?.safeAreaInsets ?? .zero).insets
-    }
-}
-
-extension UIEdgeInsets {
-    var insets: EdgeInsets {
-        EdgeInsets(top: top, leading: left, bottom: bottom, trailing: right)
     }
 }

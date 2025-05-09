@@ -196,30 +196,6 @@ final class SupabaseService {
         }
     }
     
-    /// Fetches the current user's profile from the 'users' table using async/await.
-    /// - Parameter userId: The ID of the user.
-    /// - Returns: The user's profile.
-    /// - Throws: An error if fetching fails or the profile is not found.
-    func fetchUserProfile(userId: UUID) async throws -> UserProfile {
-        // Asynchronously fetch user profiles from the database
-        let profiles: [UserProfile] = try await client
-            .database
-            .from("users") // Table name for user profiles
-            .select() // Select all columns
-            .eq("id", value: userId.uuidString) // Filter by user ID
-            .limit(1) // Expect at most one profile
-            .execute()
-            .value // Decode the response into [UserProfile]
-        
-        // Check if a profile was found
-        if let profile = profiles.first {
-            return profile // Return the found profile
-        } else {
-            // Throw an error if no profile is found
-            throw NSError(domain: "SupabaseServiceError", code: 404, userInfo: [NSLocalizedDescriptionKey: "User profile not found for ID: \(userId.uuidString)"])
-        }
-    }
-    
     /// Inserts a new user profile into the 'users' table in Supabase.
     /// - Parameters:
     ///   - profile: The UserProfile object to insert.
@@ -286,30 +262,6 @@ final class SupabaseService {
             } catch {
                 completion(.failure(error))
             }
-        }
-    }
-    
-    /// Fetches user preferences for a given userId from Supabase using async/await.
-    /// - Parameter userId: The UUID of the user.
-    /// - Returns: The user's preferences.
-    /// - Throws: An error if fetching fails or preferences are not found.
-    func fetchUserPreferences(userId: UUID) async throws -> UserPreferences {
-        // Asynchronously fetch user preferences from the database
-        let response: [UserPreferences] = try await client
-            .database
-            .from("userpreferences") // Table name for user preferences
-            .select() // Select all columns
-            .eq("user_id", value: userId.uuidString) // Filter by user ID
-            .limit(1) // Expect at most one preference set
-            .execute()
-            .value // Decode the response into [UserPreferences]
-        
-        // Check if preferences were found
-        if let prefs = response.first {
-            return prefs // Return the found preferences
-        } else {
-            // Throw an error if no preferences are found
-            throw NSError(domain: "SupabaseServiceError", code: 404, userInfo: [NSLocalizedDescriptionKey: "User preferences not found for user ID: \(userId.uuidString)"])
         }
     }
 

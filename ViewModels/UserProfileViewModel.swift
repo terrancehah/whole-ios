@@ -67,66 +67,42 @@ final class UserProfileViewModel: ObservableObject {
     }
 
     /// Fetch the current user's profile from Supabase using SupabaseService.
-    @MainActor
-    func fetchUserProfile(userId: UUID) async {
-        // Set loading state to true before starting the fetch operation
+    func fetchUserProfile(userId: UUID) {
         isLoading = true
-        // Clear any previous error messages
         errorMessage = nil
-
-        do {
-            // Asynchronously fetch the user profile using the async version from SupabaseService
-            let fetchedProfile = try await SupabaseService.shared.fetchUserProfile(userId: userId)
-            // Update the user property on the main thread
-            self.user = fetchedProfile
-            // Print a debug message indicating successful fetch and update
-            print("[DEBUG] UserProfileViewModel fetchUserProfile: Successfully fetched and updated user profile for ID \(userId).")
-        } catch {
-            // If an error occurs, capture the error message
-            // Update the errorMessage property on the main thread
-            self.errorMessage = error.localizedDescription
-            // Print an error message to the console for debugging
-            print("[ERROR] UserProfileViewModel fetchUserProfile: Failed to fetch user profile for ID \(userId). Error: \(error.localizedDescription)")
+        SupabaseService.shared.fetchUserProfile(userId: userId) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoading = false
+                switch result {
+                case .success(let profile):
+                    self?.user = profile
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
         }
-        // Set loading state to false after the fetch operation completes (either success or failure)
-        isLoading = false
     }
 
-    /// Refreshes both user profile and preferences.
-    @MainActor
-    func refresh(userId: UUID) async {
-        // Asynchronously fetch user profile
-        await fetchUserProfile(userId: userId)
-        // Asynchronously fetch user preferences
-        await fetchUserPreferences(userId: userId)
+    /// Refresh the user profile (call after purchase/restore or on app launch).
+    func refresh(userId: UUID) {
+        fetchUserProfile(userId: userId)
+        fetchUserPreferences(userId: userId)
     }
 
     /// Fetch the user's preferences from Supabase and update the local model
-    @MainActor
-    func fetchUserPreferences(userId: UUID) async {
-        // Clear any previous error messages
-        errorMessage = nil
-        // Set loading state to true; though typically preferences load quickly, it's good practice if it were a longer task
-        // self.isLoading = true // Optional: only set if this operation is also considered a loading state indicator
-
-        do {
-            // Asynchronously fetch user preferences using the async version from SupabaseService
-            let fetchedPreferences = try await SupabaseService.shared.fetchUserPreferences(userId: userId)
-            // Update userPreferences and isPreferencesLoaded on the main thread
-            self.userPreferences = fetchedPreferences
-            self.isPreferencesLoaded = true
-            // Print a debug message indicating successful fetch and update
-            print("[DEBUG] UserProfileViewModel fetchUserPreferences: Successfully fetched and updated user preferences for ID \(userId).")
-        } catch {
-            // If an error occurs, capture the error message
-            // Update the errorMessage property on the main thread
-            self.errorMessage = error.localizedDescription
-            // Mark preferences as not loaded in case of failure, or handle as appropriate for your app's logic
-            self.isPreferencesLoaded = false
-            // Print an error message to the console for debugging
-            print("[ERROR] UserProfileViewModel fetchUserPreferences: Failed to fetch user preferences for ID \(userId). Error: \(error.localizedDescription)")
+    func fetchUserPreferences(userId: UUID) {
+        SupabaseService.shared.fetchUserPreferences(userId: userId) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let preferences):
+                    self?.userPreferences = preferences
+                    self?.isPreferencesLoaded = true // Mark preferences as loaded
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                    self?.isPreferencesLoaded = true // Still mark as loaded to avoid indefinite loading
+                }
+            }
         }
-        // self.isLoading = false // Optional: match the isLoading state management if used
     }
 
     // MARK: - Category Preferences
