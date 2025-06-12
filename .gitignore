@@ -1,3 +1,8 @@
 # Ignore sensitive config files
 Utilities/Config.swift
+
+# macOS generated files
 .DS_Store
+._*
+.Spotlight-V100
+.Trashes

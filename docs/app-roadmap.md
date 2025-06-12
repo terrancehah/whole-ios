@@ -126,6 +126,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 - User profile and preferences are now saved using dedicated insert methods (`insertUserProfile`, `insertUserPreferences`) for new users.
 - Robust error handling ensures onboarding only completes if both inserts succeed.
 - All onboarding data is stored in the `users` and `userpreferences` tables, following the backend schema.
+
 **Outcome:** Onboarding is robust, modular, and seamlessly syncs new user data to Supabase.
 
 ---
@@ -137,9 +138,11 @@ This document provides a step-by-step guide for developing the Whole app, from b
 - Premium gating for all features (unlimited swipes, theme/font customization, watermark-free images) is enforced using `UserProfile.subscriptionStatus` and `trialEndDate`.
 - Paywall modal is triggered for free users at the swipe limit or when accessing premium features.
 - All logic is model-driven, robust against backend changes, and clearly documented in the codebase.
+
 - [x] StoreKit 2 integration for subscriptions and paywall logic (2025-04-24)
 - [x] Apple-native restore logic and error handling (2025-04-24)
-**Outcome:** Users can subscribe for unlimited/premium features. Premium gating and paywall logic are fully implemented and commented for maintainability.
+
+**Outcome:** Functional paywall using StoreKit 2 (StoreKitManager functionality integrated into `PaywallViewModel.swift`), users can subscribe and restore purchases. Subscription status sync with backend is a TODO in `PaywallViewModel.swift`.
 
 ---
 
@@ -149,7 +152,8 @@ This document provides a step-by-step guide for developing the Whole app, from b
 - Created `FavoritesViewModel.swift` for managing favorites (persisted via Supabase `LikedQuotes` table).
 - Integrated Favorites as a dedicated tab in the main TabView navigation.
 - All logic is robust, model-driven, and clearly commented.
-**Outcome:** Users can save and revisit liked quotes. Favorites are synced in real time and easy to maintain.
+
+**Outcome:** Users can favorite/unfavorite quotes and view them in `FavoritesView.swift` (managed by `FavoritesViewModel.swift`). Changes are synced via `SupabaseService`. Real-time sync capability depends on `SupabaseService`'s implementation of real-time listeners.
 
 ---
 
