@@ -184,7 +184,7 @@ This document provides a step-by-step guide for developing the Whole app, from b
 **Objective:** Ensure a cohesive, attractive design.
 - Used `Theme.swift` and `ThemeManager.swift` for all colors, fonts, and appearance.
 - Applied the new warm "leah valencia" palette as default, and ensured all screens/components use semantic theme colors and fonts.
-**Outcome:** The app has a consistent, appealing look that matches the latest design direction.
+**Outcome:** Centralized theming is implemented via `Features/Settings/ThemeManager.swift` (managing `AppTheme` selection and theme structures) and `Utilities/Theme.swift` (defining `AppColors` as the color palette). Fonts are defined per theme in `ThemeManager.swift`. Color definitions in `AppColors` have been updated to better align with `frontend-guidelines.md`. UI polish items detailed in `frontend-guidelines.md` appear to be addressed. **Action Required by User:** Custom font files (e.g., "Lora", "Source Han Sans", and potentially others if "Helvetica Neue Bold" / "Noto Sans SC" are custom) need to be added to the project and configured to ensure themes render as designed.
 
 ---
 

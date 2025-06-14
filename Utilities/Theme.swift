@@ -6,21 +6,21 @@ import SwiftUI
 /// Centralized semantic color definitions for the Whole app.
 struct AppColors {
     // MARK: - Core Backgrounds
-    static let background = Color(hex: "#ffeedf") // Main background (Serene Minimalism)
-    static let card = Color(hex: "#ffd1a4")       // Card background
+    static let background = Color(hex: "#F8F9FA") // Main background (Serene Minimalism)
+    static let card = Color(hex: "#FFFFFF")       // Card background
     static let groupedBackground = Color(.systemGroupedBackground) // For grouped forms
     
     // MARK: - Text
-    static let primaryText = Color(hex: "#b65f3b")
+    static let primaryText = Color(hex: "#2D3748")
     static let secondaryText = Color.secondary // Use SwiftUI's semantic color
     static let monochromeText = Color.black
     static let pastelPrimaryText = Color(hex: "#2D3748")
-    static let pastelSecondaryText = Color(hex: "#4A5568")
+    static let pastelSecondaryText = Color(hex: "#C9D1D9")
     
     // MARK: - Accents & UI
     static let accent = Color(hex: "#ff9f68")
     static let accentSecondary = Color(hex: "#ff784f")
-    static let pastelAccent = Color(hex: "#E2E8F0")
+    static let pastelAccent = Color(hex: "#F7FAFC")
     static let error = Color.red
     static let purpleHighlight = Color.purple.opacity(0.08)
     static let systemGray5 = Color(.systemGray5)
