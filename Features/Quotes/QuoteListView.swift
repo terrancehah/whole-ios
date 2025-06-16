@@ -106,6 +106,9 @@ struct QuoteListView: View {
 
         NavigationView {
             ZStack(alignment: .bottom) {
+                // Use the theme's background color, ignoring safe areas to fill the screen
+                ThemeManager.shared.selectedTheme.theme.background
+                    .ignoresSafeArea()
                 if let errorMessage = viewModel.errorMessage {
                     Text(errorMessage)
                         .foregroundColor(.red)
@@ -155,8 +158,7 @@ struct QuoteListView: View {
             .sheet(isPresented: $showPaywall) {
                 PaywallView(viewModel: PaywallViewModel())
             }
-            // Use centralized theme background color
-            .background(ThemeManager.shared.selectedTheme.theme.background)
+
             .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(StackNavigationViewStyle())

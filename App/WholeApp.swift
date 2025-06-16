@@ -9,6 +9,7 @@ struct WholeApp: App {
     var body: some Scene {
         WindowGroup {
             RootAppView()
+                .preferredColorScheme(.light)
         }
     }
 }
@@ -49,7 +50,8 @@ struct RootAppView: View {
                                     label: "",
                                     systemImage: "gearshape",
                                     action: { showSettingsSheet = true },
-                                    color: ThemeManager.shared.selectedTheme.theme.cardBackground
+                                    color: ThemeManager.shared.selectedTheme.theme.cardBackground,
+                                    foregroundColor: ThemeManager.shared.selectedTheme.theme.accentColor
                                 )
                                 .frame(width: 48, height: 48)
                                 .cornerRadius(16)
@@ -79,7 +81,8 @@ struct RootAppView: View {
                                         label: "",
                                         systemImage: "star.fill",
                                         action: { showPaywallSheet = true },
-                                        color: ThemeManager.shared.selectedTheme.theme.cardBackground
+                                        color: ThemeManager.shared.selectedTheme.theme.cardBackground,
+                                        foregroundColor: ThemeManager.shared.selectedTheme.theme.accentColor
                                     )
                                     .frame(width: 48, height: 48)
                                     .cornerRadius(16)
@@ -101,7 +104,8 @@ struct RootAppView: View {
                                     label: "",
                                     systemImage: "paintbrush",
                                     action: { showCustomizationSheet = true },
-                                    color: ThemeManager.shared.selectedTheme.theme.cardBackground
+                                    color: ThemeManager.shared.selectedTheme.theme.cardBackground,
+                                    foregroundColor: ThemeManager.shared.selectedTheme.theme.accentColor
                                 )
                                 .frame(width: 48, height: 48)
                                 .cornerRadius(16)

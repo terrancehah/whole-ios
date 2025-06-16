@@ -6,7 +6,7 @@ import SwiftUI
 /// Centralized semantic color definitions for the Whole app.
 struct AppColors {
     // MARK: - Core Backgrounds
-    static let background = Color(hex: "#F8F9FA") // Main background (Serene Minimalism)
+    static let background = Color(hex: "#ffeedf") // Main background (Serene Minimalism)
     static let card = Color(hex: "#FFFFFF")       // Card background
     static let groupedBackground = Color(.systemGroupedBackground) // For grouped forms
     
@@ -35,6 +35,7 @@ struct AppColors {
 
 // MARK: - Color Helper for UIKit Interop
 extension Color {
+
     /// Convert SwiftUI Color to UIColor for UIKit usage
     func toUIColor() -> UIColor {
         let scanner = Scanner(string: self.description.trimmingCharacters(in: CharacterSet.alphanumerics.inverted))

@@ -13,6 +13,8 @@ struct CustomButton: View {
     let action: () -> Void
     /// Optional: Custom color for the button.
     var color: Color = Color(hex: "#ff9f68")
+    /// Optional: Custom color for the button's foreground content (icon/text).
+    var foregroundColor: Color = .white
     /// Optional: Whether the button is disabled.
     var isDisabled: Bool = false
 
@@ -36,7 +38,7 @@ struct CustomButton: View {
                             .fontWeight(.medium)
                     }
                 }
-                .foregroundColor(.white)
+                .foregroundColor(foregroundColor)
                 .opacity(isDisabled ? 0.6 : 1.0)
             }
         }

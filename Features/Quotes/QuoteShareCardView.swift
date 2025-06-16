@@ -56,7 +56,7 @@ struct QuoteShareCardView: View {
                         }) {
                             Image(systemName: "square.and.arrow.up")
                                 .font(.system(size: 28, weight: .regular))
-                                .foregroundColor(themeManager.selectedTheme.theme.englishColor)
+                                .foregroundColor(themeManager.selectedTheme.theme.accentColor)
                                 .shadow(color: AppColors.buttonShadow, radius: 8, x: 0, y: 4)
                         }
                         Button(action: {
@@ -71,7 +71,7 @@ struct QuoteShareCardView: View {
                         }) {
                             Image(systemName: (viewModel?.isLiked(quote: quote) ?? false) ? "heart.fill" : "heart")
                                 .font(.system(size: 28, weight: .regular))
-                                .foregroundColor(themeManager.selectedTheme.theme.englishColor)
+                                .foregroundColor(themeManager.selectedTheme.theme.accentColor)
                                 .shadow(color: AppColors.buttonShadow, radius: 8, x: 0, y: 4)
                                 .padding(.top, 4)
                         }
