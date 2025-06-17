@@ -41,26 +41,6 @@ struct RootAppView: View {
                         )
 
                         // Overlay all four action buttons in corners
-                        // Top right: Settings
-                        VStack {
-                            HStack {
-                                Spacer()
-                                // Add shadow to settings button for consistent design
-                                CustomButton(
-                                    label: "",
-                                    systemImage: "gearshape",
-                                    action: { showSettingsSheet = true },
-                                    color: ThemeManager.shared.selectedTheme.theme.cardBackground,
-                                    foregroundColor: ThemeManager.shared.selectedTheme.theme.accentColor
-                                )
-                                .frame(width: 48, height: 48)
-                                .cornerRadius(16)
-                                .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
-                            }
-                            Spacer()
-                        }
-                        .padding(.top, 32)
-                        .padding(.trailing, 22)
                         // Top left: Paywall/Subscription (if not premium)
                         VStack {
                             HStack {
@@ -76,12 +56,11 @@ struct RootAppView: View {
                                     return true
                                 }()
                                 if !isPremiumUser {
-                                    // Add shadow to paywall button for consistent design
                                     CustomButton(
                                         label: "",
                                         systemImage: "star.fill",
                                         action: { showPaywallSheet = true },
-                                        color: ThemeManager.shared.selectedTheme.theme.cardBackground,
+                                        color: ThemeManager.shared.selectedTheme.theme.floatingButtonBackground,
                                         foregroundColor: ThemeManager.shared.selectedTheme.theme.accentColor
                                     )
                                     .frame(width: 48, height: 48)
@@ -94,17 +73,30 @@ struct RootAppView: View {
                         }
                         .padding(.top, 32)
                         .padding(.leading, 22)
-                        // Bottom right: Customization
+
+                        // Bottom right: Settings and Customization
                         VStack {
                             Spacer()
-                            HStack {
+                            HStack(spacing: 16) {
                                 Spacer()
-                                // Add shadow to customization button for consistent design
+                                // Settings Button (Inner)
+                                CustomButton(
+                                    label: "",
+                                    systemImage: "gearshape",
+                                    action: { showSettingsSheet = true },
+                                    color: ThemeManager.shared.selectedTheme.theme.floatingButtonBackground,
+                                    foregroundColor: ThemeManager.shared.selectedTheme.theme.accentColor
+                                )
+                                .frame(width: 48, height: 48)
+                                .cornerRadius(16)
+                                .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
+
+                                // Customization Button (Outer)
                                 CustomButton(
                                     label: "",
                                     systemImage: "paintbrush",
                                     action: { showCustomizationSheet = true },
-                                    color: ThemeManager.shared.selectedTheme.theme.cardBackground,
+                                    color: ThemeManager.shared.selectedTheme.theme.floatingButtonBackground,
                                     foregroundColor: ThemeManager.shared.selectedTheme.theme.accentColor
                                 )
                                 .frame(width: 48, height: 48)
@@ -114,20 +106,21 @@ struct RootAppView: View {
                         }
                         .padding(.bottom, 32)
                         .padding(.trailing, 22)
+
                         // Bottom left: Favorites
                         VStack {
                             Spacer()
                             HStack {
-                                // Add shadow to favorites button for consistent design
                                 CustomButton(
                                     label: "",
-                                    systemImage: "heart.fill",
-                                    action: {
+                                    systemImage: "heart",
+                                    action: { 
                                         favoritesViewModel.userId = userProfileViewModel.user.id
                                         favoritesViewModel.fetchLikedQuotes()
                                         showFavoritesSheet = true
                                     },
-                                    color: ThemeManager.shared.selectedTheme.theme.cardBackground
+                                    color: ThemeManager.shared.selectedTheme.theme.floatingButtonBackground,
+                                    foregroundColor: ThemeManager.shared.selectedTheme.theme.accentColor
                                 )
                                 .frame(width: 48, height: 48)
                                 .cornerRadius(16)

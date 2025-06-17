@@ -38,6 +38,7 @@ struct Theme {
     let chineseColor: Color
     let shadow: Color
     let accentColor: Color
+    let floatingButtonBackground: Color
 }
 
 /// Returns the Theme for the given AppTheme.
@@ -54,7 +55,8 @@ extension AppTheme {
                 chineseFont: .system(size: 18, weight: .regular, design: .default),
                 chineseColor: AppColors.primaryText,
                 shadow: AppColors.cardShadow,
-                accentColor: AppColors.accent
+                accentColor: AppColors.accent,
+                floatingButtonBackground: AppColors.floatingButtonBackground
             )
         case .elegantMonochrome:
             return Theme(
@@ -65,7 +67,8 @@ extension AppTheme {
                 chineseFont: .system(size: 18, weight: .regular, design: .default),
                 chineseColor: AppColors.monochromeText,
                 shadow: AppColors.monoShadow,
-                accentColor: AppColors.accent
+                accentColor: AppColors.accent,
+                floatingButtonBackground: AppColors.systemGray5
             )
         case .softPastelElegance:
             return Theme(
@@ -76,7 +79,8 @@ extension AppTheme {
                 chineseFont: .custom("Source Han Sans", size: 18),
                 chineseColor: AppColors.pastelSecondaryText,
                 shadow: AppColors.pastelShadow,
-                accentColor: AppColors.accent
+                accentColor: AppColors.accent,
+                floatingButtonBackground: AppColors.floatingButtonBackground
             )
         }
     }

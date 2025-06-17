@@ -20,6 +20,7 @@ struct AppColors {
     // MARK: - Accents & UI
     static let accent = Color(hex: "#ff9f68")
     static let accentSecondary = Color(hex: "#ff784f")
+    static let floatingButtonBackground = Color(hex: "#F7FAFC") // Light pastel gray for FABs
     static let pastelAccent = Color(hex: "#F7FAFC")
     static let error = Color.red
     static let purpleHighlight = Color.purple.opacity(0.08)
