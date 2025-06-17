@@ -6,12 +6,11 @@ import Combine
 
 /// ViewModel for managing the user's favorites (liked quotes).
 final class FavoritesViewModel: ObservableObject {
-    /// The user's full liked quotes (with metadata).
-    @Published var likedQuotes: [LikedQuote] = []
-    /// The user's current ID (must be set after login).
+    /// The user's full liked quotes.
+    @Published var likedQuotes: [Quote] = []
+    /// The user's current ID.
     var userId: UUID?
     /// Error message for UI display.
-    // Replace String? errorMessage with ErrorMessage? for alert compatibility
     @Published var errorMessage: ErrorMessage?
     /// Loading state for UI feedback.
     @Published var isLoading: Bool = false
@@ -23,7 +22,7 @@ final class FavoritesViewModel: ObservableObject {
     func fetchLikedQuotes() {
         guard let userId = userId else {
             likedQuotes = []
-            errorMessage = nil // Do not show error for empty
+            errorMessage = nil
             return
         }
         isLoading = true
@@ -33,18 +32,11 @@ final class FavoritesViewModel: ObservableObject {
                 switch result {
                 case .success(let quotes):
                     self?.likedQuotes = quotes
-                    // Only clear error if empty (first time), not on real backend error
                     if quotes.isEmpty {
                         self?.errorMessage = nil
                     }
                 case .failure(let error):
-                    // Only show error if the table actually exists but fails, not if just empty
-                    if error.localizedDescription.contains("does not exist") {
-                        self?.likedQuotes = []
-                        self?.errorMessage = nil
-                    } else {
-                        self?.errorMessage = ErrorMessage(message: "Failed to load favorites: \(error.localizedDescription)")
-                    }
+                    self?.errorMessage = ErrorMessage(message: "Failed to load favorites: \(error.localizedDescription)")
                 }
             }
         }
@@ -52,15 +44,24 @@ final class FavoritesViewModel: ObservableObject {
 
     // MARK: - Remove from Favorites
     /// Removes a liked quote from the user's favorites and updates Supabase.
-    func removeFromFavorites(likedQuote: LikedQuote) {
+    func removeFromFavorites(at offsets: IndexSet) {
         guard let userId = userId else { return }
-        SupabaseService.shared.unlikeQuote(quoteId: likedQuote.quoteId, userId: userId) { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success:
-                    self?.likedQuotes.removeAll { $0.quoteId == likedQuote.quoteId }
-                case .failure(let error):
-                    self?.errorMessage = ErrorMessage(message: "Failed to remove favorite: \(error.localizedDescription)")
+        let quotesToRemove = offsets.map { self.likedQuotes[$0] }
+        
+        // Remove from the local array first for instant UI update.
+        self.likedQuotes.remove(atOffsets: offsets)
+        
+        // Then, call the backend to remove each one.
+        for quote in quotesToRemove {
+            SupabaseService.shared.unlikeQuote(quoteId: quote.id, userId: userId) { [weak self] result in
+                DispatchQueue.main.async {
+                    if case .failure(let error) = result {
+                        // If the backend call fails, you might want to handle the error,
+                        // e.g., by re-inserting the quote into the local array and showing an alert.
+                        self?.errorMessage = ErrorMessage(message: "Failed to remove favorite: \(error.localizedDescription)")
+                        // For simplicity, we'll just log the error for now.
+                        print("Error removing favorite from backend: \(error)")
+                    }
                 }
             }
         }
@@ -69,6 +70,6 @@ final class FavoritesViewModel: ObservableObject {
     // MARK: - Utility
     /// Checks if a given quote is in the user's favorites.
     func isFavorite(quoteId: UUID) -> Bool {
-        likedQuotes.contains { $0.quoteId == quoteId }
+        likedQuotes.contains { $0.id == quoteId }
     }
 }

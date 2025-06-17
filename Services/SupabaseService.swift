@@ -81,6 +81,39 @@ final class SupabaseService {
     /// - Parameters:
     ///   - userId: The ID of the current user.
     ///   - completion: Completion handler with Result<[UUID], Error>
+    func fetchFullLikedQuotes(forUser userId: UUID, completion: @escaping (Result<[Quote], Error>) -> Void) {
+        Task {
+            do {
+                // Step 1: Fetch the IDs of liked quotes.
+                let likedRelations: [LikedQuote] = try await client.database
+                    .from("likedquotes")
+                    .select("quote_id")
+                    .eq("user_id", value: userId.uuidString)
+                    .execute()
+                    .value
+
+                let quoteIds = likedRelations.map { $0.quote_id.uuidString }
+
+                if quoteIds.isEmpty {
+                    completion(.success([]))
+                    return
+                }
+
+                // Step 2: Fetch the full quote objects for those IDs.
+                let quotes: [Quote] = try await client.database
+                    .from("quotes")
+                    .select()
+                    .in("id", value: quoteIds)
+                    .execute()
+                    .value
+
+                completion(.success(quotes))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
     func fetchLikedQuoteIDs(forUser userId: UUID, completion: @escaping (Result<[UUID], Error>) -> Void) {
         Task {
             do {
@@ -93,7 +126,7 @@ final class SupabaseService {
                     .execute()
                     .value
                 // Map to quoteId array
-                let quoteIDs = response.map { $0.quoteId }
+                let quoteIDs = response.map { $0.quote_id }
                 completion(.success(quoteIDs))
             } catch {
                 // Print the full error for more detailed diagnostics
@@ -111,11 +144,15 @@ final class SupabaseService {
     func likeQuote(quoteId: UUID, userId: UUID, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
-                let insertData = ["userId": userId.uuidString, "quoteId": quoteId.uuidString]
-                _ = try await client
+                // Create a dictionary with the correct column names for insertion.
+                let insertData: [String: String] = [
+                    "user_id": userId.uuidString,
+                    "quote_id": quoteId.uuidString
+                ]
+                try await client
                     .database
                     .from("likedquotes")
-                    .insert([insertData])
+                    .insert(insertData)
                     .execute()
                 completion(.success(()))
             } catch {
@@ -132,13 +169,12 @@ final class SupabaseService {
     func unlikeQuote(quoteId: UUID, userId: UUID, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
-                // Delete the like where both userId and quoteId match
-                _ = try await client
+                try await client
                     .database
                     .from("likedquotes")
                     .delete()
-                    .eq("userId", value: userId.uuidString)
-                    .eq("quoteId", value: quoteId.uuidString)
+                    .eq("user_id", value: userId.uuidString)
+                    .eq("quote_id", value: quoteId.uuidString)
                     .execute()
                 completion(.success(()))
             } catch {

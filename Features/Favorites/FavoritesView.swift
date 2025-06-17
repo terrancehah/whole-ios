@@ -19,27 +19,23 @@ struct FavoritesView: View {
                 // Display list of liked quotes if data is available
                 else if !viewModel.likedQuotes.isEmpty {
                     List {
-                        ForEach(viewModel.likedQuotes) { likedQuote in
-                            VStack(alignment: .leading, spacing: 8) {
-                                // Display quote ID with heading font
-                                Text("Quote ID: \(likedQuote.quoteId)")
-                                    .headingFont(size: 18) // Use heading font for quote id
-                                // Display timestamp with caption font
-                                Text("Liked at: \(likedQuote.createdAt.formatted())")
-                                    .captionFont(size: 13) // Use caption font for timestamp
-                                    .foregroundColor(.secondary)
-                            }
-                            .swipeActions(edge: .trailing) {
-                                // Button to remove quote from favorites
-                                Button(role: .destructive) {
-                                    viewModel.removeFromFavorites(likedQuote: likedQuote)
-                                } label: {
-                                    Label("Remove", systemImage: "heart.slash")
-                                        .bodyFont(size: 15)
+                        ForEach(viewModel.likedQuotes, id: \.id) { quote in
+                            NavigationLink(destination: EmptyView()) { // Using EmptyView as a placeholder destination
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text(quote.text)
+                                        .font(.body)
+                                        .lineSpacing(5)
+                                    Text(quote.author)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                        .padding(.top, 2)
                                 }
+                                .padding(.vertical, 8)
                             }
                         }
+                        .onDelete(perform: viewModel.removeFromFavorites)
                     }
+                    .listStyle(PlainListStyle()) // Use plain style for a cleaner look
                 } 
                 // Display empty state if no quotes are liked
                 else {

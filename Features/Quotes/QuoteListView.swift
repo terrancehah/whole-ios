@@ -213,7 +213,7 @@ struct QuoteListView: View {
                 .padding(.horizontal, 32)
                 .background(BlurView(style: .systemMaterial))
                 .cornerRadius(16)
-                .shadow(radius: 10)
+                .shadow(color: .black.opacity(0.15), radius: 5, x: 0, y: 2)
                 .padding(.bottom, 40)
                 .transition(.move(edge: .bottom).combined(with: .opacity))
         }
