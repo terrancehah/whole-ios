@@ -19,19 +19,8 @@ struct FavoritesView: View {
                 // Display list of liked quotes if data is available
                 else if !viewModel.likedQuotes.isEmpty {
                     List {
-                        ForEach(viewModel.likedQuotes, id: \.id) { quote in
-                            NavigationLink(destination: EmptyView()) { // Using EmptyView as a placeholder destination
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text(quote.text)
-                                        .font(.body)
-                                        .lineSpacing(5)
-                                    Text(quote.author)
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                        .padding(.top, 2)
-                                }
-                                .padding(.vertical, 8)
-                            }
+                        ForEach(viewModel.likedQuotes) { quote in
+                            FavoriteRowView(quote: quote)
                         }
                         .onDelete(perform: viewModel.removeFromFavorites)
                     }
@@ -79,4 +68,20 @@ struct FavoritesView_Previews: PreviewProvider {
 struct ErrorMessage: Identifiable {
     let id = UUID()
     let message: String
+}
+
+// MARK: - Favorite Row View
+/// A view that represents a single row in the favorites list.
+struct FavoriteRowView: View {
+    let quote: Quote
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(quote.englishText)
+                .font(.body)
+                .lineSpacing(5)
+            // Author information is not directly available on the Quote object and has been removed for now.
+        }
+        .padding(.vertical, 8)
+    }
 }
