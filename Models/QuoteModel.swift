@@ -4,7 +4,7 @@
 import Foundation
 
 /// Enum representing allowed quote categories.
-enum QuoteCategory: String, CaseIterable, Codable, Identifiable {
+enum QuoteCategory: String, CaseIterable, Codable, Identifiable, Equatable {
     case inspiration = "Inspiration"
     case motivation = "Motivation"
     case love = "Love"
@@ -39,10 +39,15 @@ enum QuoteCategory: String, CaseIterable, Codable, Identifiable {
     init(fromRaw raw: String) {
         self = QuoteCategory.allCases.first(where: { $0.rawValue.caseInsensitiveCompare(raw) == .orderedSame }) ?? .unknown
     }
+
+    // Explicit Equatable conformance
+    static func == (lhs: QuoteCategory, rhs: QuoteCategory) -> Bool {
+        return lhs.rawValue == rhs.rawValue
+    }
 }
 
 /// Represents a bilingual quote with metadata, matching the Supabase 'quotes' table.
-struct Quote: Codable, Identifiable {
+struct Quote: Codable, Identifiable, Equatable {
     /// Unique identifier for the quote (UUID, matches Supabase)
     let id: UUID
     /// The English text of the quote.
@@ -87,6 +92,8 @@ struct Quote: Codable, Identifiable {
         try container.encodeIfPresent(createdAt, forKey: .createdAt)
         try container.encodeIfPresent(createdBy, forKey: .createdBy)
     }
+
+    // Equatable conformance will be synthesized by the compiler as all members are Equatable.
 }
 
 // MARK: - Memberwise Initializer for Previews & Testing

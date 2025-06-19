@@ -87,7 +87,7 @@ final class SupabaseService {
                 // Step 1: Fetch the IDs of liked quotes.
                 let likedRelations: [LikedQuote] = try await client.database
                     .from("likedquotes")
-                    .select("quote_id")
+                    .select()
                     .eq("user_id", value: userId.uuidString)
                     .execute()
                     .value

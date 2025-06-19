@@ -6,6 +6,7 @@ import SwiftUI
 /// Main UI for displaying the user's favorite (liked) quotes.
 struct FavoritesView: View {
     @ObservedObject var viewModel: FavoritesViewModel
+    @Environment(\.editMode) private var editMode // State for list edit mode
 
     var body: some View {
         NavigationView {
@@ -19,12 +20,17 @@ struct FavoritesView: View {
                 // Display list of liked quotes if data is available
                 else if !viewModel.likedQuotes.isEmpty {
                     List {
-                        ForEach(viewModel.likedQuotes) { quote in
+                        ForEach(viewModel.likedQuotes, id: \.id) { quote in
                             FavoriteRowView(quote: quote)
+                                .listRowSeparator(.hidden) // Remove horizontal lines
+                                .listRowInsets(EdgeInsets()) // Make card span full width of the row
                         }
                         .onDelete(perform: viewModel.removeFromFavorites)
                     }
                     .listStyle(PlainListStyle()) // Use plain style for a cleaner look
+                    .padding(.horizontal, 8) // Reduced horizontal padding for wider cards
+                    .environment(\.editMode, editMode) // Pass editMode to the list
+                    .animation(.default, value: viewModel.likedQuotes) // Animate list changes
                 } 
                 // Display empty state if no quotes are liked
                 else {
@@ -45,11 +51,14 @@ struct FavoritesView: View {
                     .padding()
                 }
             }
-            // Set navigation title (cannot apply custom font directly)
-            .navigationTitle("Favorites")
-            .alert(item: $viewModel.errorMessage) { error in
-                // Use standard Text for title/message (font cannot be customized in native Alert)
-                Alert(title: Text("Error"), message: Text(error.message), dismissButton: .default(Text("OK")))
+            .navigationTitle("Favorites") // Apply to the Group
+            .toolbar { // Apply to the Group
+                if !viewModel.likedQuotes.isEmpty && !viewModel.isLoading {
+                    EditButton()
+                }
+            }
+            .alert(item: $viewModel.errorMessage) { errorMsg in // Display error alert if an error occurs
+                Alert(title: Text("Error"), message: Text(errorMsg.message), dismissButton: .default(Text("OK")))
             }
         }
     }
@@ -76,12 +85,23 @@ struct FavoriteRowView: View {
     let quote: Quote
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 12) { // Adjusted spacing
             Text(quote.englishText)
-                .font(.body)
+                .font(.title2) // Font from QuoteCardView
+                // .fontWeight(.semibold) // Removed to use default (regular) weight for a lighter appearance
                 .lineSpacing(5)
-            // Author information is not directly available on the Quote object and has been removed for now.
+                .foregroundColor(AppColors.primaryText)
+
+            Text(quote.chineseText)
+                .font(.title3) // Font from QuoteCardView
+                .lineSpacing(4)
+                .foregroundColor(AppColors.secondaryText)
         }
-        .padding(.vertical, 8)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 15)
+        // .frame(minHeight: 150, alignment: .topLeading) // Removed to allow natural height based on content
+        .background(AppColors.background)
+        .cornerRadius(12)
+        .shadow(color: AppColors.pastelShadow, radius: 3, x: 0, y: 2)
     }
 }
