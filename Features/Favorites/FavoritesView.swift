@@ -24,11 +24,12 @@ struct FavoritesView: View {
                             FavoriteRowView(quote: quote)
                                 .listRowSeparator(.hidden) // Remove horizontal lines
                                 .listRowInsets(EdgeInsets()) // Make card span full width of the row
+                                .padding(.bottom, 12) // Add spacing AFTER each card instance
                         }
                         .onDelete(perform: viewModel.removeFromFavorites)
                     }
                     .listStyle(PlainListStyle()) // Use plain style for a cleaner look
-                    .padding(.horizontal, 8) // Reduced horizontal padding for wider cards
+                    .padding(.horizontal) // Add default horizontal padding for left/right margins
                     .environment(\.editMode, editMode) // Pass editMode to the list
                     .animation(.default, value: viewModel.likedQuotes) // Animate list changes
                 } 
@@ -85,21 +86,21 @@ struct FavoriteRowView: View {
     let quote: Quote
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) { // Adjusted spacing
+        VStack(alignment: .leading, spacing: 6) { // Internal spacing
             Text(quote.englishText)
-                .font(.title2) // Font from QuoteCardView
-                // .fontWeight(.semibold) // Removed to use default (regular) weight for a lighter appearance
-                .lineSpacing(5)
+                .font(.system(size: 16)) // Increased font size
+                .lineSpacing(2)
                 .foregroundColor(AppColors.primaryText)
 
             Text(quote.chineseText)
-                .font(.title3) // Font from QuoteCardView
-                .lineSpacing(4)
+                .font(.system(size: 14)) // Increased font size
+                .lineSpacing(2)
                 .foregroundColor(AppColors.secondaryText)
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 15)
-        // .frame(minHeight: 150, alignment: .topLeading) // Removed to allow natural height based on content
+        .frame(maxWidth: .infinity, alignment: .leading) // Ensure VStack expands to full width
+        .padding(.horizontal, 20) // Internal horizontal padding for text content
+        .padding(.vertical, 15)   // Internal vertical padding for text content
+        // .border(Color.red, width: 1) // Removed DEBUG border
         .background(AppColors.background)
         .cornerRadius(12)
         .shadow(color: AppColors.pastelShadow, radius: 3, x: 0, y: 2)
