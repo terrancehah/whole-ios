@@ -65,6 +65,11 @@
 ---
 
 ## Changelog
+
+### 2025-06-20: Favorites UI Overhaul
+- The Favorites screen has been redesigned with a modern, card-based UI using a `List`.
+- Each favorite quote is now displayed in a distinct card with consistent spacing, rounded corners, and a subtle shadow.
+- An "Edit" button has been added to the navigation bar, providing a more intuitive way for users to delete their saved quotes.
 - Refactored onboarding flow to a multi-step experience:
   - Preferences split into categories, name, and goals, each with their own screen.
   - Categories and goals now use a grid selection UI with colored borders.

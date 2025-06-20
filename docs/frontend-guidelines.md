@@ -114,6 +114,19 @@ Whole supports multiple visual styles to suit different user preferences. For la
   - The tab uses a minimal, modern list UI with swipe-to-remove and empty/error states.
   - All logic is model-driven and robust.
 
+### Favorites UI Updates (2025-06-20)
+- **Layout**: The view now uses a `List` with `.listStyle(PlainListStyle())` to present a clean, modern, card-based layout.
+- **Card Design**: Each favorite quote is displayed in its own card. Cards have a background color matching the app's theme (`AppColors.background`), a `cornerRadius` of 12, and a subtle `shadow` for depth.
+- **Spacing**: 
+  - Default list separators are hidden (`.listRowSeparator(.hidden)`).
+  - The `List` has `.padding(.horizontal)` to create consistent left and right margins.
+  - A `.padding(.bottom, 12)` is applied to each row to ensure consistent vertical spacing between cards.
+- **Typography**:
+  - English text uses `.system(size: 16)`.
+  - Chinese text uses `.system(size: 14)`.
+  - Both have a `lineSpacing` of 2 for optimal readability.
+- **Deletion UX**: In addition to the standard swipe-to-delete gesture, an **Edit** button is now included in the navigation bar to provide a more explicit and discoverable way for users to manage their favorites.
+
 ## 12. User Quote Editor
 - **User Quote Editor:**
   - Premium users access a dedicated quote creation screen with a soft, minimal UI.

@@ -90,11 +90,12 @@ Premium features are unlocked through a subscription, offering unlimited quote a
 - Onboarding only completes if both inserts succeed, with robust error handling.
 - All onboarding data is stored in the `users` and `userpreferences` tables following backend schema.
 
-### 5.9 Favorites
+### 5.9 Favorites (Updated 2025-06-20)
 - **Favorites (Liked Quotes):**
-  - Users can save quotes as favorites and revisit them in a dedicated tab.
+  - Users can save quotes as favorites and revisit them in a dedicated tab featuring a modern, card-based layout.
   - Favorites are synced to the backend and persist across devices.
   - Removing a favorite updates both UI and backend in real time.
+  - The user experience for deletion is enhanced with both a standard swipe-to-delete gesture and a more discoverable "Edit" button for managing the list.
 
 ### 5.10 UUID Migration
 #### Data Model and Backend Consistency

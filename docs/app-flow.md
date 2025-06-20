@@ -243,6 +243,18 @@ To ensure a stable and consistent display of quotes and user-specific data (like
   - Share Options: Compatible with installed social media apps.
   - Platforms: Instagram, Instagram Stories, WhatsApp, WeChat, etc.
 
+## 7. Favorites Tab Flow (2025-06-20)
+
+- **Viewing Favorites**: Users can navigate to the "Favorites" tab to view a list of all the quotes they have previously liked. The list is presented as a series of vertically scrolling cards. For detailed visual and layout specifications, see the "Favorites Tab" section in `frontend-guidelines.md`.
+
+- **Deleting Favorites**: There are two methods for removing quotes from the favorites list:
+  1.  **Swipe to Delete**: Users can perform a standard leading-to-trailing swipe gesture on any quote card to reveal a "Delete" button. Tapping this button removes the quote from their favorites.
+  2.  **Edit Mode**: An "Edit" button is located in the navigation bar. Tapping this button puts the list into an edit mode, allowing the user to select multiple quotes and delete them in a single action. Tapping "Done" (which replaces "Edit") exits this mode. This provides a clear and discoverable alternative to the swipe gesture.
+
+- **States**:
+  - **Loading State**: A progress indicator is shown while the list of favorited quotes is being fetched from the backend.
+  - **Empty State**: If the user has not liked any quotes, a view with a heart icon and instructional text is displayed.
+
 ## 8. AuthService
 - **Password Reset:**
   - The AuthService provides a method to send password reset emails via Supabase.
