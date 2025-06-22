@@ -14,7 +14,7 @@ struct PaywallView: View {
             // System background for light/dark mode (Serene Minimalism theme)
             ThemeManager.shared.selectedTheme.theme.background
                 .ignoresSafeArea()
-            VStack(spacing: 32) {
+            VStack(spacing: 24) { // Reduced spacing for a tighter layout
                 // Close button
                 HStack {
                     Spacer()
@@ -29,76 +29,43 @@ struct PaywallView: View {
                 .padding(.horizontal)
                 
                 // Title & subtitle
-                VStack(spacing: 8) {
+                VStack(spacing: 4) {
                     Text("Unlock Premium")
-                        .font(.title).fontWeight(.bold)
+                        .font(.largeTitle).fontWeight(.bold) // Increased font size
                         .multilineTextAlignment(.center)
                     Text("Start your 7-day free trial. No charge today.")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
-                .padding(.top, 16)
-                
-                // Premium benefits
-                VStack(alignment: .leading, spacing: 12) {
-                    Label("Unlimited quotes, no daily limit", systemImage: "infinity")
-                    Label("No watermark on shared images", systemImage: "photo")
-                    Label("Premium themes & fonts", systemImage: "paintpalette")
-                    Label("Create and save your own quotes", systemImage: "pencil.and.outline")
+                .padding(.top, 8) // Reduced top padding
+
+                // Premium benefits list
+                VStack(alignment: .leading, spacing: 16) {
+                    BenefitRowView(iconName: "infinity", text: "Unlimited quotes, no daily limit")
+                    BenefitRowView(iconName: "photo.on.rectangle.angled", text: "No watermark on shared images")
+                    BenefitRowView(iconName: "paintpalette", text: "Premium themes & fonts")
+                    BenefitRowView(iconName: "square.and.pencil", text: "Create and save your own quotes")
                 }
-                .font(.body)
+                .padding(20)
+                .background(Color.purple.opacity(0.08))
+                .cornerRadius(16)
                 .padding(.horizontal)
-                .padding(.vertical, 8)
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(Color.purple.opacity(0.08))
-                )
-                
+
                 // Trial timeline (7-day trial visual)
-                VStack(alignment: .leading, spacing: 0) {
-                    RoundedRectangle(cornerRadius: 18)
-                        .stroke(Color.purple.opacity(0.3), lineWidth: 1.5)
-                        .background(Color.clear)
-                        .overlay(
-                            VStack(alignment: .leading, spacing: 20) {
-                                HStack(alignment: .top) {
-                                    Image(systemName: "lock.fill")
-                                        .foregroundColor(.purple)
-                                    VStack(alignment: .leading) {
-                                        Text("Today")
-                                            .fontWeight(.semibold)
-                                        Text("Get full access and see your mindset start to change")
-                                            .font(.footnote)
-                                            .foregroundColor(.secondary)
-                                    }
-                                }
-                                HStack(alignment: .top) {
-                                    Image(systemName: "bell")
-                                        .foregroundColor(.purple)
-                                    VStack(alignment: .leading) {
-                                        Text("Day 6")
-                                            .fontWeight(.semibold)
-                                        Text("Get a reminder that your trial ends in 24 hours")
-                                            .font(.footnote)
-                                            .foregroundColor(.secondary)
-                                    }
-                                }
-                                HStack(alignment: .top) {
-                                    Image(systemName: "calendar")
-                                        .foregroundColor(.purple)
-                                    VStack(alignment: .leading) {
-                                        Text("After day 7")
-                                            .fontWeight(.semibold)
-                                        Text("Your free trial ends and you'll be charged, cancel anytime before.")
-                                            .font(.footnote)
-                                            .foregroundColor(.secondary)
-                                    }
-                                }
-                            }
-                            .padding(20)
-                        )
-                        .frame(maxWidth: .infinity)
+                VStack(alignment: .leading, spacing: 16) {
+                    TimelineRowView(iconName: "lock.fill", title: "Today", subtitle: "Get full access and see your mindset start to change")
+                    Divider()
+                    TimelineRowView(iconName: "bell.fill", title: "Day 6", subtitle: "Get a reminder that your trial ends in 24 hours")
+                    Divider()
+                    TimelineRowView(iconName: "calendar", title: "After day 7", subtitle: "Your free trial ends and you'll be charged, cancel anytime")
                 }
+                .padding(20)
+                .background(Color.purple.opacity(0.08))
+                .cornerRadius(16)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(Color.purple.opacity(0.3), lineWidth: 1)
+                )
                 .padding(.horizontal)
                 
                 // Reminder toggle
@@ -123,9 +90,9 @@ struct PaywallView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(LinearGradient(gradient: Gradient(colors: [Color.purple, Color.pink]), startPoint: .leading, endPoint: .trailing))
+                        .background(LinearGradient(gradient: Gradient(colors: [Color.pink, Color.purple]), startPoint: .leading, endPoint: .trailing)) // Reversed gradient
                         .cornerRadius(16)
-                        .shadow(color: Color.purple.opacity(0.18), radius: 8, x: 0, y: 4)
+                        .shadow(color: Color.pink.opacity(0.2), radius: 8, x: 0, y: 4) // Adjusted shadow
                 }
                 .padding(.horizontal)
                 .disabled(viewModel.isProcessing)
@@ -173,6 +140,54 @@ struct PaywallView: View {
 }
 
 #if DEBUG
+/// A helper view to display a single premium benefit with an icon and text.
+struct BenefitRowView: View {
+    let iconName: String
+    let text: String
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(systemName: iconName)
+                .font(.title3)
+                .foregroundColor(AppColors.primaryText)
+                .frame(width: 30)
+            
+            Text(text)
+                .font(.body)
+                .foregroundColor(AppColors.primaryText)
+            
+            Spacer()
+        }
+    }
+}
+
+/// A helper view to display a single timeline event with an icon, title, and subtitle.
+struct TimelineRowView: View {
+    let iconName: String
+    let title: String
+    let subtitle: String
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 16) {
+            Image(systemName: iconName)
+                .font(.title3)
+                .foregroundColor(.purple)
+                .frame(width: 30)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .fontWeight(.semibold)
+                    .foregroundColor(AppColors.primaryText)
+
+                Text(subtitle)
+                    .font(.footnote)
+                    .foregroundColor(AppColors.secondaryText)
+            }
+            Spacer()
+        }
+    }
+}
+
 struct PaywallView_Previews: PreviewProvider {
     static var previews: some View {
         PaywallView(viewModel: PaywallViewModel())
