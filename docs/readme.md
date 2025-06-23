@@ -1,5 +1,9 @@
 # Whole
 
+<p align="center">
+  <img src="./assets/app-icon.png" alt="Whole App Icon" width="200"/>
+</p>
+
 **Whole** is an MVP (Minimum Viable Product) iOS application designed to deliver bilingual (English and Chinese) quotes to your lock screen and standby mode, providing daily inspiration and motivation. This project is intentionally scoped for rapid development—ideally to be completed within 1–2 weeks. The codebase and documentation emphasize clarity, maintainability, and a focus on core features for fast iteration and validation.
 
 ---
