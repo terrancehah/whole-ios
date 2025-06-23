@@ -60,14 +60,16 @@ Premium features are unlocked through a subscription, offering unlimited quote a
 - UI: QuoteListView fills the screen, all buttons have corner radius 12 and consistent shadows, Chinese text is lighter.
 - Error popups for backend issues are now suppressed unless relevant.
 
-### 5.4 Paywall and Subscriptions
-- Offers a **7-day free trial** upon first launch
-- Provides monthly and yearly subscription options
-- Premium features include:
-  - Unlimited quote access
-  - Watermark removal
-  - Premium fonts and themes
-  - Ability to create personal quotes
+### 5.4 Paywall and Subscriptions (Updated 2025-06-23)
+- **UI/UX**: The paywall interface has been completely redesigned with a modern, card-based layout to clearly communicate premium benefits and improve user trust.
+- **Functionality**:
+  - Offers a **7-day free trial** upon first launch.
+  - Provides monthly and yearly subscription options.
+- **Premium Features**:
+  - Unlimited quote access.
+  - Watermark removal.
+  - Premium fonts and themes.
+  - Ability to create personal quotes.
 
 ### 5.5 Notifications
 - Sends daily notifications with new quotes at a user-set time

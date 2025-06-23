@@ -124,13 +124,9 @@ To ensure a stable and consistent display of quotes and user-specific data (like
   - All onboarding steps (category selection, name, goals, notification preferences, etc.) now save data directly to the backend using the currently authenticated user's UUID (from Supabase Auth). For anonymous users, the email may be nil.
   - This ensures all onboarding data is always tied to the correct backend account (anonymous or real), supporting seamless upgrade and backend sync.
 
-- **Paywall Screen**
-  - Purpose: Encourage subscription while offering a free trial or limited access.
-  - Details:
-    - Options:
-      - "Start 7-Day Free Trial" button.
-      - "Subscribe Now" with monthly and yearly pricing displayed.
-      - Reminder Toggle: "Remind me before trial ends" (default: on).
+- **Paywall Screen (Updated 2025-06-23)**
+  - **Purpose**: To present a clean, professional, and informative interface that clearly communicates the value of a premium subscription.
+  - **Design**: The paywall features a modern, single-column layout with a prominent title, two distinct info cards (for benefits and the trial timeline), and a vibrant call-to-action button. The design uses a cohesive color palette and clear typography to create an inviting and trustworthy user experience. For detailed design specifications, see `docs/frontend-guidelines.md`.
       - Close Button: Access free version with limitations.
 
 ## Anonymous User Provisioning and Backend Account Creation
@@ -141,9 +137,10 @@ To ensure a stable and consistent display of quotes and user-specific data (like
   - When the user later logs in with Google, Apple, or email, all data is migrated from the anonymous account to the new authenticated account.
 - **Anonymous User Email Handling:** Anonymous users now have their email set to `NULL` in the database, not an empty string or placeholder. This prevents unique constraint issues and aligns with the Supabase schema.
 
-## Subscription & Paywall Logic (Updated 2025-04-24)
-- StoreKit 2 is now integrated for all subscription and paywall flows.
-- The paywall allows users to start a 7-day free trial or restore purchases.
+## Subscription & Paywall Logic (Updated 2025-06-23)
+- **UI Overhaul**: The paywall UI has been significantly redesigned to improve clarity, aesthetics, and user trust. It now features a card-based layout that clearly outlines premium benefits and the trial timeline.
+- **StoreKit 2**: The underlying logic continues to use StoreKit 2 for all subscription and paywall flows.
+- **Functionality**: The paywall allows users to start a 7-day free trial or restore purchases.
 - Subscription restoration uses StoreKit 2's recommended approach:
     - All verified transactions are collected using `for try await`.
     - Only non-revoked, correct-product transactions are considered.

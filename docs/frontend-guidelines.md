@@ -197,3 +197,22 @@ Refer to `QuoteListView.swift` for implementation details.
 ---
 
 > **Note:** For implementation, start with Serene Minimalism. Use the other styles as reference for future expansion.
+
+## 21. Paywall UI (Updated 2025-06-23)
+- **Objective**: To present a clean, professional, and informative interface that clearly communicates the value of a premium subscription.
+- **Layout**: A single-column `VStack` with balanced spacing, featuring a prominent title, two distinct info cards, and a vibrant call-to-action button.
+- **Typography**:
+  - **Main Title**: "Unlock Premium" uses `.largeTitle` with a bold weight for maximum impact.
+  - **Subtitle**: A smaller, secondary-colored subheadline provides context for the 7-day free trial.
+  - **Card Content**: Body text uses `.body` and `.footnote` fonts with semantic primary and secondary colors for readability.
+- **Card Design**:
+  - **Benefits & Timeline Cards**: Both cards share a consistent design language:
+    - A light, semi-transparent purple background (`Color.purple.opacity(0.08)`).
+    - A corner radius of 16.
+    - Generous internal padding (20).
+    - The timeline card includes a subtle purple border for added definition.
+  - **Icons**: SF Symbols are used throughout for clarity and consistency (e.g., `lock.fill`, `infinity`).
+- **Call-to-Action (CTA) Button**:
+  - **Gradient**: Features a vibrant `LinearGradient` flowing from `Color.pink` to `Color.purple`.
+  - **Shadow**: A soft pink shadow (`Color.pink.opacity(0.2)`) adds depth and makes the button pop.
+  - **Text**: Uses a bold, white `.headline` font for clear, concise messaging.

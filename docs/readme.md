@@ -66,6 +66,11 @@
 
 ## Changelog
 
+### 2025-06-23: Paywall UI Overhaul
+- The paywall has been completely redesigned to be more professional, informative, and trustworthy.
+- The new UI features a prominent title, two distinct cards for benefits and the trial timeline, and a vibrant, gradient-based call-to-action button.
+- The layout, typography, and color scheme have been polished to align with the app's overall aesthetic.
+
 ### 2025-06-20: Favorites UI Overhaul
 - The Favorites screen has been redesigned with a modern, card-based UI using a `List`.
 - Each favorite quote is now displayed in a distinct card with consistent spacing, rounded corners, and a subtle shadow.
